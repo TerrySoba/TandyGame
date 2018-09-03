@@ -93,10 +93,7 @@ static char far* screen[4] = {(char far*)(0xB8000000L), (char far*)(0xB8002000L)
 
 void TandyGfx::drawScreen()
 {
-    waitForVsync();
-    screen[0][10] = 10;
-
-    
+    waitForVsync();    
     for (int i = 0; i < 4; ++i)
     {
         for (int line = 0; line < TANDY_SCREEN_H / 4; ++line)

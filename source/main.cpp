@@ -14,8 +14,6 @@ int main()
 	    gfx.drawScreen();
 	}
 	
-	puts("gnaaa...");
-
 	getchar();
 	return 0;
 }
