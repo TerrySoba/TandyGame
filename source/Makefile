@@ -1,4 +1,4 @@
-objects1 = main.o tandygfx.o
+objects1 = main.o tandygfx.o image.o
 coptions = -0 -ml
 dest     = game.exe
 
@@ -9,6 +9,9 @@ main.o:
 
 tandygfx.o:
   wpp $(coptions) tandygfx.cpp
+
+image.o:
+  wpp $(coptions) image.cpp
 
 $(dest): $(objects1)
   %write game.lnk NAME   $@

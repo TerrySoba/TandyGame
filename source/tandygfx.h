@@ -1,20 +1,15 @@
 #ifndef TANDYGFX_H_INCLUDED
 #define TANDYGFX_H_INCLUDED
 
-class Image
+#include <vector>
+
+#include "image.h"
+
+struct Rectangle
 {
-public:
-	Image(const char* filename);
-
-	int width() const { return m_width; }
-	int height() const { return m_height; }
-	char* data() const { return m_data; }
-
-private:
-	int m_width, m_height;
-	char* m_data;
+	int x,y;
+	int width, height;
 };
-
 
 class TandyGfx
 {
@@ -28,7 +23,7 @@ public:
 
 private:
 	char* m_screenBuffer;
-	
+	std::vector<Rectangle> m_dirtyRects;
 };
 
 
