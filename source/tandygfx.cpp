@@ -21,26 +21,6 @@ static void videoInit()
        }
 }
 
-void loadImage(char* out)
-{
-    FILE* fp = fopen("out.img", "rb");
-
-	if (!fp)
-	{
-		printf("Could not open file \"%s\".\n", "out.img");
-        return;
-	}
-
-	short int width, height;
-
-    fread(&width, 2, 1, fp);
-    fread(&height, 2, 1, fp);
-
-    fread(out, 1, width * height / 2, fp);
-
-	fclose(fp);
-}
-
 
 TandyGfx::TandyGfx()
 {
@@ -48,9 +28,7 @@ TandyGfx::TandyGfx()
 
     m_screenBuffer = new char[screenBytes];
 
-    memset(m_screenBuffer, 0x17, screenBytes);
-
-    loadImage(m_screenBuffer);
+    memset(m_screenBuffer, 0x0, screenBytes);
 
     videoInit();
 }
@@ -69,22 +47,36 @@ TandyGfx::~TandyGfx()
 
 static char far* screen[4] = {(char far*)(0xB8000000L), (char far*)(0xB8002000L), (char far*)(0xB8004000L), (char far*)(0xB8006000L)};
 
+static char far* getScreenLine(int line)
+{
+    return screen[line & 3] + LINE_BYTES * (line >> 2);
+}
+
 void TandyGfx::drawScreen()
 {
-    waitForVsync();    
-    for (int i = 0; i < 4; ++i)
+    waitForVsync();
+    for (int i = 0; i < m_dirtyRects.size(); ++i)
     {
-        for (int line = 0; line < TANDY_SCREEN_H / 4; ++line)
+        Rectangle& rect = m_dirtyRects[i];
+        for (int y = rect.y; y < rect.y + rect.height; ++y)
         {
-            memcpy(screen[i] + line * LINE_BYTES, m_screenBuffer + (line * 4 + i) * LINE_BYTES, LINE_BYTES);
+            memcpy(getScreenLine(y) + rect.x / 2 , m_screenBuffer + LINE_BYTES * y + rect.x / 2, rect.width / 2);
         }
     }
+
+    m_dirtyRects.clear();
 }
 
 void TandyGfx::drawImage(const Image& image, int targetX, int targetY)
 {
     char* imageData = image.data();
     const int imageLineBytes = image.width() / 2;
+
+    Rectangle rect = {
+        targetX, targetY,
+        image.width(), image.height()};
+    m_dirtyRects.push_back(rect);
+
     for (int y = 0; y < image.height(); ++y)
     {
         memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);

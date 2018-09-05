@@ -1,5 +1,5 @@
 objects1 = main.o tandygfx.o image.o
-coptions = -0 -ml
+coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 dest     = game.exe
 
 all: $(dest)
