@@ -1,10 +1,14 @@
 #ifndef _IMAGE_H_INC_
 #define _IMAGE_H_INC_
 
+#include <stdint.h>
+
 class Image
 {
 public:
     Image(const char* filename);
+    Image(int width, int height, uint8_t value);
+
     ~Image();
 
     int width() const { return m_width; }

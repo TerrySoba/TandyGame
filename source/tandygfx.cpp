@@ -83,8 +83,10 @@ void TandyGfx::drawScreen()
 
 void TandyGfx::drawImage(const Image& image, int targetX, int targetY)
 {
+    char* imageData = image.data();
+    const int imageLineBytes = image.width() / 2;
     for (int y = 0; y < image.height(); ++y)
     {
-        // memcpy(m_screenBuffer, image.data() + );
+        memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
     }
 }

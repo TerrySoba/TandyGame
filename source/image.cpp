@@ -1,6 +1,7 @@
 #include "image.h"
 
 #include <stdio.h>
+#include <string.h>
 
 Image::Image(const char* filename)
 {
@@ -20,6 +21,15 @@ Image::Image(const char* filename)
     fread(m_data, 1, m_width * m_height / 2, fp);
 
 	fclose(fp);
+}
+
+Image::Image(int width, int height, uint8_t value) :
+    m_width(width),
+    m_height(height)
+{
+    int s = m_width * m_height / 2;
+    m_data = new char[s];
+    memset(m_data, value, s);
 }
 
 Image::~Image()
