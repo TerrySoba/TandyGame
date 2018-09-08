@@ -17,12 +17,13 @@ public:
 	TandyGfx();
 	~TandyGfx();
 
-	void drawScreen();
+	void setBackgroundImage(const Image& image);
+	void drawBackground();
 
 	void drawImage(const Image& image, int x, int y);
 
 private:
-	char* m_screenBuffer;
+	char* m_backgroundImage;
 	std::vector<Rectangle> m_dirtyRects;
 };
 

@@ -16,15 +16,17 @@ int main()
 
 	int x = 0;
 
-	gfx.drawImage(bg, 0, 0);
+	gfx.setBackgroundImage(bg);
 
 	for (;;)
 	{
 		++x;
-		if (x > 100) x = 0;
-		gfx.drawImage(img, x, 100);
-		gfx.drawImage(img, 100, x);
-	    gfx.drawScreen();
+		if (x > 150) x = 0;
+
+		gfx.drawBackground();
+		gfx.drawImage(img, x, 150);
+		gfx.drawImage(img, 150, x);
+	    
 	}
 	
 	getchar();
