@@ -3,6 +3,22 @@
 #include <stdio.h>
 #include <string.h>
 
+Image::Image(const Image& image)
+{
+    int s = image.width() * image.height() / 2;
+    m_data = new char[s];
+    memcpy(m_data, image.data(), s);
+}
+
+Image& Image::operator=(const Image& other)
+{
+    int s = other.width() * other.height() / 2;
+    delete m_data;
+    m_data = new char[s];
+    memcpy(m_data, other.data(), s);
+    return *this;    
+}
+
 Image::Image(const char* filename)
 {
     FILE* fp = fopen(filename, "rb");

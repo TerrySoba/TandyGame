@@ -46,7 +46,7 @@ usescancodes=true
 language=
 machine=tandy
 captures=capture
-memsize=16
+memsize=1
 
 [render]
 # frameskip: How many frames DOSBox skips before drawing one.
@@ -241,10 +241,10 @@ ipx=false
 # You can put your MOUNT lines here.
 
 keyb gr
-mount c .
+mount c source
 c:
 game
-exit
+# exit
 
 
 

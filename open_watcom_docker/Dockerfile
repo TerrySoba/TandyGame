@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM alpine:3.10
 
 ADD open_watcom.tar.gz .
 
@@ -8,4 +8,3 @@ ENV EDPATH=$WATCOM/eddat
 ENV INCLUDE=$WATCOM/h
 
 CMD cd /build && wmake
-

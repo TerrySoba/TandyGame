@@ -6,8 +6,11 @@
 class Image
 {
 public:
+    Image(const Image& image);
     Image(const char* filename);
     Image(int width, int height, uint8_t value);
+
+    Image& operator=(const Image& other);
 
     ~Image();
 
