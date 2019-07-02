@@ -1,12 +1,11 @@
-#include <QCoreApplication>
-
-#include <QImage>
+#include "lodepng/lodepng.h"
 
 #include <iostream>
 #include <exception>
-
 #include <stdio.h>
 #include <cmath>
+#include <vector>
+#include <sstream>
 
 
 double square(double val)
@@ -47,12 +46,10 @@ static const std::vector<std::pair<char, RGB>> tandyColors =
     {15 , {0xFF,0xFF,0xFF}},
 };
 
-unsigned char getBestTandyColor(QRgb colorValue)
+
+
+unsigned char getBestTandyColor(RGB color)
 {
-    RGB color;
-    color.r = qRed(colorValue);
-    color.g = qGreen(colorValue);
-    color.b = qBlue(colorValue);
     char bestIndex = 0;
     double bestDiff = 100000;
     for (const auto& entry : tandyColors)
@@ -68,29 +65,49 @@ unsigned char getBestTandyColor(QRgb colorValue)
     return bestIndex;
 }
 
-void convertFile(QString inputFile, QString outputFile)
+RGB rgba2rgb(uint32_t rgba)
 {
-    auto image = QImage(inputFile);
+    return RGB{
+        (uint8_t)((rgba & 0x000000ff) >> 0),
+        (uint8_t)((rgba & 0x0000ff00) >> 8),
+        (uint8_t)((rgba & 0x00ff0000) >> 16),
+        };
+}
 
-    if (image.isNull())
+void convertFile(std::string inputFile, std::string outputFile)
+{
+    std::vector<unsigned char> imageData;
+    unsigned w, h;
+
+    auto errorcode = lodepng::decode(imageData, w, h, inputFile, LCT_RGBA, 8);
+
+    if (errorcode)
     {
-        throw std::runtime_error("Could not load input file.");
+        std::stringstream message;
+        message << "Could not load input image. error:" << errorcode;
+        throw std::runtime_error(message.str());
     }
 
-    FILE* fp = fopen(outputFile.toStdString().c_str(), "wb");
+    std::cout << "w:" << w << " h:" << h << std::endl;
 
-    int16_t width = image.width();
-    int16_t height = image.height();
+    FILE* fp = fopen(outputFile.c_str(), "wb");
+
+    int16_t width = w;
+    int16_t height = h;
 
     fwrite(&width, 2, 1, fp);
     fwrite(&height, 2, 1, fp);
+
+    uint32_t* data = (uint32_t*)imageData.data();
 
     for (int y = 0; y < height; ++y)
     {
         for (int x = 0; x < width / 2; ++x)
         {
-            auto color1 = image.pixel(2 * x    ,y);
-            auto color2 = image.pixel(2 * x + 1,y);
+            auto color1 = rgba2rgb(data[w*y + 2*x]);
+            auto color2 = rgba2rgb(data[w*y + 2*x + 1]);
+
+            std::cout << "color1 r:" << (int)color1.r << " g:" << (int)color1.g << " b:" << (int)color1.b << std::endl;
 
             unsigned char pixel1 = getBestTandyColor(color1);
             unsigned char pixel2 = getBestTandyColor(color2);
@@ -107,8 +124,6 @@ void convertFile(QString inputFile, QString outputFile)
 int main(int argc, char *argv[])
 {
     try {
-        QCoreApplication a(argc, argv);
-
         if (argc != 3)
         {
             std::cerr << "Usage: " << argv[0] << " input_file output_file" << std::endl;
@@ -125,6 +140,3 @@ int main(int argc, char *argv[])
     }
 
 }
-
-
-
