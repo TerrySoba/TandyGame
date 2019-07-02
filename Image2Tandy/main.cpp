@@ -107,8 +107,6 @@ void convertFile(std::string inputFile, std::string outputFile)
             auto color1 = rgba2rgb(data[w*y + 2*x]);
             auto color2 = rgba2rgb(data[w*y + 2*x + 1]);
 
-            std::cout << "color1 r:" << (int)color1.r << " g:" << (int)color1.g << " b:" << (int)color1.b << std::endl;
-
             unsigned char pixel1 = getBestTandyColor(color1);
             unsigned char pixel2 = getBestTandyColor(color2);
 
