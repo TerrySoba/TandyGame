@@ -1,5 +1,7 @@
 #include "lodepng/lodepng.h"
 
+#include "tclap/CmdLine.h"
+
 #include <iostream>
 #include <exception>
 #include <stdio.h>
@@ -23,7 +25,7 @@ double colorDiff(
         const RGB& color2)
 {
     // very simplistic euclidean distance...
-    return std::sqrt(square(color1.r - color2.r) + square(color1.g - color2.g) + square(color1.b - color2.b));
+    return square(color1.r - color2.r) + square(color1.g - color2.g) + square(color1.b - color2.b);
 }
 
 static const std::vector<std::pair<char, RGB>> tandyColors =
@@ -74,12 +76,18 @@ RGB rgba2rgb(uint32_t rgba)
         };
 }
 
-void convertFile(std::string inputFile, std::string outputFile)
+struct Image
 {
-    std::vector<unsigned char> imageData;
-    unsigned w, h;
+    std::vector<uint8_t> data; // RGBA, 8bit per channel
+    unsigned int width, height;
+};
 
-    auto errorcode = lodepng::decode(imageData, w, h, inputFile, LCT_RGBA, 8);
+
+Image loadPngImage(const std::string& filename)
+{
+    Image image;
+
+    auto errorcode = lodepng::decode(image.data, image.width, image.height, filename, LCT_RGBA, 8);
 
     if (errorcode)
     {
@@ -88,32 +96,51 @@ void convertFile(std::string inputFile, std::string outputFile)
         throw std::runtime_error(message.str());
     }
 
-    std::cout << "w:" << w << " h:" << h << std::endl;
+    return image;
+}
 
-    FILE* fp = fopen(outputFile.c_str(), "wb");
 
-    int16_t width = w;
-    int16_t height = h;
+std::vector<uint8_t> convertToTandy(const Image& img)
+{
+    std::vector<uint8_t> tandyImage;
+    tandyImage.reserve(img.data.size() / 8);
 
-    fwrite(&width, 2, 1, fp);
-    fwrite(&height, 2, 1, fp);
+    uint32_t* data = (uint32_t*)img.data.data();
 
-    uint32_t* data = (uint32_t*)imageData.data();
-
-    for (int y = 0; y < height; ++y)
+    for (unsigned int y = 0; y < img.height; ++y)
     {
-        for (int x = 0; x < width / 2; ++x)
+        for (unsigned int x = 0; x < img.width / 2; ++x)
         {
-            auto color1 = rgba2rgb(data[w*y + 2*x]);
-            auto color2 = rgba2rgb(data[w*y + 2*x + 1]);
+            auto color1 = rgba2rgb(data[img.width*y + 2*x]);
+            auto color2 = rgba2rgb(data[img.width*y + 2*x + 1]);
 
             unsigned char pixel1 = getBestTandyColor(color1);
             unsigned char pixel2 = getBestTandyColor(color2);
 
             unsigned char pixel = pixel1 << 4 | pixel2;
-            fwrite(&pixel, 1, 1, fp);
+            tandyImage.push_back(pixel);
         }
     }
+
+    return tandyImage;
+}
+
+void convertFile(std::string inputFile, std::string outputFile)
+{
+    auto image = loadPngImage(inputFile);
+
+    std::cout << "w:" << image.width << " h:" << image.height << std::endl;
+
+    auto tandyImage = convertToTandy(image);
+
+    FILE* fp = fopen(outputFile.c_str(), "wb");
+
+    int16_t width = image.width;
+    int16_t height = image.height;
+
+    fwrite(&width, 2, 1, fp);
+    fwrite(&height, 2, 1, fp);
+    fwrite(tandyImage.data(), tandyImage.size(), 1, fp);
 
     fclose(fp);
 }
@@ -122,13 +149,20 @@ void convertFile(std::string inputFile, std::string outputFile)
 int main(int argc, char *argv[])
 {
     try {
-        if (argc != 3)
-        {
-            std::cerr << "Usage: " << argv[0] << " input_file output_file" << std::endl;
-            return 1;
-        }
 
-        convertFile(argv[1], argv[2]);
+        TCLAP::CmdLine cmd(
+            "This tool converts PNG images to images suitable for display on the Tandy1000 line of computers. "
+            "The input image is converted to a 16 color image in the process.",
+            ' ', "0.1");
+
+        TCLAP::UnlabeledValueArg<std::string> inputPath("input", "The input PNG image to be converted.", true, "", "PNG image");
+        cmd.add( inputPath );
+        TCLAP::UnlabeledValueArg<std::string> outputPath("output", "The output image.", true, "", "output image");
+        cmd.add( outputPath );
+        
+        cmd.parse(argc, argv);
+
+        convertFile(inputPath.getValue(), outputPath.getValue());
 
         return 0;
 
