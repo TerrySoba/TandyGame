@@ -50,12 +50,13 @@ Animation::Animation(const char* filename)
     fread(&m_width, 2, 1, fp);
     fread(&m_height, 2, 1, fp);
 
-    m_data = new char[m_width * m_height / 2];
+    m_data = new char[m_width * m_height];
 
-    fread(m_data, 1, m_width * m_height / 2, fp);
+    fread(m_data, 1, m_width * m_height, fp);
 
 	fclose(fp);
 }
+
 
 Animation::~Animation()
 {

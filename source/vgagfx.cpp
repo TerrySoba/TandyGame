@@ -1,4 +1,4 @@
-#include "tandygfx.h"
+#include "vgagfx.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -10,14 +10,14 @@
 #define inport(px) inpw(px)
 #define inportb(px) inp(px)
 
-#define TANDY_SCREEN_W 320L
-#define TANDY_SCREEN_H 200L
+#define SCREEN_W 320L
+#define SCREEN_H 200L
 
 
 extern void videoInit(void);
 #pragma aux videoInit =    \
     "mov ah, 00h"          \
-    "mov al, 09h"          \
+    "mov al, 13h"          \
     "int 10h"              \
     ;
 
@@ -42,9 +42,9 @@ void sortRects(std::vector<Rectangle>& rects)
 }
 
 
-TandyGfx::TandyGfx()
+VgaGfx::VgaGfx()
 {
-    long int screenBytes = TANDY_SCREEN_W * TANDY_SCREEN_H / 2;
+    long int screenBytes = SCREEN_W * SCREEN_H;
 
     m_backgroundImage = new char[screenBytes];
     m_screenBuffer = new char[screenBytes];
@@ -52,13 +52,13 @@ TandyGfx::TandyGfx()
     memset(m_backgroundImage, 0xff, screenBytes);
     memset(m_screenBuffer, 0x0, screenBytes);
 
-    Rectangle rect = {0,0,TANDY_SCREEN_W,TANDY_SCREEN_H};
+    Rectangle rect = {0, 0, SCREEN_W, SCREEN_H};
     m_dirtyRects.push_back(rect);
 
     videoInit();
 }
 
-TandyGfx::~TandyGfx()
+VgaGfx::~VgaGfx()
 {
     delete[] m_screenBuffer;
     delete[] m_backgroundImage;
@@ -71,27 +71,27 @@ TandyGfx::~TandyGfx()
     while (inportb(CGA_STATUS_REG) & VERTICAL_RETRACE_BIT); \
     while (!(inportb(CGA_STATUS_REG) & VERTICAL_RETRACE_BIT))
 
-#define LINE_BYTES 160L
+#define LINE_BYTES 320L
 
-static char far* screen[4] = {(char far*)(0xB8000000L), (char far*)(0xB8002000L), (char far*)(0xB8004000L), (char far*)(0xB8006000L)};
+static char far* screen = (char far*)(0xA0000000L);
 
-static char far* TandyGfx::getScreenLine(int line)
+static char far* VgaGfx::getScreenLine(int line)
 {
-    return screen[line & 3] + LINE_BYTES * (line >> 2);
+    return screen + LINE_BYTES * line;
 }
 
-char far* TandyGfx::getBackBufferLine(int line)
+char far* VgaGfx::getBackBufferLine(int line)
 {
     return m_screenBuffer + LINE_BYTES * line;
 }
 
-char far* TandyGfx::getBackgroundImageLine(int line)
+char far* VgaGfx::getBackgroundImageLine(int line)
 {
     return m_backgroundImage + LINE_BYTES * line;
 }
 
 
-void TandyGfx::vsync()
+void VgaGfx::vsync()
 {
     waitForVsync();
 }
@@ -103,10 +103,10 @@ void TandyGfx::vsync()
 #define set_upper(x, val) ((x & 0x0f) | (val << 4))
 
 
-void TandyGfx::drawImage(const ImageBase& image, int targetX, int targetY)
+void VgaGfx::drawImage(const ImageBase& image, int targetX, int targetY)
 {
     const char* imageData = image.data();
-    const int imageLineBytes = image.width() / 2;
+    const int imageLineBytes = image.width();
 
     Rectangle rect = {
         targetX, targetY,
@@ -117,11 +117,11 @@ void TandyGfx::drawImage(const ImageBase& image, int targetX, int targetY)
     for (int y = 0; y < image.height(); ++y)
     {
         // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
-        memcpy(getBackBufferLine(y + targetY) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
+        memcpy(getBackBufferLine(y + targetY) + targetX, imageData + imageLineBytes * y, imageLineBytes);
     }
 }
 
-void TandyGfx::clear()
+void VgaGfx::clear()
 {
     for (int i = 0; i < m_dirtyRects.size(); ++i)
     {
@@ -132,13 +132,13 @@ void TandyGfx::clear()
             // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
             // memset(getScreenLine(y + rect.y) + rect.x / 2, 0, rect.width / 2);
             // memset(getBackBufferLine(y + rect.y) + rect.x / 2, 0, rect.width / 2);
-            memcpy(getBackBufferLine(y + rect.y) + rect.x / 2, getBackgroundImageLine(y + rect.y) + rect.x / 2, rect.width / 2);
+            memcpy(getBackBufferLine(y + rect.y) + rect.x, getBackgroundImageLine(y + rect.y) + rect.x, rect.width);
         }
     }
     m_dirtyRects.clear();
 }
 
-void TandyGfx::drawScreen()
+void VgaGfx::drawScreen()
 {   
     vsync();
 
@@ -150,7 +150,7 @@ void TandyGfx::drawScreen()
         for (int y = 0; y < rect.height; ++y)
         {
             // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
-            memcpy(getScreenLine(y + rect.y) + rect.x / 2, getBackBufferLine(y + rect.y) + rect.x / 2, rect.width / 2);
+            memcpy(getScreenLine(y + rect.y) + rect.x, getBackBufferLine(y + rect.y) + rect.x, rect.width);
         }
     }
 
@@ -158,12 +158,12 @@ void TandyGfx::drawScreen()
 }
 
 
-void TandyGfx::setBackground(const ImageBase& image)
+void VgaGfx::setBackground(const ImageBase& image)
 {
-    if (image.width() == TANDY_SCREEN_W &&
-        image.height() == TANDY_SCREEN_H)
+    if (image.width() == SCREEN_W &&
+        image.height() == SCREEN_H)
     {
-        memcpy(m_backgroundImage, image.data(), TANDY_SCREEN_W * TANDY_SCREEN_H / 2);
+        memcpy(m_backgroundImage, image.data(), SCREEN_W * SCREEN_H);
         // memcpy(m_screenBuffer, image.data(), image.width() * image.height() / 2);
         Rectangle rect = {
             0, 0,

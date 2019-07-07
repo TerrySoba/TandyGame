@@ -108,21 +108,17 @@ Image loadPngImage(const std::string& filename)
 std::vector<uint8_t> convertToTandy(const Image& img)
 {
     std::vector<uint8_t> tandyImage;
-    tandyImage.reserve(img.data.size() / 8);
+    tandyImage.reserve(img.data.size() / 4);
 
     uint32_t* data = (uint32_t*)img.data.data();
 
     for (unsigned int y = 0; y < img.height; ++y)
     {
-        for (unsigned int x = 0; x < img.width / 2; ++x)
+        for (unsigned int x = 0; x < img.width; ++x)
         {
-            auto color1 = rgba2rgb(data[img.width*y + 2*x]);
-            auto color2 = rgba2rgb(data[img.width*y + 2*x + 1]);
-
+            auto color1 = rgba2rgb(data[img.width*y + x]);
             unsigned char pixel1 = getBestTandyColor(color1);
-            unsigned char pixel2 = getBestTandyColor(color2);
-
-            unsigned char pixel = pixel1 << 4 | pixel2;
+            unsigned char pixel = pixel1;
             tandyImage.push_back(pixel);
         }
     }

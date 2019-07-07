@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "tandygfx.h"
+#include "vgagfx.h"
 #include "image.h"
 #include "animation.h"
 
@@ -12,13 +12,14 @@ int main()
 	try
 	{
 		Image img("rgb.img");
-		Image bg("out.img");
+		Image bg("vgabg.img");
 
 		Animation guy("guy.ani");
 
 		int y = 0;
 		
-		TandyGfx gfx;
+		// TandyGfx gfx;
+		VgaGfx gfx;
 		gfx.setBackground(bg);
 		for (;;)
 		{

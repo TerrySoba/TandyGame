@@ -1,4 +1,4 @@
-objects1 = main.o tandygfx.o image.o animation.o
+objects1 = main.o vgagfx.o image.o animation.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -10,8 +10,8 @@ all: $(dest)
 main.o:
   wpp $(coptions) main.cpp
 
-tandygfx.o:
-  wpp $(coptions) tandygfx.cpp
+vgagfx.o:
+  wpp $(coptions) vgagfx.cpp
 
 image.o:
   wpp $(coptions) image.cpp

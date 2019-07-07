@@ -8,3 +8,4 @@ Image2Tandy/Image2Tandy
 Image2Tandy/Makefile
 .vscode/
 Image2Tandy/build/
+*.err
