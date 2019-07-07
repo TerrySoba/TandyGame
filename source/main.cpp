@@ -2,53 +2,49 @@
 
 #include "tandygfx.h"
 #include "image.h"
+#include "animation.h"
 
 #include <stdio.h>
+#include <iostream>
 
 int main()
 {
-	TandyGfx gfx;
-
-	Image img("rgb.img");
-	Image bg("out.img");
-
-	int y = 0;
-
-
-	gfx.setBackground(bg);
-	for (;;)
+	try
 	{
-		// gfx.drawScreen();
-		// gfx.vsync();
-		gfx.clear();
-		
-		gfx.drawImage(img, 10 + y & 63, 10 + y & 63);
-		gfx.drawImage(img, 10 + y & 63, 10 + y & 127);
-		gfx.drawImage(img, 10 + y & 127, 10 + y & 63);
-		gfx.drawImage(img, 10 + y & 127, 10 + y & 127);
-		
-		gfx.drawScreen();
+		Image img("rgb.img");
+		Image bg("out.img");
 
-		++y;
+		Animation guy("guy.ani");
+
+		int y = 0;
+		
+		TandyGfx gfx;
+		gfx.setBackground(bg);
+		for (;;)
+		{
+			// gfx.drawScreen();
+			// gfx.vsync();
+			gfx.clear();
+			
+			// gfx.drawImage(img, 10, 10);
+
+			// gfx.drawImage(img, 10 + y & 63, 10 + y & 63);
+			// gfx.drawImage(img, 10 + y & 63, 10 + y & 127);
+			// gfx.drawImage(img, 10 + y & 127, 10 + y & 63);
+			// gfx.drawImage(img, 10 + y & 127, 10 + y & 127);
+			
+			gfx.drawImage(guy, 10 + y & 63, 10 + y & 63);
+
+			gfx.drawScreen();
+
+			++y;
+		}
+
 	}
-
-
-	// Image bg("out.img");
-	
-
-	
-
-	// gfx.setBackground(bg);
-
-	// for (;;)
-	// {
-	// 	++x;
-	// 	if (x > 100) x = 0;
-	// 	gfx.drawImage(img, x, 100);
-	// 	gfx.drawImage(img, 100, x);
-	//     gfx.drawScreen();
-	// }
-	
-	getchar();
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return 1;
+	}
 	return 0;
 }

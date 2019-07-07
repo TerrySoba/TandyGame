@@ -94,7 +94,7 @@ void TandyGfx::vsync()
 #define set_upper(x, val) ((x & 0x0f) | (val << 4))
 
 
-void TandyGfx::drawImage(const Image& image, int targetX, int targetY)
+void TandyGfx::drawImage(const ImageBase& image, int targetX, int targetY)
 {
     const char* imageData = image.data();
     const int imageLineBytes = image.width() / 2;
@@ -149,7 +149,7 @@ void TandyGfx::drawScreen()
 }
 
 
-void TandyGfx::setBackground(const Image& image)
+void TandyGfx::setBackground(const ImageBase& image)
 {
     if (image.width() == TANDY_SCREEN_W &&
         image.height() == TANDY_SCREEN_H)

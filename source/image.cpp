@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <stdexcept>
+
 Image::Image(const Image& image)
 {
     int s = image.width() * image.height() / 2;
@@ -25,8 +27,7 @@ Image::Image(const char* filename)
 
 	if (!fp)
 	{
-		printf("Could not open file \"%s\".\n", filename);
-        return;
+        throw std::runtime_error("Could not open file.");
 	}
 
     fread(&m_width, 2, 1, fp);

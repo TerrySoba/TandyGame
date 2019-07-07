@@ -1,9 +1,11 @@
 #ifndef _IMAGE_H_INC_
 #define _IMAGE_H_INC_
 
+#include "image_base.h"
+
 #include <stdint.h>
 
-class Image
+class Image : public ImageBase
 {
 public:
     Image(const Image& image);
@@ -12,15 +14,15 @@ public:
 
     Image& operator=(const Image& other);
 
-    ~Image();
+    virtual ~Image();
 
-    int width() const { return m_width; }
-	int height() const { return m_height; }
-	char* data() const { return m_data; }
+    virtual uint16_t width() const { return m_width; }
+	virtual uint16_t height() const { return m_height; }
+	virtual char* data() const { return m_data; }
 
 private:
-    int m_width;
-    int m_height;
+    uint16_t m_width;
+    uint16_t m_height;
     char* m_data;
 };
 

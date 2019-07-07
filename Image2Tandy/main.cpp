@@ -1,6 +1,10 @@
+#include "animation_loader.h"
+
 #include "lodepng/lodepng.h"
 
 #include "tclap/CmdLine.h"
+
+#include "nlohmann/json.hpp"
 
 #include <iostream>
 #include <exception>
@@ -8,6 +12,7 @@
 #include <cmath>
 #include <vector>
 #include <sstream>
+#include <optional>
 
 
 double square(double val)
@@ -125,10 +130,9 @@ std::vector<uint8_t> convertToTandy(const Image& img)
     return tandyImage;
 }
 
-void convertFile(std::string inputFile, std::string outputFile)
-{
-    auto image = loadPngImage(inputFile);
 
+void convertSingleImage(const Image& image, std::string outputFile)
+{
     std::cout << "w:" << image.width << " h:" << image.height << std::endl;
 
     auto tandyImage = convertToTandy(image);
@@ -145,6 +149,45 @@ void convertFile(std::string inputFile, std::string outputFile)
     fclose(fp);
 }
 
+void write16bit(uint16_t data, FILE* fp)
+{
+    fwrite(&data, 2, 1, fp);
+}
+
+void convertAnimation(const Image& image, const AnimationInfo& animationInfo, std::string outputFile)
+{
+    std::cout << "w:" << image.width << " h:" << image.height << std::endl;
+
+    auto tandyImage = convertToTandy(image);
+
+    FILE* fp = fopen(outputFile.c_str(), "wb");
+
+    fwrite("TANI", 1, 4, fp);
+
+    write16bit(animationInfo.frames.size(), fp); // frame count
+    for (auto frame : animationInfo.frames)
+    {
+        write16bit(frame.x, fp);                 // frame x offset
+        write16bit(frame.y, fp);                 // frame y offset
+        write16bit(frame.width, fp);             // frame width
+        write16bit(frame.height, fp);            // frame height
+        write16bit(frame.duration, fp);          // duration in milliseconds
+    }
+
+    write16bit(animationInfo.tags.size(), fp);   // tag count
+    for (auto tag : animationInfo.tags)
+    {
+        write16bit(tag.startFrame, fp);          // start frame
+        write16bit(tag.endFrame, fp);            // end frame
+    }
+
+    write16bit(image.width, fp);                 // image width
+    write16bit(image.height, fp);                // image height
+
+    fwrite(tandyImage.data(), tandyImage.size(), 1, fp);
+
+    fclose(fp);
+}
 
 int main(int argc, char *argv[])
 {
@@ -159,11 +202,27 @@ int main(int argc, char *argv[])
         cmd.add( inputPath );
         TCLAP::UnlabeledValueArg<std::string> outputPath("output", "The output image.", true, "", "output image");
         cmd.add( outputPath );
-        
+
+        TCLAP::ValueArg<std::string> jsonPath("j", "json", "JSON sprite sheet info. If used, an animation will be generated.", false, "", "json file" );
+        cmd.add( jsonPath );
+
+        TCLAP::ValueArg<std::string> animationTag("t", "animation-tag", "Tag to be used for animation. For single images this has no effect.", false, "", "json file" );
+        cmd.add( animationTag );
+
         cmd.parse(argc, argv);
 
-        convertFile(inputPath.getValue(), outputPath.getValue());
+        auto image = loadPngImage(inputPath.getValue());
 
+        if (jsonPath.isSet())
+        {
+            auto animationInfo = loadAnimation(jsonPath.getValue());
+            convertAnimation(image, animationInfo, outputPath.getValue());
+        }
+        else
+        {
+            convertSingleImage(image, outputPath.getValue());
+        }
+        
         return 0;
 
     } catch (std::exception& ex) {

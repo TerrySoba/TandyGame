@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "image.h"
+#include "image_base.h"
 
 struct Rectangle
 {
@@ -20,9 +20,9 @@ public:
 
 	void drawScreen();
 
-	void setBackground(const Image& image);
+	void setBackground(const ImageBase& image);
 
-	void drawImage(const Image& image, int x, int y);
+	void drawImage(const ImageBase& image, int x, int y);
 
 	void vsync();
 

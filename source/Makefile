@@ -1,4 +1,4 @@
-objects1 = main.o tandygfx.o image.o
+objects1 = main.o tandygfx.o image.o animation.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -15,6 +15,9 @@ tandygfx.o:
 
 image.o:
   wpp $(coptions) image.cpp
+
+animation.o:
+  wpp $(coptions) animation.cpp
 
 $(dest): $(objects1)
   %write game.lnk NAME   $@
