@@ -12,6 +12,7 @@ main.o:
 
 vgagfx.o:
   wpp $(coptions) vgagfx.cpp
+  # wdis vgagfx.o -s -l
 
 image.o:
   wpp $(coptions) image.cpp

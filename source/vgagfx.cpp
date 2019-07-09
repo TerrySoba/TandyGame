@@ -31,6 +31,59 @@ extern void videoInit(void);
 //        }
 // }
 
+
+// uint16_t segment(const char far* p)
+// {
+//     return (((int32_t)p) & 0xffff0000) >> 16;
+// }
+
+// uint16_t ptr(const char far* p)
+// {
+//     return (((int32_t)p) & 0x0000ffff);
+// }
+
+// // extern void myMemCopy(char far* dest, const char far* src, int16_t len);
+// extern void myMemCopy(char far* dest, const char far* src, uint16_t len)
+// {
+//     uint16_t destSeg = segment(dest);
+//     uint16_t destPtr = ptr(dest);
+//     uint16_t srcSeg = segment(src);
+//     uint16_t srcPtr = ptr(src);
+
+
+//     __asm{
+//         mov ax, len
+//         mov bx, destPtr
+//         mov ds, destSeg
+//         mov cx, 00102h
+//         copyloop:
+//         mov [bx], ch
+//         inc bx
+//         dec ax
+//         jnz copyloop
+//     }
+
+//     // uint16_t color = 0x0102;
+//     // __asm{
+//     //     mov ax, 0A000h
+//     //     mov ds, ax
+//     //     mov cx, color
+//     //     mov bx, 100
+//     //     mov [bx], cx
+//     // }
+// }
+
+// #pragma aux myMemCopy =    \
+//     "MOV AX, 0A000h" \
+//     "MOV DS, AX" \
+//     ";MOV CX, 00304h" \
+//     "MOV BX, 100 " \
+//     "MOV [BX], CX " \
+//     parm   [cx]  \
+//     ;
+
+
+
 int compareRectangles(const void* a, const void* b) {
    return ( ((Rectangle*)a)->y > ((Rectangle*)b)->y );
 }
@@ -75,21 +128,9 @@ VgaGfx::~VgaGfx()
 
 static char far* screen = (char far*)(0xA0000000L);
 
-static char far* VgaGfx::getScreenLine(int line)
-{
-    return screen + LINE_BYTES * line;
-}
-
-char far* VgaGfx::getBackBufferLine(int line)
-{
-    return m_screenBuffer + LINE_BYTES * line;
-}
-
-char far* VgaGfx::getBackgroundImageLine(int line)
-{
-    return m_backgroundImage + LINE_BYTES * line;
-}
-
+#define getScreenLine(line) (screen + LINE_BYTES * (line))
+#define getBackBufferLine(line) (m_screenBuffer + LINE_BYTES * (line))
+#define getBackgroundImageLine(line) (m_backgroundImage + LINE_BYTES * (line))
 
 void VgaGfx::vsync()
 {
@@ -116,8 +157,50 @@ void VgaGfx::drawImage(const ImageBase& image, int targetX, int targetY)
 
     for (int y = 0; y < image.height(); ++y)
     {
-        // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
         memcpy(getBackBufferLine(y + targetY) + targetX, imageData + imageLineBytes * y, imageLineBytes);
+    }
+}
+
+void VgaGfx::drawImageTransparent(const ImageBase& image, int targetX, int targetY, uint8_t transparentColor)
+{
+    const char* imageData = image.data();
+    const int imageLineBytes = image.width();
+
+    Rectangle rect = {
+        targetX, targetY,
+        image.width(), image.height()};
+    m_dirtyRects.push_back(rect);
+    m_undrawnRects.push_back(rect); 
+
+    for (int y = 0; y < image.height(); ++y)
+    {
+        char* dest = getBackBufferLine(y + targetY) + targetX;
+        const char* src  = imageData + imageLineBytes * y;
+
+        for (uint16_t x = 0; x < image.width(); ++x)
+        {
+            if (*src != transparentColor)
+            {
+                *dest++ = *src++; 
+            }
+            else
+            {
+                ++dest;
+                ++src;
+            }
+        }
+
+        // memcpy(getBackBufferLine(y + targetY) + targetX, imageData + imageLineBytes * y, imageLineBytes);
+        
+        // myMemCopy(getBackBufferLine(y + targetY) + targetX, imageData + imageLineBytes * y, imageLineBytes);
+        // myMemCopy(0x0202);
+
+        // for (int x = 0; x < image.width(); ++x)
+        // {
+        //     uint8_t pixel = *(imageData + imageLineBytes * y + x);
+        //     if (pixel != transparentColor)
+        //         line[targetX + x] = pixel;
+        // }
     }
 }
 

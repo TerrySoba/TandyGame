@@ -2,6 +2,7 @@
 *.o
 *.exe
 *.lnk
+*.lst
 compiler
 .qmake.stash
 Image2Tandy/Image2Tandy

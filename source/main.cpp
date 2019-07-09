@@ -34,7 +34,7 @@ int main()
 			// gfx.drawImage(img, 10 + y & 127, 10 + y & 63);
 			// gfx.drawImage(img, 10 + y & 127, 10 + y & 127);
 			
-			gfx.drawImage(guy, 10 + y & 63, 10 + y & 63);
+			gfx.drawImageTransparent(guy, 10 + y & 63, 10 + y & 63, 0);
 
 			gfx.drawScreen();
 
