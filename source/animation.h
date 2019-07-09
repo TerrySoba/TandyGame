@@ -19,7 +19,7 @@ struct FrameTag
     uint16_t startFrame, endFrame;
 };
 
-class Animation : public ImageBase
+class Animation
 {
 public:
     Animation(const char* filename);
@@ -27,17 +27,26 @@ public:
 
     uint16_t width() const;
 	uint16_t height() const;
-	char* data() const;
 
     void nextFrame();
     void useTag(uint16_t);
+
+    void draw(char* dest, uint16_t lineLength, uint16_t x, uint16_t y) const;
+
 private:
+    uint16_t m_imageWidth;
+    uint16_t m_imageHeight;
+
+
     uint16_t m_width;
     uint16_t m_height;
     char* m_data;
 
     std::vector<Frame> m_frames;
     std::vector<FrameTag> m_tags;
+    int m_currentFrame;
+    int m_minFrame;
+    int m_maxFrame;
 };
 
 #endif

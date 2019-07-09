@@ -12,15 +12,19 @@ int main()
 	try
 	{
 		Image img("rgb.img");
-		Image bg("vgabg.img");
+		Image bg("way.img");
 
 		Animation guy("guy.ani");
+		guy.useTag(1);
 
 		int y = 0;
 		
 		// TandyGfx gfx;
 		VgaGfx gfx;
 		gfx.setBackground(bg);
+		
+		int frames = 0;
+
 		for (;;)
 		{
 			// gfx.drawScreen();
@@ -34,11 +38,17 @@ int main()
 			// gfx.drawImage(img, 10 + y & 127, 10 + y & 63);
 			// gfx.drawImage(img, 10 + y & 127, 10 + y & 127);
 			
-			gfx.drawImageTransparent(guy, 10 + y & 63, 10 + y & 63, 0);
+			// gfx.drawImageTransparent(guy, 10 + y & 63, 10 + y & 63, 0);
+			if (y > 300) y = 0;
+
+			gfx.drawImage(guy, y, 79);
 
 			gfx.drawScreen();
 
+			++frames;
 			++y;
+
+			if (frames % 4 == 0) guy.nextFrame();
 		}
 
 	}

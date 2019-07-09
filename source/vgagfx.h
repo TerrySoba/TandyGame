@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "image_base.h"
+#include "animation.h"
 
 struct Rectangle
 {
@@ -22,6 +23,7 @@ public:
 
 	void setBackground(const ImageBase& image);
 
+	void drawImage(const Animation& image, int x, int y);
 	void drawImage(const ImageBase& image, int x, int y);
 	void drawImageTransparent(const ImageBase& image, int targetX, int targetY, uint8_t transparentColor);
 

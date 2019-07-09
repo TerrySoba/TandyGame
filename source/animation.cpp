@@ -47,14 +47,20 @@ Animation::Animation(const char* filename)
         m_tags.push_back(tag);
     }
     
-    fread(&m_width, 2, 1, fp);
-    fread(&m_height, 2, 1, fp);
+    fread(&m_imageWidth, 2, 1, fp);
+    fread(&m_imageHeight, 2, 1, fp);
 
-    m_data = new char[m_width * m_height];
+    m_data = new char[m_imageWidth * m_imageHeight];
 
-    fread(m_data, 1, m_width * m_height, fp);
+    fread(m_data, 1, m_imageWidth * m_imageHeight, fp);
 
 	fclose(fp);
+
+    
+    m_minFrame = 0;
+    m_maxFrame = frameCount - 1;
+    m_currentFrame = m_maxFrame;
+    nextFrame();
 }
 
 
@@ -73,17 +79,32 @@ uint16_t Animation::height() const
     return m_height;
 }
 
-char* Animation::data() const
-{
-    return m_data;
-}
-
 void Animation::nextFrame()
 {
-
+    m_currentFrame += 1;
+    if (m_currentFrame > m_maxFrame) m_currentFrame = m_minFrame;
+    m_width = m_frames[m_currentFrame].width;
+    m_height = m_frames[m_currentFrame].height;
 }
 
-void Animation::useTag(uint16_t)
+void Animation::useTag(uint16_t tag)
 {
+    if (tag >= m_tags.size()) return;
 
+    m_minFrame = m_tags[tag].startFrame;
+    m_maxFrame = m_tags[tag].endFrame;
+    m_currentFrame = m_minFrame;
+}
+
+void Animation::draw(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t targetY) const
+{
+    const Frame& frame = m_frames[m_currentFrame];
+    char* data = m_data;
+    for (int y = 0; y < frame.height; ++y)
+    {
+        memcpy(
+            dest + lineLength * (targetY + y) + targetX,
+            data + m_imageWidth * (frame.y + y)  + frame.x,
+            frame.width);
+    }
 }
