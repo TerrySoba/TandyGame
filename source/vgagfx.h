@@ -26,6 +26,7 @@ public:
 	void drawImage(const Animation& image, int x, int y);
 	void drawImage(const ImageBase& image, int x, int y);
 	void drawImageTransparent(const ImageBase& image, int targetX, int targetY, uint8_t transparentColor);
+	void drawImageTransparent(const Animation& image, int x, int y);
 
 	void vsync();
 

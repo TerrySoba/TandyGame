@@ -32,6 +32,7 @@ public:
     void useTag(uint16_t);
 
     void draw(char* dest, uint16_t lineLength, uint16_t x, uint16_t y) const;
+    void drawTransparent(char* dest, uint16_t lineLength, uint16_t x, uint16_t y) const;
 
 private:
     uint16_t m_imageWidth;

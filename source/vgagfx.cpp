@@ -155,6 +155,17 @@ void VgaGfx::drawImage(const Animation& image, int x, int y)
     image.draw(m_screenBuffer, LINE_BYTES, x, y);
 }
 
+void VgaGfx::drawImageTransparent(const Animation& image, int x, int y)
+{
+    Rectangle rect = {
+        x, y,
+        image.width(), image.height()};
+    m_dirtyRects.push_back(rect);
+    m_undrawnRects.push_back(rect);
+
+    image.drawTransparent(m_screenBuffer, LINE_BYTES, x, y);
+}
+
 void VgaGfx::drawImage(const ImageBase& image, int targetX, int targetY)
 {
     const char* imageData = image.data();

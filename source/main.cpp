@@ -42,6 +42,7 @@ int main()
 			if (y > 300) y = 0;
 
 			gfx.drawImage(guy, y, 79);
+			gfx.drawImageTransparent(guy, y, 100);
 
 			gfx.drawScreen();
 

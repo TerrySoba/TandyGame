@@ -108,3 +108,28 @@ void Animation::draw(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t
             frame.width);
     }
 }
+
+void Animation::drawTransparent(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t targetY) const
+{
+    const Frame& frame = m_frames[m_currentFrame];
+    char* data = m_data;
+    for (int y = 0; y < frame.height; ++y)
+    {
+        char* dst = dest + lineLength * (targetY + y) + targetX;
+        const char* src = data + m_imageWidth * (frame.y + y)  + frame.x;
+
+        for (int i = 0; i < frame.width; ++i)
+        {
+            if (*src != 0)
+            {
+                *dst++ = *src++;
+            }
+            else
+            {
+                ++dst;
+                ++src;
+            }
+            
+        }
+    }
+}
