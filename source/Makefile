@@ -1,4 +1,4 @@
-objects1 = main.o vgagfx.o image.o animation.o
+objects1 = main.o vgagfx.o image.o animation.o keyboard.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -19,6 +19,9 @@ image.o:
 
 animation.o:
   wpp $(coptions) animation.cpp
+
+keyboard.o:
+  wpp $(coptions) keyboard.cpp
 
 $(dest): $(objects1)
   %write game.lnk NAME   $@
