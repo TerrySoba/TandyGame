@@ -12,14 +12,15 @@ extern "C"
 /**
  * Returns addresses that are aligned to 16byte
  */
-static void* allignedMalloc(int size)
+static void* allignedMalloc(int size, void** origBlock = NULL)
 {
 	char* ptr = (char*)malloc(size + 16);
+	if (origBlock) *origBlock = (void*)ptr;
 	ptr += 16ul - ((uint32_t)ptr & 0xf);
 	return (void*)ptr;
 }
 
-int radLoadModule(const char* filename)
+void* radLoadModule(const char* filename)
 {
 	FILE* fp = fopen(filename, "rb");
 
@@ -30,10 +31,11 @@ int radLoadModule(const char* filename)
 	if (!fp)
 	{
         printf("Could not open file.");
-		return 0;
+		return NULL;
 	}
 
-	uint8_t* songData = (uint8_t*)allignedMalloc(len);
+	void* origBlock;
+	uint8_t* songData = (uint8_t*)allignedMalloc(len, &origBlock);
 	uint8_t* buf = songData;
 
 	while (!feof(fp))
@@ -47,8 +49,9 @@ int radLoadModule(const char* filename)
 	if (!radInitPlayer(songData))
 	{
 		printf("Could not initialize RAD player. Maybe file is corrupted.\n");
-		return 0;
+		free(origBlock);
+		return NULL;
 	}
 
-	return 1;
+	return origBlock;
 }

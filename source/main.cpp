@@ -77,7 +77,8 @@ void timerInit(void)
 
 int main()
 {
-	if (!radLoadModule("RASTER.RAD"))
+	void* radModule = radLoadModule("RASTER.RAD");
+	if (!radModule)
 	{
 		printf("Error loading module.");
 		return 1;
@@ -127,5 +128,7 @@ int main()
 		fprintf(stderr, "Exception: %s\n", e.what());
 		return 1;
 	}
+
+	free(radModule);
 	return 0;
 }

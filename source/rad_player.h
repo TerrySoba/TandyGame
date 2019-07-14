@@ -6,6 +6,6 @@ extern "C"
     extern void radPlayMusic();
 }
 
-int radLoadModule(const char* filename);
+void* radLoadModule(const char* filename);
 
 #endif
