@@ -1,4 +1,4 @@
-objects1 = main.o vgagfx.o image.o animation.o keyboard.o
+objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -23,9 +23,12 @@ animation.o:
 keyboard.o:
   wpp $(coptions) keyboard.cpp
 
+rad_player.o:
+  wpp $(coptions) rad_player.cpp
+
 $(dest): $(objects1)
   %write game.lnk NAME   $@
   %write game.lnk SYSTEM DOS
-  %write game.lnk FILE   {$(objects1)}
+  %write game.lnk FILE   {$(objects1) 3rd_party/rad_tracker/player_nasm.obj}
   wlink  @game.lnk
 

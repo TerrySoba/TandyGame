@@ -77,7 +77,7 @@ void __interrupt __far handleScancode( void )
             s_keyEsc = !(code & PRESS_MASK);
             break;
     }
-    
+
 }
 
 void initKeyboard()

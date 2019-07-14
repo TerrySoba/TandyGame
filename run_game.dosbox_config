@@ -92,7 +92,7 @@ cycledown=20
 # prebuffer: How many milliseconds of data to keep on top of the blocksize.
 
 nosound=false
-rate=44100
+rate=49716
 blocksize=1024
 prebuffer=20
 
@@ -133,9 +133,9 @@ irq=7
 dma=1
 hdma=5
 sbmixer=true
-oplmode=auto
-oplemu=default
-oplrate=44100
+oplmode=opl2
+oplemu=compat
+oplrate=49716
 
 [gus]
 #      gus: Enable the Gravis Ultrasound emulation.
@@ -240,7 +240,7 @@ ipx=false
 # Lines in this section will be run at startup.
 # You can put your MOUNT lines here.
 
-keyb gr
+# keyb gr
 mount c source
 c:
 game
