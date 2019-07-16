@@ -4,6 +4,7 @@
 *.lnk
 *.lst
 compiler
+release/
 .qmake.stash
 Image2Tandy/Image2Tandy
 Image2Tandy/Makefile

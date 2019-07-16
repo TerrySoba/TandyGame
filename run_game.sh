@@ -1,2 +1,2 @@
-dosbox -conf run_game.dosbox_config
+dosbox-x -conf run_game.dosbox_config
 

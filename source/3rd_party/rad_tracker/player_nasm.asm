@@ -218,6 +218,8 @@ irq_timer:
 test_module: incbin RAD_MODULE_NAME
 %endif
 
+	cpu 186
+
 ;²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²
 ; This routine initialises the player.
 ; IN:
@@ -225,7 +227,8 @@ test_module: incbin RAD_MODULE_NAME
 ; OUT:
 ;	Carry	- set on error (such as invalid module)
 ;ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-InitPlayer:	pusha
+InitPlayer:	
+		pusha
 
 		call	EndPlayer	; clear Adlib ready for tune
 

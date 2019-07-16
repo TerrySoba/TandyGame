@@ -1,0 +1,5 @@
+game.exe
+guy.ani
+rgb.img
+way.img
+RASTER.RAD

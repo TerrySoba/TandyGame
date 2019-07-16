@@ -1,5 +1,7 @@
 %include "player_nasm.asm"
 
+    cpu 186
+
 global radInitPlayer_
 radInitPlayer_:
     shr ax, 4   ; ax contains offset
