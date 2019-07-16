@@ -186,7 +186,7 @@ rad_start:
 
 irq_timer:
 	; Prelude
-	pusha
+	my_push
 	push ds
 	push es
 	mov ax, cs
@@ -211,14 +211,34 @@ irq_timer:
 	out 0x20, al
 	pop es
 	pop ds
-	popa
+	my_popa
 	iret
 
 	align 16
 test_module: incbin RAD_MODULE_NAME
 %endif
 
-	cpu 186
+	cpu 8086
+
+%macro  my_pusha 0
+        push di 
+		push si 
+		push bp 
+		push sp 
+		push bx 
+		push dx 
+		push cx
+%endmacro
+
+%macro  my_popa 0
+		pop cx
+		pop dx
+		pop bx
+		pop bp ; this is NOT a mistake. This would be sp, but that is not restored.
+		pop bp
+		pop si
+		pop di
+%endmacro
 
 ;²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²
 ; This routine initialises the player.
@@ -228,7 +248,8 @@ test_module: incbin RAD_MODULE_NAME
 ;	Carry	- set on error (such as invalid module)
 ;ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 InitPlayer:	
-		pusha
+		; pusha
+		my_pusha
 
 		call	EndPlayer	; clear Adlib ready for tune
 
@@ -307,7 +328,7 @@ InitPlayer:
 		jmp	.lx			; successful initialisation
 
 	.err:	stc
-	.lx:	popa
+	.lx:	my_popa
 		ret
 
 
@@ -335,7 +356,8 @@ EndPlayer:	push	ax
 ; to maintain accurate music playback.  Refer to accompanying timer source-code
 ; for ways of providing a 50/sec timer service.
 ;ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
-PlayMusic:	pusha
+PlayMusic:
+		my_pusha
 		push	ds
 
 		mov	ds,[cs:ModSeg]	; segment of module
@@ -409,7 +431,7 @@ PlayMusic:	pusha
 	.lx:	call	UpdateNotes
 
 		pop	ds
-		popa
+		my_popa
 		ret
 ;ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ
 	; jump to line AX
@@ -508,13 +530,18 @@ PlayNote:	mov	di,cx
 		; note/octave are used as parameters then (instrument ignored)
 		mov	bx,ax
 		and	bx,15		; note
-		shr	al,4
+		shr	al,1
+		shr	al,1
+		shr	al,1
+		shr	al,1
 		and	ax,7		; octave
 		dec	bx		; we want 1..12
 		cmp	bx,12
 		jae	.lx		; not a valid note (probably KEY-OFF)
 
-		imul	ax,FreqRange	; scale octave
+		mov dx, FreqRange
+		imul dx	; scale octave
+
 		add	bx,bx
 		add	ax,[cs:NoteFreq+bx]	; add frequency of this note
 		sub	ax,FreqStart	; so range starts from zero
@@ -542,7 +569,9 @@ PlayNote:	mov	di,cx
 		mov	dl,ah
 		add	al,al
 		rcr	dl,1
-		shr	dl,3		; instrument no.
+		shr	dl,1		; instrument no.
+		shr	dl,1		; instrument no.
+		shr	dl,1		; instrument no.
 		jz	.la		; no instrument to load
 		call	LoadInst
 
@@ -553,7 +582,9 @@ PlayNote:	mov	di,cx
 		jz	.lb		; just a KEY-OFF so we're done
 
 		mov	bx,[cs:NoteFreq-2+bx]	; frequency of note (BX-1)
-		shr	al,3		; octave
+		shr	al,1		; octave
+		shr	al,1		; octave
+		shr	al,1		; octave
 		and	al,7*4
 		or	al,20h		; KEY-ON
 		or	al,bh		; Frequency high byte
@@ -662,7 +693,8 @@ UpdateNotes:	xor	bh,bh		; channel index
 		jz	.lb		; no slide for this channel
 		call	GetFreq
 		mov	ch,bl
-		sar	cx,8		; sign extend 8bit->16bit
+		mov cl, 8
+		sar	cx, cl		; sign extend 8bit->16bit
 		add	ax,cx
 		call	SetFreq
 
@@ -701,7 +733,8 @@ UpdateNotes:	xor	bh,bh		; channel index
 
 		; sign extend speed/direction
 		mov	dh,bl
-		sar	dx,8
+		mov cl, 8
+		sar	dx,cl
 
 		; get destination frequency
 		mov	cl,[cs:ToneSlideFreqL+si]
@@ -752,7 +785,8 @@ GetFreq:	mov	cl,[cs:OldA0+si]
 		and	ch,3		; mask to get high frequency
 		sub	cx,FreqStart
 		mov	al,[cs:OldB0+si]
-		shr	al,2
+		shr	al,1
+		shr	al,1
 		and	ax,7		; mask to get octave
 		mov	dx,FreqRange
 		mul	dx
@@ -778,7 +812,8 @@ SetFreq:	mov	cx,FreqRange
 
 		mov	ah,[cs:OldB0+si]
 		and	ah,11100000b	; keep old toggles
-		shl	al,2		; move octave to correct bit position
+		shl	al,1		; move octave to correct bit position
+		shl	al,1		; move octave to correct bit position
 		or	al,ah		; insert octave
 		or	al,dh		; insert high frequency
 		mov	ah,bh

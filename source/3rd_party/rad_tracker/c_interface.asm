@@ -1,10 +1,11 @@
 %include "player_nasm.asm"
 
-    cpu 186
+    cpu 8086
 
 global radInitPlayer_
 radInitPlayer_:
-    shr ax, 4   ; ax contains offset
+    mov cl, 4
+    shr ax, cl  ; ax contains offset
     add ax, dx  ; dx contains segment
     mov es, ax
 
