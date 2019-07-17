@@ -41,6 +41,8 @@ private:
 	char* m_screenBuffer;
 	std::vector<Rectangle> m_undrawnRects;
 	std::vector<Rectangle> m_dirtyRects;
+
+	uint8_t m_oldVideoMode;
 };
 
 

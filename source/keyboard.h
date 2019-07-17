@@ -15,6 +15,14 @@ extern volatile uint8_t s_keyAlt;
 extern volatile uint8_t s_keySpace;
 extern volatile uint8_t s_keyEsc;
 
-void initKeyboard();
+class Keyboard
+{
+public:
+    Keyboard();
+    ~Keyboard();
+private:
+    void __interrupt __far (*m_oldInterrupt)();
+};
+
 
 #endif

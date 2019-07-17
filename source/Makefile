@@ -1,4 +1,4 @@
-objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o
+objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -9,6 +9,9 @@ all: $(dest)
 
 main.o: 
   wpp $(coptions) main.cpp
+
+timer.o: 
+  wpp $(coptions) timer.cpp
 
 vgagfx.o:
   wpp $(coptions) vgagfx.cpp

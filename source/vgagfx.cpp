@@ -13,76 +13,17 @@
 #define SCREEN_W 320L
 #define SCREEN_H 200L
 
-
-extern void videoInit(void);
+extern void videoInit(uint16_t mode);
 #pragma aux videoInit =    \
-    "mov ah, 00h"          \
-    "mov al, 13h"          \
     "int 10h"              \
-    ;
+    parm [ax];
 
-
-// static void videoInit()
-// {
-//     __asm{
-//         mov ah, 00h
-//         mov al, 09h
-//         int 10h
-//        }
-// }
-
-
-// uint16_t segment(const char far* p)
-// {
-//     return (((int32_t)p) & 0xffff0000) >> 16;
-// }
-
-// uint16_t ptr(const char far* p)
-// {
-//     return (((int32_t)p) & 0x0000ffff);
-// }
-
-// // extern void myMemCopy(char far* dest, const char far* src, int16_t len);
-// extern void myMemCopy(char far* dest, const char far* src, uint16_t len)
-// {
-//     uint16_t destSeg = segment(dest);
-//     uint16_t destPtr = ptr(dest);
-//     uint16_t srcSeg = segment(src);
-//     uint16_t srcPtr = ptr(src);
-
-
-//     __asm{
-//         mov ax, len
-//         mov bx, destPtr
-//         mov ds, destSeg
-//         mov cx, 00102h
-//         copyloop:
-//         mov [bx], ch
-//         inc bx
-//         dec ax
-//         jnz copyloop
-//     }
-
-//     // uint16_t color = 0x0102;
-//     // __asm{
-//     //     mov ax, 0A000h
-//     //     mov ds, ax
-//     //     mov cx, color
-//     //     mov bx, 100
-//     //     mov [bx], cx
-//     // }
-// }
-
-// #pragma aux myMemCopy =    \
-//     "MOV AX, 0A000h" \
-//     "MOV DS, AX" \
-//     ";MOV CX, 00304h" \
-//     "MOV BX, 100 " \
-//     "MOV [BX], CX " \
-//     parm   [cx]  \
-//     ;
-
-
+extern uint8_t getCurrentVideoMode();
+#pragma aux getCurrentVideoMode =    \
+    "mov ax, 0fh"          \
+    "int 10h"              \
+    modify [ax]            \
+    value [al];
 
 int compareRectangles(const void* a, const void* b) {
    return ( ((Rectangle*)a)->y > ((Rectangle*)b)->y );
@@ -108,13 +49,16 @@ VgaGfx::VgaGfx()
     Rectangle rect = {0, 0, SCREEN_W, SCREEN_H};
     m_dirtyRects.push_back(rect);
 
-    videoInit();
+    m_oldVideoMode = getCurrentVideoMode();
+    videoInit(0x13);
 }
 
 VgaGfx::~VgaGfx()
 {
     delete[] m_screenBuffer;
     delete[] m_backgroundImage;
+
+    videoInit(m_oldVideoMode);
 }
 
 #define CGA_STATUS_REG 0x03DA

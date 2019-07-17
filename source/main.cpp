@@ -3,75 +3,16 @@
 #include "animation.h"
 #include "keyboard.h"
 #include "rad_player.h"
+#include "timer.h"
+#include "version.h"
 
-#include <dos.h>
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector>
-#include <conio.h>
 
-
-// #include <iostream>
-// #include <iomanip>
-
-// char binBuffer[9];
-
-// char* toBinary(uint8_t val)
-// {
-// 	binBuffer[8] = 0;
-
-// 	for (int i = 0; i < 8; ++i)
-// 		if ((1 << i) & val) binBuffer[i] = '1';
-// 		else binBuffer[i] = '0';
-
-// 	return binBuffer;
-// }
-
-
-static void __interrupt __far customTimerInterrupt()
+static void playMusic()
 {
 	radPlayMusic();
-
-	// signal interrupt done
-	__asm{
-    	"mov al,20H"
-    	"out 20H,al"
-	}
-}
-
-#define TIMER_INTERRUPT 0x08
-
-void timerInit(void)
-{
-    // The clock we're dealing with here runs at 1.193182mhz, so we
-    // just divide 1.193182 by the number of triggers we want per
-    // second to get our divisor.
-    uint32_t c = 1193181 / (uint32_t)50;
-
-    _dos_setvect(TIMER_INTERRUPT, customTimerInterrupt);
-
-    __asm{ "cli" }
-
-    // There's a ton of options encoded into this one byte I'm going
-    // to send to the PIT here so...
-
-    // 0x34 = 0011 0100 in binary.
-
-    // 00  = Select counter 0 (counter divisor)
-    // 11  = Command to read/write counter bits (low byte, then high
-    //       byte, in sequence).
-    // 010 = Mode 2 - rate generator.
-    // 0   = Binary counter 16 bits (instead of BCD counter).
-
-    outp(0x43, 0x34);
-
-    // Set divisor low byte.
-    outp(0x40, (uint8_t)(c & 0xff));
-
-    // Set divisor high byte.
-    outp(0x40, (uint8_t)((c >> 8) & 0xff));
-
-    __asm { "sti" }
 }
 
 
@@ -84,11 +25,11 @@ int main()
 		return 1;
 	}
 
-	timerInit();
-	initKeyboard();
-
 	try
 	{
+		DosTimer timer(playMusic, 50);
+		Keyboard keyboard;
+
 		Image img("rgb.img");
 		Image bg("way.img");
 
@@ -104,7 +45,7 @@ int main()
 		
 		int frames = 0;
 
-		for (;;)
+		while (!s_keyEsc)
 		{
 			gfx.clear();
 			gfx.drawImage(guy, x, y);
@@ -130,5 +71,9 @@ int main()
 	}
 
 	free(radModule);
+	radEndPlayer();
+
+	printf("Build date: %s\nGit revision: %s\nhttps://github.com/TerrySoba/TandyGame\n\nThanks for playing!\n", BUILD_DATE, GIT_HASH);
+
 	return 0;
 }

@@ -1,3 +1,5 @@
+#include "keyboard.h"
+
 #include <dos.h>
 #include <stdint.h>
 
@@ -80,7 +82,9 @@ void __interrupt __far handleScancode( void )
 
 }
 
-void initKeyboard()
+#define KEYBOARD_INTERRUPT 9
+
+Keyboard::Keyboard()
 {
     s_keyLeft = 0;
     s_keyRight = 0;
@@ -91,7 +95,11 @@ void initKeyboard()
     s_keySpace = 0;
     s_keyEsc = 0;
 
-    _dos_setvect(9, handleScancode);
+    m_oldInterrupt = _dos_getvect(KEYBOARD_INTERRUPT);
+    _dos_setvect(KEYBOARD_INTERRUPT, handleScancode);
+}
 
-    // setvect();
+Keyboard::~Keyboard()
+{
+    _dos_setvect(KEYBOARD_INTERRUPT, m_oldInterrupt);
 }

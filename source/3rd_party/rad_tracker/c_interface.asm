@@ -23,6 +23,11 @@ radPlayMusic_:
     call PlayMusic
     retf
 
+global radEndPlayer_
+radEndPlayer_:
+    call EndPlayer
+    retf
+
 
 
 
