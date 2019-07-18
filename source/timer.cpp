@@ -27,51 +27,37 @@ DosTimer::DosTimer(void (*timerFunction)(), int frequency)
     // The clock we're dealing with here runs at 1.193182mhz, so we
     // just divide 1.193182 by the number of triggers we want per
     // second to get our divisor.
-    uint32_t c = 1193181 / (uint32_t)frequency;
+    uint32_t c = 1193182 / (uint32_t)frequency;
+    uint16_t speed = c;
+
+    // set clock speed
+    __asm {
+        cli
+      	mov     bx,  speed //  set the clock speed to 60Hz (1193180/60)
+      	mov     al,  00110110b
+    	out     43h, al
+      	mov     al,  bl
+	    out     40h, al
+    	mov     al,  bh
+      	out     40h, al
+        sti
+    }
 
     m_oldInterrupt = _dos_getvect(TIMER_INTERRUPT);
     _dos_setvect(TIMER_INTERRUPT, customTimerInterrupt);
-
-    __asm{ "cli" }
-
-    // There's a ton of options encoded into this one byte I'm going
-    // to send to the PIT here so...
-
-    // 0x34 = 0011 0100 in binary.
-
-    // 00  = Select counter 0 (counter divisor)
-    // 11  = Command to read/write counter bits (low byte, then high
-    //       byte, in sequence).
-    // 010 = Mode 2 - rate generator.
-    // 0   = Binary counter 16 bits (instead of BCD counter).
-
-    outp(0x43, 0x34);
-
-    // Set divisor low byte.
-    outp(0x40, (uint8_t)(c & 0xff));
-
-    // Set divisor high byte.
-    outp(0x40, (uint8_t)((c >> 8) & 0xff));
-
-    __asm { "sti" }
 }
 
 DosTimer::~DosTimer()
 {
-    uint32_t c = 1193181 / (uint32_t)18;
-
-    __asm{ "cli" }
-
-    outp(0x43, 0x34);
-
-    // Set divisor low byte.
-    outp(0x40, (uint8_t)(c & 0xff));
-
-    // Set divisor high byte.
-    outp(0x40, (uint8_t)((c >> 8) & 0xff));
-
-    __asm { "sti" }
+    __asm {
+      	xor bx,  bx        // min rate 18.2 Hz when set to zero
+    	mov al,  00110110b
+      	out 43h, al
+	    mov al,  bl
+    	out 40h, al
+      	mov al,  bh
+	    out 40h, al
+    }
 
     _dos_setvect(TIMER_INTERRUPT, m_oldInterrupt);
 }
-

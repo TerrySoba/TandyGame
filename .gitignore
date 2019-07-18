@@ -11,3 +11,4 @@ Image2Tandy/Makefile
 .vscode/
 Image2Tandy/build/
 *.err
+source/version.h

@@ -13,10 +13,12 @@
 #define SCREEN_W 320L
 #define SCREEN_H 200L
 
-extern void videoInit(uint16_t mode);
+extern void videoInit(uint8_t mode);
 #pragma aux videoInit =    \
+    "mov ah, 0"            \
     "int 10h"              \
-    parm [ax];
+    modify [ax]            \
+    parm [al];
 
 extern uint8_t getCurrentVideoMode();
 #pragma aux getCurrentVideoMode =    \
@@ -58,7 +60,8 @@ VgaGfx::~VgaGfx()
     delete[] m_screenBuffer;
     delete[] m_backgroundImage;
 
-    videoInit(m_oldVideoMode);
+    // videoInit(m_oldVideoMode);
+    videoInit(0x03);
 }
 
 #define CGA_STATUS_REG 0x03DA
