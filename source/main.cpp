@@ -13,7 +13,7 @@ int main()
 {
 	try
 	{
-		RadPlayer player("RASTER.sRAD");
+		RadPlayer player("RASTER.RAD");
 		Keyboard keyboard;
 
 		Image img("rgb.img");
