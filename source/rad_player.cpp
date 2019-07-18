@@ -1,11 +1,16 @@
 #include "rad_player.h"
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdexcept>
+
 
 extern "C"
 {
+    extern void radPlayMusic();
+    extern void radEndPlayer();
 	extern uint16_t radInitPlayer(const uint8_t far* songData);
 }
 
@@ -54,4 +59,26 @@ void* radLoadModule(const char* filename)
 	}
 
 	return origBlock;
+}
+
+static void timerFunction()
+{
+	radPlayMusic();
+}
+
+RadPlayer::RadPlayer(const char* modulePath)
+{
+	m_songData = radLoadModule(modulePath);
+	if (!m_songData)
+	{
+		throw std::runtime_error("Error loading rad module.");
+	}
+	m_timer = new DosTimer(timerFunction, 50);
+}
+
+RadPlayer::~RadPlayer()
+{
+	delete m_timer;
+	radEndPlayer();
+	free(m_songData);
 }

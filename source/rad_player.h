@@ -1,13 +1,17 @@
 #ifndef RAD_PLAYER_H_INCLUDED
 #define RAD_PLAYER_H_INCLUDED
 
-extern "C"
+#include "timer.h"
+
+class RadPlayer
 {
-    extern void radPlayMusic();
-    extern void radEndPlayer();
-}
+public:
+    RadPlayer(const char* modulePath);
+    ~RadPlayer();
 
-void* radLoadModule(const char* filename);
-
+private:
+    DosTimer* m_timer;
+    void* m_songData;
+};
 
 #endif

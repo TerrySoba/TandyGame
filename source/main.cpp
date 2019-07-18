@@ -3,31 +3,17 @@
 #include "animation.h"
 #include "keyboard.h"
 #include "rad_player.h"
-#include "timer.h"
 #include "version.h"
-
 
 #include <stdio.h>
 #include <stdlib.h>
 
-static void playMusic()
-{
-	radPlayMusic();
-}
-
 
 int main()
 {
-	void* radModule = radLoadModule("RASTER.RAD");
-	if (!radModule)
-	{
-		printf("Error loading module.");
-		return 1;
-	}
-
 	try
 	{
-		DosTimer timer(playMusic, 50);
+		RadPlayer player("RASTER.sRAD");
 		Keyboard keyboard;
 
 		Image img("rgb.img");
@@ -69,9 +55,6 @@ int main()
 		fprintf(stderr, "Exception: %s\n", e.what());
 		return 1;
 	}
-
-	free(radModule);
-	radEndPlayer();
 
 	printf("Build date: %s\nGit revision: %s\nhttps://github.com/TerrySoba/TandyGame\n\nThanks for playing!\n", BUILD_DATE, GIT_HASH);
 
