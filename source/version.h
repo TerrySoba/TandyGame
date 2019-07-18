@@ -1,2 +1,0 @@
-#define BUILD_DATE "2019-07-17 22:17:57+02:00"
-#define GIT_HASH "6408bab0ea81e7a18ef73df657ffeda824409253"
