@@ -5,12 +5,7 @@
 
 #include "image_base.h"
 #include "animation.h"
-
-struct Rectangle
-{
-	int x,y;
-	int width, height;
-};
+#include "rectangle.h"
 
 
 class VgaGfx
@@ -31,12 +26,8 @@ public:
 	void vsync();
 
 	void clear();
+	
 private:
-
-	// static char far* getScreenLine(int line);
-	// char far* getBackBufferLine(int line);
-	// char far* getBackgroundImageLine(int line);
-
 	char* m_backgroundImage;
 	char* m_screenBuffer;
 	std::vector<Rectangle> m_undrawnRects;

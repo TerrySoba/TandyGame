@@ -28,4 +28,4 @@ mount c release
 c:
 game
 pause
-# exit
+exit

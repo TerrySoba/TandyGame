@@ -1,7 +1,9 @@
-FROM alpine:3.10
+FROM alpine:3.10.1
 
 RUN apk add --update \
+    make \
     nasm \
+    upx \
   && rm -rf /var/cache/apk/*
 
 ADD open_watcom.tar.gz .
@@ -11,4 +13,4 @@ ENV PATH=$WATCOM/binl:$PATH
 ENV EDPATH=$WATCOM/eddat
 ENV INCLUDE=$WATCOM/h
 
-CMD cd /build && wmake
+CMD cd /build && make

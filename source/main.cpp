@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 int main()
 {
 	try
@@ -56,7 +55,7 @@ int main()
 		return 1;
 	}
 
-	printf("Build date: %s\nGit revision: %s\nhttps://github.com/TerrySoba/TandyGame\n\nThanks for playing!\n", BUILD_DATE, GIT_HASH);
+	printf("Build date: %s\nhttps://github.com/TerrySoba/TandyGame\n\nThanks for playing!\n", BUILD_DATE);
 
 	return 0;
 }
