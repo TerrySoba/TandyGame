@@ -36,7 +36,7 @@ void Physics::calc()
     }
 }
 
-bool intersectRect(const Rectangle &r1, const Rectangle &r2)
+bool Physics::intersectRect(const Rectangle &r1, const Rectangle &r2)
 {
     return !(r2.x > r1.x + r1.width ||
              r2.x + r2.width < r1.x ||

@@ -25,6 +25,8 @@ public:
 
     void calc();
 
+    static bool intersectRect(const Rectangle &r1, const Rectangle &r2);
+
 public:
 
     std::vector<Rectangle> m_walls;

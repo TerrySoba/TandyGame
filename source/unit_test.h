@@ -5,10 +5,19 @@
 #include <string>
 #include <iostream>
 
-typedef int (*TestFunctionPtr)();
+enum TestResult
+{
+	TEST_FAILURE = 0,
+	TEST_SUCCESS = 1
+};
 
-extern std::map<std::string, TestFunctionPtr> s_tests;
+typedef void (*TestFunctionPtr)();
 
+
+
+extern TestResult s_currentTestResult;
+
+std::map<std::string, TestFunctionPtr>& getTests();
 void runTests();
 
 #define xstr(s) str(s)
@@ -18,20 +27,27 @@ void runTests();
 	class StaticRunner ## line \
 	{ \
 	public: \
-		StaticRunner ## line () { expr; } \
+		StaticRunner ## line () { expr; std::cout << "size: " << getTests().size() << std::endl; } \
 	}; \
 	static StaticRunner ## line staticRunner ## line;
 
 #define TEST(name) \
-	int test_ ## name (); \
-	RUN_STATIC(s_tests[xstr(name)] = &test_ ## name, name); \
-	int test_ ## name ()
+	void test_ ## name (); \
+	RUN_STATIC(getTests()[xstr(name)] = &test_ ## name, name); \
+	void test_ ## name ()
 
 #define ASSERT_TRUE(expr) \
 	if (!(expr)) \
 	{ \
 		std::cout << "Assert failed: ASSERT_TRUE("  xstr(expr)  ") " << __FILE__ << ":" << __LINE__ << std::endl; \
-		return 0; \
+		s_currentTestResult = TEST_FAILURE; \
+	}
+
+#define ASSERT_FALSE(expr) \
+	if ((expr)) \
+	{ \
+		std::cout << "Assert failed: ASSERT_FALSE("  xstr(expr)  ") " << __FILE__ << ":" << __LINE__ << std::endl; \
+		s_currentTestResult = TEST_FAILURE; \
 	}
 
 #endif
