@@ -19,6 +19,7 @@ public:
 
     int addActor(const Actor& rect);
     void setActor(int index, const Actor& rect);
+    void getActorPos(int index, int16_t& x, int16_t& y);
 
     void addWall(const Rectangle& rect);
 

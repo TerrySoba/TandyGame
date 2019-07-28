@@ -3,3 +3,4 @@ guy.ani
 rgb.img
 way.img
 RASTER.RAD
+CELT.RAD
