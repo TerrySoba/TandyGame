@@ -8,8 +8,7 @@
 
 struct Actor
 {
-    int16_t x,y;
-    int16_t width, height;
+    Rectangle rect;
     int16_t dx, dy;
 };
 

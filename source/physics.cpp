@@ -19,8 +19,8 @@ void Physics::addWall(const Rectangle &rect)
 void Physics::getActorPos(int index, int16_t& x, int16_t& y)
 {
     Actor& actor = m_actors[index];
-    x = actor.x;
-    y = actor.y;
+    x = actor.rect.x;
+    y = actor.rect.y;
 }
 
 void Physics::calc()
@@ -28,11 +28,21 @@ void Physics::calc()
     for (int i = 0; i < m_actors.size(); ++i)
     {
         Actor& actor = m_actors[i];
-        actor.x += actor.dx;
-        actor.y += actor.dy;
+        actor.rect.x += actor.dx;
+        actor.rect.y += actor.dy;
 
+        for (int n = 0; n < m_walls.size(); ++n)
+        {
+            if (intersectRect(m_walls[n], actor.rect))
+            {
+                actor.rect.x -= actor.dx;
+                actor.rect.y -= actor.dy;
+                actor.dy *= -1;
+                actor.dx *= -1;
+            }
+        }
 
-        actor.dy += 1;
+        actor.dy += 2;
     }
 }
 

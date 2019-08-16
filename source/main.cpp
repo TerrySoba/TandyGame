@@ -36,15 +36,15 @@ int main()
 
 		Physics physics;
 		Actor actor;
-		actor.x = 10 << 4;
-		actor.y = 100 << 4;
-		actor.width = guy.width();
-		actor.height = guy.height();
+		actor.rect.x = 10 << 4;
+		actor.rect.y = 100 << 4;
+		actor.rect.width = guy.width();
+		actor.rect.height = guy.height();
 		actor.dx = 0;// 30;
 		actor.dy = 0;// -50;
 		int player = physics.addActor(actor);
 
-		Rectangle ground = {0, 190, 320, 10};
+		Rectangle ground = {0, 150 << 4, 320 << 4, 10 << 4};
 
 		physics.addWall(ground);
 
@@ -71,7 +71,7 @@ int main()
 			if (s_keyDown) ++y;
 
 			if (frames % 4 == 0) guy.nextFrame();
-			// physics.calc();
+			physics.calc();
 		}
 
 	}
