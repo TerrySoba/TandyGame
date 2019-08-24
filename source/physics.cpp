@@ -56,11 +56,30 @@ void Physics::calc()
         {
             if (intersectRect(m_walls[n], actor.rect))
             {
-                actor.rect.x -= actor.dx;
-                actor.rect.y -= actor.dy;
-                actor.dy = 0;
-                // actor.dx = 0;
+                IntersectionType type = getIntersectionType(m_walls[n], actor.rect);
+                // actor.rect.x -= actor.dx;
+                // actor.rect.y -= actor.dy;
                 actor.jumpFrame = 0;
+                actor.dy = 0;
+
+                // switch(type)
+                // {
+                //     case INTERSECTION_TOP:
+                //         // falthrough
+                //     case INTERSECTION_BOTTOM:
+                //         actor.dy = 0;
+                //         actor.jumpFrame = 0;
+                //         break;
+                //     case INTERSECTION_LEFT:
+                //         // fallthrough
+                //     case INTERSECTION_RIGHT:
+                //         actor.dx = 0;
+                //     case INTERSECTION_OTHER:
+                //         actor.dy = 0;
+                //         actor.dx = 0;
+                //         break;
+                // }
+                
             }
         }
 
@@ -102,7 +121,28 @@ bool pointIntersect(const Rectangle& r, int16_t x, int16_t y)
 
 IntersectionType Physics::getIntersectionType(const Rectangle &r1, const Rectangle &r2)
 {
-    
+    bool topLeft = pointIntersect(r1, r2.x, r2.y);
+    bool topRight = pointIntersect(r1, r2.x + r2.width, r2.y);
+    bool bottomLeft = pointIntersect(r1, r2.x, r2.y + r2.height);
+    bool bottomRight = pointIntersect(r1, r2.x + r2.width, r2.y + r2.height);
+
+    if (bottomLeft && bottomRight && !topLeft && !topRight)
+    {
+        return INTERSECTION_TOP;
+    }
+    if (bottomLeft && !bottomRight && topLeft && !topRight)
+    {
+        return INTERSECTION_RIGHT;
+    }
+    if (!bottomLeft && bottomRight && !topLeft && topRight)
+    {
+        return INTERSECTION_LEFT;
+    }
+    if (!bottomLeft && !bottomRight && topLeft && topRight)
+    {
+        return INTERSECTION_BOTTOM;
+    }
+
 
     return INTERSECTION_OTHER;
 }

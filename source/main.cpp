@@ -45,7 +45,7 @@ int main()
 		actor.jumpFrame = 1;
 		int player = physics.addActor(actor);
 
-		Rectangle ground(0, PIXEL_TO_SUBPIXEL(150), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(10));
+		Rectangle ground(0, PIXEL_TO_SUBPIXEL(150), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(20));
 
 		physics.addWall(ground);
 
