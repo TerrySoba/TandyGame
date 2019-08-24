@@ -13,20 +13,20 @@ TestResult s_currentTestResult;
 
 void runTests()
 {
-    std::cout << "Running tests.\n" << std::endl;
+    std::cout << "Running " << getTests().size() << " tests." << std::endl;
     int i = 1;
     int failureCount = 0;
     for (std::map<std::string, TestFunctionPtr>::iterator it = getTests().begin(); it != getTests().end(); ++it)
     {
         std::string name = (it->first);
-        std::cout << "Running test \"" << name.c_str() << "\" (" << i++ << " of " << getTests().size() << ")" << std::endl;
+        std::cout << "[ RUN       ] " << name.c_str() << " (" << i++ << " of " << getTests().size() << ")" << std::endl;
         s_currentTestResult = TEST_SUCCESS;
         it->second();
         if (s_currentTestResult != TEST_SUCCESS)
         {
             ++failureCount;
         }
-        std::cout << ((s_currentTestResult == TEST_SUCCESS)?"SUCCESS":"FAILURE") << std::endl;
+        std::cout << "[      " << ((s_currentTestResult == TEST_SUCCESS)?"  OK":"FAIL") << " ] " << name.c_str() << std::endl;
     }
 
     std::cout << "Failed tests: " << failureCount << std::endl;

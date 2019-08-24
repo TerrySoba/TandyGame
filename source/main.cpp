@@ -42,9 +42,10 @@ int main()
 		actor.rect.height = guy.height();
 		actor.dx = 0;// 30;
 		actor.dy = 0;// -50;
+		actor.jumpFrame = 1;
 		int player = physics.addActor(actor);
 
-		Rectangle ground = {0, 150 << 4, 320 << 4, 10 << 4};
+		Rectangle ground(0, PIXEL_TO_SUBPIXEL(150), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(10));
 
 		physics.addWall(ground);
 
@@ -59,16 +60,28 @@ int main()
 
 			physics.getActorPos(player, playerX, playerY);
 
-			gfx.drawImageTransparent(guy, playerX >> 4, playerY >> 4);
+			gfx.drawImageTransparent(guy, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
 
 			gfx.drawScreen();
 
 			++frames;
 
-			if (s_keyRight) ++x;
-			if (s_keyLeft) --x;
+			if (s_keyRight)
+			{
+				physics.setActorSpeed(player, 16, 0);
+				++x;
+			}
+			
+			if (s_keyLeft)
+			{
+				physics.setActorSpeed(player, -16, 0);
+				--x;
+			}
 			if (s_keyUp) --y;
 			if (s_keyDown) ++y;
+
+			if (s_keyAlt) physics.startActorJump(player);
+
 
 			if (frames % 4 == 0) guy.nextFrame();
 			physics.calc();

@@ -48,7 +48,7 @@ VgaGfx::VgaGfx()
     memset(m_backgroundImage, 0xff, screenBytes);
     memset(m_screenBuffer, 0x0, screenBytes);
 
-    Rectangle rect = {0, 0, SCREEN_W, SCREEN_H};
+    Rectangle rect(0, 0, SCREEN_W, SCREEN_H);
     m_dirtyRects.push_back(rect);
 
     m_oldVideoMode = getCurrentVideoMode();
@@ -93,9 +93,9 @@ void VgaGfx::vsync()
 
 void VgaGfx::drawImage(const Animation& image, int x, int y)
 {
-    Rectangle rect = {
+    Rectangle rect(
         x, y,
-        image.width(), image.height()};
+        image.width(), image.height());
     m_dirtyRects.push_back(rect);
     m_undrawnRects.push_back(rect);
 
@@ -104,9 +104,9 @@ void VgaGfx::drawImage(const Animation& image, int x, int y)
 
 void VgaGfx::drawImageTransparent(const Animation& image, int x, int y)
 {
-    Rectangle rect = {
+    Rectangle rect(
         x, y,
-        image.width(), image.height()};
+        image.width(), image.height());
     m_dirtyRects.push_back(rect);
     m_undrawnRects.push_back(rect);
 
@@ -118,9 +118,9 @@ void VgaGfx::drawImage(const ImageBase& image, int targetX, int targetY)
     const char* imageData = image.data();
     const int imageLineBytes = image.width();
 
-    Rectangle rect = {
+    Rectangle rect(
         targetX, targetY,
-        image.width(), image.height()};
+        image.width(), image.height());
     m_dirtyRects.push_back(rect);
     m_undrawnRects.push_back(rect);
 
@@ -135,9 +135,9 @@ void VgaGfx::drawImageTransparent(const ImageBase& image, int targetX, int targe
     const char* imageData = image.data();
     const int imageLineBytes = image.width();
 
-    Rectangle rect = {
+    Rectangle rect(
         targetX, targetY,
-        image.width(), image.height()};
+        image.width(), image.height());
     m_dirtyRects.push_back(rect);
     m_undrawnRects.push_back(rect); 
 
@@ -217,9 +217,9 @@ void VgaGfx::setBackground(const ImageBase& image)
     {
         memcpy(m_backgroundImage, image.data(), SCREEN_W * SCREEN_H);
         // memcpy(m_screenBuffer, image.data(), image.width() * image.height() / 2);
-        Rectangle rect = {
+        Rectangle rect(
             0, 0,
-            image.width(), image.height()};
+            image.width(), image.height());
         m_dirtyRects.push_back(rect);
     }
 }

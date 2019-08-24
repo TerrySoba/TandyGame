@@ -13,8 +13,6 @@ enum TestResult
 
 typedef void (*TestFunctionPtr)();
 
-
-
 extern TestResult s_currentTestResult;
 
 std::map<std::string, TestFunctionPtr>& getTests();
@@ -27,7 +25,7 @@ void runTests();
 	class StaticRunner ## line \
 	{ \
 	public: \
-		StaticRunner ## line () { expr; std::cout << "size: " << getTests().size() << std::endl; } \
+		StaticRunner ## line () { expr; } \
 	}; \
 	static StaticRunner ## line staticRunner ## line;
 
@@ -41,6 +39,7 @@ void runTests();
 	{ \
 		std::cout << "Assert failed: ASSERT_TRUE("  xstr(expr)  ") " << __FILE__ << ":" << __LINE__ << std::endl; \
 		s_currentTestResult = TEST_FAILURE; \
+		return; \
 	}
 
 #define ASSERT_FALSE(expr) \
