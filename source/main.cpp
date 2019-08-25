@@ -62,6 +62,10 @@ int main()
 
 			gfx.drawImageTransparent(guy, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
 
+			gfx.drawText("ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789#", 10, 10);
+			gfx.drawText("What is your name, please?", 10, 20);
+			gfx.drawText("That is a secret! Name: Unknown.", 10, 30);
+
 			gfx.drawScreen();
 
 			++frames;

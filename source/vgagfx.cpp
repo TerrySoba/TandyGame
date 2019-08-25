@@ -6,6 +6,7 @@
 #include <dos.h>
 #include <conio.h>
 #include <stdio.h>
+#include "font_data.h"
 
 #define inport(px) inpw(px)
 #define inportb(px) inp(px)
@@ -91,7 +92,7 @@ void VgaGfx::vsync()
 #define set_upper(x, val) ((x & 0x0f) | (val << 4))
 
 
-void VgaGfx::drawImage(const Animation& image, int x, int y)
+void VgaGfx::drawImage(const Animation& image, int16_t x, int16_t y)
 {
     Rectangle rect(
         x, y,
@@ -102,7 +103,7 @@ void VgaGfx::drawImage(const Animation& image, int x, int y)
     image.draw(m_screenBuffer, LINE_BYTES, x, y);
 }
 
-void VgaGfx::drawImageTransparent(const Animation& image, int x, int y)
+void VgaGfx::drawImageTransparent(const Animation& image, int16_t x, int16_t y)
 {
     Rectangle rect(
         x, y,
@@ -113,7 +114,7 @@ void VgaGfx::drawImageTransparent(const Animation& image, int x, int y)
     image.drawTransparent(m_screenBuffer, LINE_BYTES, x, y);
 }
 
-void VgaGfx::drawImage(const ImageBase& image, int targetX, int targetY)
+void VgaGfx::drawImage(const ImageBase& image, int16_t targetX, int16_t targetY)
 {
     const char* imageData = image.data();
     const int imageLineBytes = image.width();
@@ -130,7 +131,7 @@ void VgaGfx::drawImage(const ImageBase& image, int targetX, int targetY)
     }
 }
 
-void VgaGfx::drawImageTransparent(const ImageBase& image, int targetX, int targetY, uint8_t transparentColor)
+void VgaGfx::drawImageTransparent(const ImageBase& image, int16_t targetX, int16_t targetY, uint8_t transparentColor)
 {
     const char* imageData = image.data();
     const int imageLineBytes = image.width();
@@ -158,18 +159,6 @@ void VgaGfx::drawImageTransparent(const ImageBase& image, int targetX, int targe
                 ++src;
             }
         }
-
-        // memcpy(getBackBufferLine(y + targetY) + targetX, imageData + imageLineBytes * y, imageLineBytes);
-        
-        // myMemCopy(getBackBufferLine(y + targetY) + targetX, imageData + imageLineBytes * y, imageLineBytes);
-        // myMemCopy(0x0202);
-
-        // for (int x = 0; x < image.width(); ++x)
-        // {
-        //     uint8_t pixel = *(imageData + imageLineBytes * y + x);
-        //     if (pixel != transparentColor)
-        //         line[targetX + x] = pixel;
-        // }
     }
 }
 
@@ -221,5 +210,29 @@ void VgaGfx::setBackground(const ImageBase& image)
             0, 0,
             image.width(), image.height());
         m_dirtyRects.push_back(rect);
+    }
+}
+
+
+
+
+void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
+{
+    int len = strlen(text);
+
+    Rectangle rect(
+        targetX, targetY,
+        len * CHAR_WIDTH, CHAR_HEIGHT);
+    // m_dirtyRects.push_back(rect);
+    // m_undrawnRects.push_back(rect);
+
+
+    for (int i = 0; i < len; ++i)
+    {
+        char* charImg = alphabet[getCharacterIndex(text[i])];
+        for (int y = 0; y < CHAR_HEIGHT; ++y)
+        {
+            memcpy(getBackBufferLine(targetY + y) + targetX + i * CHAR_WIDTH, charImg + CHAR_WIDTH * y, CHAR_WIDTH);
+        }
     }
 }

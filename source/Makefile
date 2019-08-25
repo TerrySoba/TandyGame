@@ -15,7 +15,7 @@ $(dest): _$(dest)
 	upx -9 --ultra-brute -f --8086 -o$(dest) _$(dest)
 
 main.o: vgagfx.h image.h animation.h keyboard.h rad_player.h version.h physics.h
-vgagfx.o: image_base.h animation.h rectangle.h
+vgagfx.o: image_base.h animation.h rectangle.h font_data.h
 image.o: image_base.h
 animation.o: image.h
 keyboard.o: 
