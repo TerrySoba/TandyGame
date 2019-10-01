@@ -16,7 +16,7 @@ int main()
 {
 	try
 	{
-		// RadPlayer music("CELT.RAD");
+		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 
 		Image img("rgb.img");
@@ -36,8 +36,8 @@ int main()
 
 		Physics physics;
 		Actor actor;
-		actor.rect.x = 10 << 4;
-		actor.rect.y = 100 << 4;
+		actor.rect.x = PIXEL_TO_SUBPIXEL(300);
+		actor.rect.y = PIXEL_TO_SUBPIXEL(30);
 		actor.rect.width = guy.width();
 		actor.rect.height = guy.height();
 		actor.dx = 0;// 30;
@@ -45,26 +45,37 @@ int main()
 		actor.jumpFrame = 1;
 		int player = physics.addActor(actor);
 
-		Rectangle ground(0, PIXEL_TO_SUBPIXEL(150), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(20));
+		Rectangle ground(0, PIXEL_TO_SUBPIXEL(80), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(20));
 
 		physics.addWall(ground);
 
 		int16_t playerX;
 		int16_t playerY;
 
+		gfx.clear();
+
+		char buf[255];
+
+		snprintf(buf, 255, "Build date: %s", BUILD_DATE);
+
+
+		gfx.drawText(buf, 10, 10);
+
+		// gfx.drawText("ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789#", 10, 10);
+		// gfx.drawText("What is your name, please?", 10, 20);
+		// gfx.drawText("That is a secret! Name: Unknown.", 10, 30);
+
 		while (!s_keyEsc)
 		{
 			gfx.clear();
-			gfx.drawImage(guy, x, y);
+			// gfx.drawImage(guy, x, y);
 			// gfx.drawImageTransparent(guy, x, 100);
 
 			physics.getActorPos(player, playerX, playerY);
 
 			gfx.drawImageTransparent(guy, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
 
-			gfx.drawText("ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789#", 10, 10);
-			gfx.drawText("What is your name, please?", 10, 20);
-			gfx.drawText("That is a secret! Name: Unknown.", 10, 30);
+		
 
 			gfx.drawScreen();
 

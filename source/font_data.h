@@ -273,9 +273,9 @@ char characterQuestionmark[] = {
 
 char character0[] = { 
      0, 15, 15,  0,  0,
+    15,  0, 15, 15,  0,
     15,  0,  0, 15,  0,
-    15, 15, 15, 15,  0,
-    15,  0,  0, 15,  0,
+    15, 15,  0, 15,  0,
      0, 15, 15,  0,  0,
      0,  0,  0,  0,  0,
 };
@@ -379,6 +379,24 @@ char characterColon[] = {
      0,  0,  0,  0,  0,
 };
 
+char characterPlus[] = { 
+     0,  0,  0,  0,  0,
+     0, 15,  0,  0,  0,
+    15, 15, 15,  0,  0,
+     0, 15,  0,  0,  0,
+     0,  0,  0,  0,  0,
+     0,  0,  0,  0,  0,
+};
+
+char characterMinus[] = { 
+     0,  0,  0,  0,  0,
+     0,  0,  0,  0,  0,
+    15, 15, 15,  0,  0,
+     0,  0,  0,  0,  0,
+     0,  0,  0,  0,  0,
+     0,  0,  0,  0,  0,
+};
+
 char characterUnknown[] = { 
     15, 15, 15, 15,  0,
     15,  0,  0, 15,  0,
@@ -388,6 +406,8 @@ char characterUnknown[] = {
      0,  0,  0,  0,  0,
 };
 
+
+
 char* alphabet[] = {
     characterA, characterB, characterC, characterD, characterE, characterF,
     characterG, characterH, characterI, characterJ, characterK, characterL,
@@ -396,7 +416,8 @@ char* alphabet[] = {
     characterY, characterZ, characterSpace, characterPoint, characterComma,
     characterQuestionmark, character0, character1, character2, character3,
     character4, character5, character6, character7, character8, character9,
-    characterExclamationmark, characterColon, characterUnknown
+    characterExclamationmark, characterColon, characterPlus, characterMinus,
+    characterUnknown,
 };
 
 int getCharacterIndex(char ch)
@@ -445,8 +466,10 @@ int getCharacterIndex(char ch)
         case '9': return 39;
         case '!': return 40;
         case ':': return 41;
+        case '+': return 42;
+        case '-': return 43;
     }
 
-    return 42;
+    return 44;
 }
 
