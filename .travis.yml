@@ -5,3 +5,4 @@ services:
 
 script:
   - bash build.sh
+  - zip -r game.zip release/
