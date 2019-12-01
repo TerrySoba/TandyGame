@@ -1,6 +1,3 @@
 # TandyGame
 
-Requires DOS and a VGA card.
-
-## Download:
-Current Build: [game.zip](game.zip)
+See [project homepage](https://terrysoba.github.io/TandyGame/).
