@@ -5,9 +5,12 @@ services:
 
 script:
   - bash build.sh
-  - zip -r game.zip release/
+  - mkdir deploy
+  - cp README.md deploy
+  - zip -r deploy/game.zip release/
 
 deploy:
   provider: pages:git
   token: $MY_GITHUB_TOKEN
   edge: true # opt in to dpl v2
+  local_dir: deploy
