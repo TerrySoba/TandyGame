@@ -14,3 +14,4 @@ deploy:
   token: $MY_GITHUB_TOKEN
   edge: true # opt in to dpl v2
   local_dir: deploy
+  keep_history: false
