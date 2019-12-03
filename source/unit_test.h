@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <stdio.h>
 
 enum TestResult
 {
@@ -16,7 +17,7 @@ typedef void (*TestFunctionPtr)();
 extern TestResult s_currentTestResult;
 
 std::map<std::string, TestFunctionPtr>& getTests();
-void runTests();
+void runTests(std::string junitFilename = "");
 
 #define xstr(s) str(s)
 #define str(s) #s
@@ -47,6 +48,7 @@ void runTests();
 	{ \
 		std::cout << "Assert failed: ASSERT_FALSE("  xstr(expr)  ") " << __FILE__ << ":" << __LINE__ << std::endl; \
 		s_currentTestResult = TEST_FAILURE; \
+		return; \
 	}
 
 #endif
