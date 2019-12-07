@@ -2,6 +2,6 @@
 
 int main()
 {
-   	runTests("junit.xml");
-    return 0;
+    bool success = runTests();
+    return success?0:1;
 }

@@ -17,7 +17,9 @@ typedef void (*TestFunctionPtr)();
 extern TestResult s_currentTestResult;
 
 std::map<std::string, TestFunctionPtr>& getTests();
-void runTests(std::string junitFilename = "");
+
+// returns true on success, false if at least one test failed
+bool runTests();
 
 #define xstr(s) str(s)
 #define str(s) #s

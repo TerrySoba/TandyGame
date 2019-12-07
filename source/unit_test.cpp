@@ -8,19 +8,11 @@ std::map<std::string, TestFunctionPtr>& getTests()
     return tests;
 }
 
-// std::map<std::string, TestFunctionPtr>* s_tests;
 TestResult s_currentTestResult;
 
-void runTests(std::string junitFilename)
+bool runTests()
 {
     FILE* junit = NULL;
-    if(!junitFilename.empty())
-    {
-       junit = fopen(junitFilename.c_str(), "wb");
-    }
-
-    if (junit) fprintf(junit, "<?xml version=\"1.0\" ?>\n<testsuites>\n<testsuite tests=\"%d\">\n", getTests().size());
-
     std::cout << "Running " << getTests().size() << " tests." << std::endl;
     int i = 1;
     int failureCount = 0;
@@ -29,23 +21,28 @@ void runTests(std::string junitFilename)
         std::string name = (it->first);
         std::cout << "[ RUN       ] " << name.c_str() << " (" << i++ << " of " << getTests().size() << ")" << std::endl;
         s_currentTestResult = TEST_SUCCESS;
-        it->second();
+        try
+        {
+            it->second();
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << "Unexpected exception:" << e.what() << '\n';
+            s_currentTestResult = TEST_FAILURE;
+        }
+        catch(...)
+        {
+            std::cout << "Unknown exception\n";
+            s_currentTestResult = TEST_FAILURE;
+        }
+        
         if (s_currentTestResult != TEST_SUCCESS)
         {
             ++failureCount;
         }
         std::cout << "[      " << ((s_currentTestResult == TEST_SUCCESS)?"  OK":"FAIL") << " ] " << name.c_str() << std::endl;
-        if (junit) fprintf(junit, "<testcase classname=\"test\" name=\"%s\">\n", name.c_str());
-        if (junit && s_currentTestResult != TEST_SUCCESS)
-        {
-            fprintf(junit, "<failure type=\"AssertionFailure\">See build log for details.</failure>\n");
-        }
-        if (junit) fprintf(junit, "</testcase>\n");
     }
 
     std::cout << "Failed tests: " << failureCount << std::endl;
-
-    if (junit) fprintf(junit, "</testsuite>\n</testsuites>\n");
-
-    if (junit) fclose(junit);
+    return (failureCount > 0);
 }
