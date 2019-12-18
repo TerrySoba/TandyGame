@@ -3,3 +3,6 @@ guy.ani
 rgb.img
 way.img
 CELT.RAD
+../images/gradient.tga
+../images/gradcomp.tga
+../images/tiles.tga

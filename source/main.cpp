@@ -5,6 +5,7 @@
 #include "rad_player.h"
 #include "version.h"
 #include "physics.h"
+#include "tga_image.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +21,10 @@ int main()
 		Keyboard keyboard;
 
 		Image img("rgb.img");
-		Image bg("way.img");
+		// Image bg("way.img");
+		TgaImage bg("tiles.tga");
+
+		// return 0;
 
 		Animation guy("guy.ani");
 		guy.useTag(1);

@@ -1,5 +1,5 @@
-objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o physics.o csv_reader.o
-objects_test = test_main.o unit_test.o physics.o physics_test.o csv_reader.o csv_reader_test.o 
+objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o
+objects_test = test_main.o unit_test.o physics.o physics_test.o csv_reader.o csv_reader_test.o tga_image.o tga_image_test.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -26,7 +26,10 @@ test_main.o: unit_test.h
 unit_test.o: unit_test.h
 physics_test.o: unit_test.h physics.h
 csv_reader_test.o: unit_test.h csv_reader.h
-csv_reader.o:
+csv_reader.o: csv_reader.h
+tga_image.o: tga_image.h
+tga_image_test.o: tga_image.h
+
 
 %.o : %.cpp
 	wpp $(coptions) $<
