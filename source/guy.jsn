@@ -1,0 +1,106 @@
+{ "frames": {
+   "guy_anim 0.ase": {
+    "frame": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 1.ase": {
+    "frame": { "x": 10, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 2.ase": {
+    "frame": { "x": 20, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 3.ase": {
+    "frame": { "x": 30, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   },
+   "guy_anim 4.ase": {
+    "frame": { "x": 40, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   },
+   "guy_anim 5.ase": {
+    "frame": { "x": 50, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   },
+   "guy_anim 6.ase": {
+    "frame": { "x": 60, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   },
+   "guy_anim 7.ase": {
+    "frame": { "x": 70, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   },
+   "guy_anim 8.ase": {
+    "frame": { "x": 80, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   },
+   "guy_anim 9.ase": {
+    "frame": { "x": 90, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   },
+   "guy_anim 10.ase": {
+    "frame": { "x": 100, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 50
+   }
+ },
+ "meta": {
+  "app": "https://github.com/LibreSprite/LibreSprite/",
+  "version": "1.0-dev",
+  "image": "/home/yoshi252/program_sources/TandyGame/images/guy.png",
+  "format": "I8",
+  "size": { "w": 110, "h": 15 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "WalkStart", "from": 0, "to": 2, "direction": "forward" },
+   { "name": "Loop", "from": 3, "to": 10, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Background", "opacity": 255, "blendMode": "normal" }
+  ]
+ }
+}

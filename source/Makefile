@@ -1,5 +1,5 @@
-objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o
-objects_test = test_main.o unit_test.o physics.o physics_test.o csv_reader.o csv_reader_test.o tga_image.o tga_image_test.o
+objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o json.o cJSON.o
+objects_test = test_main.o unit_test.o physics.o physics_test.o csv_reader.o csv_reader_test.o tga_image.o tga_image_test.o json.o json_test.o cJSON.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -29,7 +29,12 @@ csv_reader_test.o: unit_test.h csv_reader.h
 csv_reader.o: csv_reader.h
 tga_image.o: tga_image.h
 tga_image_test.o: tga_image.h
+json.o: json.h
+json_test.o: json.h
 
+
+cJSON.o: 3rd_party/cJSON/cJSON.h
+	wpp $(coptions) 3rd_party/cJSON/cJSON.c
 
 %.o : %.cpp
 	wpp $(coptions) $<
