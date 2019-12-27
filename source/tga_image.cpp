@@ -54,13 +54,13 @@ TgaImage::TgaImage(const char* filename)
         throw std::runtime_error("Invalid image format.");
     }
 
-    uint16_t palleteEntrySize = (colorMapDepth == 15)? 16 : colorMapDepth;
+    uint16_t paletteEntrySize = (colorMapDepth == 15)? 16 : colorMapDepth;
 
     // we ignore id data, so seek over it
     fseek(fp, idLength, SEEK_CUR);
 
     // seek over color palette for now
-    fseek(fp, (uint32_t)(palleteEntrySize / 8) * (uint32_t)colorMapLength, SEEK_CUR);
+    fseek(fp, (uint32_t)(paletteEntrySize / 8) * (uint32_t)colorMapLength, SEEK_CUR);
 
     if (bitsPerPixel != 8)
     {

@@ -12,3 +12,4 @@ Image2Tandy/Makefile
 Image2Tandy/build/
 *.err
 source/version.h
+Png2Tga/build
