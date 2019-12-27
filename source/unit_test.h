@@ -45,6 +45,14 @@ bool runTests();
 		return; \
 	}
 
+#define ASSERT_THROW(expr, expected_exception) \
+	try { \
+		expr; \
+		std::cout << "Assert failed: ASSERT_THROW("  xstr(expr)  ") but actually it did not throw. " << __FILE__ << ":" << __LINE__ << std::endl; \
+		s_currentTestResult = TEST_FAILURE; \
+		return; \
+	} catch (const expected_exception&)	{}
+
 #define ASSERT_FALSE(expr) \
 	if ((expr)) \
 	{ \

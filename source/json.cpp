@@ -57,6 +57,66 @@ JsonValue::JsonValue(cJSON* data) :
 {
 }
 
+int JsonValue::size()
+{
+    if (isArray() || isObject())
+        return cJSON_GetArraySize(m_data);
+    else
+        return 0;
+}
+
+JsonValue JsonValue::at(int pos)
+{
+    cJSON* res = cJSON_GetArrayItem(m_data, pos);
+    if (!res)
+    {
+        throw std::runtime_error("Index out of range.");
+    }
+    return JsonValue(res);
+}
+
+JsonValue JsonValue::at(const char* name)
+{
+    cJSON* res = cJSON_GetObjectItemCaseSensitive(m_data, name);
+    if (!res)
+    {
+        throw std::runtime_error("Invalid object key.");
+    }
+    return JsonValue(res);
+}
+
+std::string JsonValue::keyString()
+{
+    return m_data->string;
+}
+
+std::string JsonValue::toString()
+{
+    if (!isString())
+    {
+        throw std::runtime_error("Not a string.");
+    }
+    return m_data->valuestring;
+}
+
+int JsonValue::toInt()
+{
+    if (!isNumber())
+    {
+        throw std::runtime_error("Not a number.");
+    }
+    return m_data->valueint;
+}
+
+double JsonValue::toDouble()
+{
+    if (!isNumber())
+    {
+        throw std::runtime_error("Not a number.");
+    }
+    return m_data->valuedouble;
+}
+
 bool JsonValue::isInvalid()
 {
     return cJSON_IsInvalid(m_data);

@@ -1,6 +1,8 @@
 #ifndef JSON_H_INCLUDED
 #define JSON_H_INCLUDED
 
+#include <string>
+
 // forward declare
 struct cJSON;
 
@@ -18,8 +20,17 @@ public:
     bool isString(); 
     bool isArray();  
     bool isObject(); 
-    bool isRaw();    
+    bool isRaw();
 
+    int size();
+    JsonValue at(int pos);
+    JsonValue at(const char* name);
+
+    std::string keyString();
+    std::string toString();
+    int toInt();
+    double toDouble();
+    
 private:
     cJSON* m_data;
 };
