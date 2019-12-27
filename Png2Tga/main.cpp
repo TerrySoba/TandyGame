@@ -138,7 +138,94 @@ void write8bit(uint8_t data, FILE* fp)
 }
 
 
-void convertToTga(const Image& image, std::string outputFile)
+struct Chunk
+{
+    bool isRleChunk;
+    std::vector<uint8_t> data;
+};
+
+
+bool isSameRle(const Chunk& a, const Chunk& b)
+{
+    if (!a.isRleChunk || !b.isRleChunk) return false;
+    if (a.data.size() == 0 || b.data.size() == 0) return false;
+    return (a.data[0] == b.data[0]);
+}
+
+/**
+ * Compress data using run length encoding (RLE).
+ * Currently the implementation is VERY inefficient.
+ */
+void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
+{
+    std::vector<Chunk> chunks;
+
+    // initialize chunks with single bytes of data
+    for (auto ch : data)
+    {
+        chunks.push_back(Chunk({true, {ch}}));
+    }
+
+    // merge RLE chunks that are the same
+    for (size_t i = 0; i < chunks.size() - 1; ++i)
+    {
+        if (isSameRle(chunks[i], chunks[i + 1]) &&
+            chunks[i].data.size() + chunks[i + 1].data.size() < 127) // max chunk size is 127 bytes
+        {
+            // merge RLE blocks
+            auto newData = chunks[i].data;
+            newData.insert(newData.end(), chunks[i + 1].data.begin(), chunks[i + 1].data.end());
+            chunks[i] = Chunk({true, newData});
+            chunks.erase(chunks.begin() + i + 1);
+            --i;
+        }
+    }
+
+    // all chunks that are smaller than 3 elements should not be RLE chunks,
+    // so we mark them as not being RLE chunks
+    for (size_t i = 0; i < chunks.size(); ++i)
+    {
+        if (chunks[i].data.size() < 3)
+        {
+            chunks[i].isRleChunk = false;
+        }
+    }
+
+    // now merge non RLE chunks
+    for (size_t i = 0; i < chunks.size() - 1; ++i)
+    {
+        if (!chunks[i].isRleChunk && !chunks[i + 1].isRleChunk &&
+            chunks[i].data.size() + chunks[i + 1].data.size() < 127) // max chunk size is 127 bytes
+        {
+            // merge chunk blocks
+            auto newData = chunks[i].data;
+            newData.insert(newData.end(), chunks[i + 1].data.begin(), chunks[i + 1].data.end());
+            chunks[i] = Chunk({false, newData});
+            chunks.erase(chunks.begin() + i + 1);
+            --i;
+        }
+    }
+
+    // now write chunks to file
+    for (auto &chunk : chunks)
+    {
+        auto header = (chunk.data.size() - 1);
+        if (chunk.isRleChunk)
+            header |= 0x80;
+        write8bit(header, fp);
+
+        if (chunk.isRleChunk)
+        {
+            write8bit(chunk.data[0], fp);
+        }
+        else
+        {
+            fwrite(chunk.data.data(), 1, chunk.data.size(), fp);
+        }
+    }
+}
+
+void convertToTga(const Image& image, std::string outputFile, bool useRleCompression = true)
 {
     std::cout << "w:" << image.width << " h:" << image.height << std::endl;
 
@@ -148,7 +235,10 @@ void convertToTga(const Image& image, std::string outputFile)
 
     write8bit(0, fp); // id length in bytes
     write8bit(1, fp); // color map type (1 == color map / palette present)
-    write8bit(1, fp); // image type (1 == uncompressed color-mapped image)
+    if (useRleCompression)
+        write8bit(9, fp); // image type (9 == RLE compressed color-mapped image)
+    else
+        write8bit(1, fp); // image type (1 == uncompressed color-mapped image)
     write16bit(0, fp); // color map origin
     write16bit(rgbiColors.size(), fp); // color map length
     write8bit(24, fp); // color map depth (bits per palette entry)
@@ -170,8 +260,16 @@ void convertToTga(const Image& image, std::string outputFile)
     }
 
     // write image data
-    fwrite(rgbiImage.data(), 1, rgbiImage.size(), fp);
-
+    if (!useRleCompression)
+    {
+        // write uncompressed
+        fwrite(rgbiImage.data(), 1, rgbiImage.size(), fp);
+    }
+    else
+    {
+        doRleCompression(rgbiImage, fp);
+    }
+    
     fclose(fp);
 }
 
