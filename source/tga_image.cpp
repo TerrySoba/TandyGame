@@ -40,7 +40,7 @@ TgaImage::TgaImage(const char* filename)
     fread(&bitsPerPixel, 1, 1, fp);
     fread(&imageDescriptor, 1, 1, fp);
 
-    // make sure we have pallette data
+    // make sure we have palette data
     if (colorMapType != 1 )
     {
         printf("Color map type: %d\n", colorMapType);

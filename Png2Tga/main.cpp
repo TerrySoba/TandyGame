@@ -127,6 +127,17 @@ std::vector<uint8_t> convertToRgbi(const Image& img)
 }
 
 
+void write16bit(uint16_t data, FILE* fp)
+{
+    fwrite(&data, 2, 1, fp);
+}
+
+void write8bit(uint8_t data, FILE* fp)
+{
+    fwrite(&data, 1, 1, fp);
+}
+
+
 void convertToTga(const Image& image, std::string outputFile)
 {
     std::cout << "w:" << image.width << " h:" << image.height << std::endl;
@@ -135,20 +146,35 @@ void convertToTga(const Image& image, std::string outputFile)
 
     FILE* fp = fopen(outputFile.c_str(), "wb");
 
-    int16_t width = image.width;
-    int16_t height = image.height;
+    write8bit(0, fp); // id length in bytes
+    write8bit(1, fp); // color map type (1 == color map / palette present)
+    write8bit(1, fp); // image type (1 == uncompressed color-mapped image)
+    write16bit(0, fp); // color map origin
+    write16bit(rgbiColors.size(), fp); // color map length
+    write8bit(24, fp); // color map depth (bits per palette entry)
+    write16bit(0, fp); // x origin
+    write16bit(0, fp); // y origin
+    write16bit(image.width, fp); // image width
+    write16bit(image.height, fp); // image height
+    write8bit(8, fp); // bits per pixel
+    write8bit((1 << 5), fp); // image descriptor
 
-    fwrite(&width, 2, 1, fp);
-    fwrite(&height, 2, 1, fp);
-    fwrite(rgbiImage.data(), rgbiImage.size(), 1, fp);
+    // we do not have id data, so do not write any
+
+    // write palette data (3 byte per entry) BGR
+    for (auto entry : rgbiColors)
+    {
+        write8bit(entry.second.b, fp);
+        write8bit(entry.second.g, fp);
+        write8bit(entry.second.r, fp);
+    }
+
+    // write image data
+    fwrite(rgbiImage.data(), 1, rgbiImage.size(), fp);
 
     fclose(fp);
 }
 
-void write16bit(uint16_t data, FILE* fp)
-{
-    fwrite(&data, 2, 1, fp);
-}
 
 int main(int argc, char *argv[])
 {
