@@ -288,11 +288,14 @@ int main(int argc, char *argv[])
         TCLAP::UnlabeledValueArg<std::string> outputPath("output", "The output TGA image.", true, "", "output image");
         cmd.add( outputPath );
 
+        TCLAP::SwitchArg compress("c", "compress", "Use RLE to compress image data.");
+        cmd.add(compress);
+
         cmd.parse(argc, argv);
 
         auto image = loadPngImage(inputPath.getValue());
 
-        convertToTga(image, outputPath.getValue());
+        convertToTga(image, outputPath.getValue(), compress.getValue());
     
         return 0;
 
