@@ -1,6 +1,7 @@
 #ifndef JSON_H_INCLUDED
 #define JSON_H_INCLUDED
 
+#include <stdio.h>
 #include <string>
 
 // forward declare
@@ -38,15 +39,16 @@ private:
 class Json
 {
 public:
-    static Json fromFile(const char* filename);
-    static Json fromString(const char* data);
+    Json(const char* data);
+    Json(FILE* fp);
+    ~Json();
 
     JsonValue getRoot();
-    ~Json();
-private:
-
-    Json(const char* data);
     
+private:
+    Json(const Json&);
+    Json& operator=(const Json&);
+
 private:
     cJSON* jsonRoot;
 };

@@ -20,14 +20,16 @@ int main()
 		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 
-		Image img("rgb.img");
-		// Image bg("way.img");
-		TgaImage bg("tiles.tga");
+		// Image img("rgb.img");
+		Image bg("way.img");
+		// TgaImage bg("tiles.tga");
 
 		// return 0;
 
-		Animation guy("guy.ani");
-		guy.useTag(1);
+		// Animation guy("guy.ani");
+		Animation guy("guy.jsn", "guy.tga");
+		// guy.useTag(1);
+		guy.useTag("Loop");
 
 		int y = 100;
 		int x = 100;

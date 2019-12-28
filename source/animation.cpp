@@ -1,72 +1,59 @@
 #include "animation.h"
+#include "json.h"
 
 #include <stdio.h>
 #include <string.h>
 #include <stdexcept>
 
-Animation::Animation(const char* filename)
+
+Animation::Animation(const char* jsonFilename, const char* tgaFilename) :
+    m_image(tgaFilename)
 {
-    FILE* fp = fopen(filename, "rb");
 
-	if (!fp)
-	{
-        throw std::runtime_error("Could not open file.");
-	}
+    FILE* fp = fopen(jsonFilename, "rb");
+    Json json(fp);
+    fclose(fp);
 
-    char header[4];
-    fread(header, 4, 1, fp);
-
-    // check file header
-    if (memcmp(header, "TANI", 4) != 0)
+    JsonValue value = json.getRoot();
+    if (!value.isObject())
     {
-        throw std::runtime_error("Animation file is missing correct header.");
+        throw std::runtime_error("Invalid json file.");
     }
 
-    uint16_t frameCount;
-    fread(&frameCount, 2, 1, fp);
+    JsonValue frames = value.at("frames");
 
-    for (int i = 0; i < frameCount; ++i)
+    for (int i = 0; i < frames.size(); ++i)
     {
-        Frame frame;
-        fread(&frame.x, 2, 1, fp);
-        fread(&frame.y, 2, 1, fp);
-        fread(&frame.width, 2, 1, fp);
-        fread(&frame.height, 2, 1, fp);
-        fread(&frame.duration, 2, 1, fp);
-        m_frames.push_back(frame);
+        JsonValue frame = frames.at(i).at("frame");
+        int x = frame.at("x").toInt();
+        int y = frame.at("y").toInt();
+        int w = frame.at("w").toInt();
+        int h = frame.at("h").toInt();
+
+        int duration = frames.at(i).at("duration").toInt();
+
+        Frame f = {
+            x, y, w, h, duration
+        };
+
+        m_frames.push_back(f);
     }
 
-    uint16_t tagCount;
-    fread(&tagCount, 2, 1, fp);
-
-    for (int i = 0; i < tagCount; ++i)
+    JsonValue tags = value.at("meta").at("frameTags");
+    for (int i = 0; i < tags.size(); ++i)
     {
-        FrameTag tag;
-        fread(&tag.startFrame, 2, 1, fp);
-        fread(&tag.endFrame, 2, 1, fp);
-        m_tags.push_back(tag);
+        JsonValue tag = tags.at(i);
+        FrameTag frameTag;
+        frameTag.startFrame = tag.at("from").toInt();
+        frameTag.endFrame = tag.at("to").toInt();
+        frameTag.name = tag.at("name").toString();
+        m_tags.push_back(frameTag);
     }
-    
-    fread(&m_imageWidth, 2, 1, fp);
-    fread(&m_imageHeight, 2, 1, fp);
 
-    m_data = new char[m_imageWidth * m_imageHeight];
-
-    fread(m_data, 1, m_imageWidth * m_imageHeight, fp);
-
-	fclose(fp);
-
-    
     m_minFrame = 0;
-    m_maxFrame = frameCount - 1;
+    m_maxFrame = m_frames.size() - 1;
     m_currentFrame = m_maxFrame;
     nextFrame();
-}
-
-
-Animation::~Animation()
-{
-    delete m_data;
 }
 
 uint16_t Animation::width() const
@@ -96,15 +83,27 @@ void Animation::useTag(uint16_t tag)
     m_currentFrame = m_minFrame;
 }
 
+void Animation::useTag(const char* name)
+{
+    for (int i = 0; i < m_tags.size(); ++i)
+    {
+        if (m_tags[i].name == name)
+        {
+            useTag(i);
+            return;
+        }
+    }
+}
+
 void Animation::draw(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t targetY) const
 {
     const Frame& frame = m_frames[m_currentFrame];
-    char* data = m_data;
+    char* data = m_image.data();
     for (int y = 0; y < frame.height; ++y)
     {
         memcpy(
             dest + lineLength * (targetY + y) + targetX,
-            data + m_imageWidth * (frame.y + y)  + frame.x,
+            data + m_image.width() * (frame.y + y)  + frame.x,
             frame.width);
     }
 }
@@ -112,11 +111,11 @@ void Animation::draw(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t
 void Animation::drawTransparent(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t targetY) const
 {
     const Frame& frame = m_frames[m_currentFrame];
-    char* data = m_data;
+    char* data = m_image.data();
     for (int y = 0; y < frame.height; ++y)
     {
         char* dst = dest + lineLength * (targetY + y) + targetX;
-        const char* src = data + m_imageWidth * (frame.y + y)  + frame.x;
+        const char* src = data + m_image.width() * (frame.y + y)  + frame.x;
 
         for (int i = 0; i < frame.width; ++i)
         {

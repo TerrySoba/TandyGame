@@ -4,7 +4,10 @@
 
 TEST(JsonTest1)
 {
-    Json json = Json::fromFile("guy.jsn");
+    FILE* fp = fopen("guy.jsn", "rb");
+    Json json(fp);
+    
+    fclose(fp);
     JsonValue value = json.getRoot();
     ASSERT_FALSE(value.isInvalid());
     ASSERT_FALSE(value.isFalse());  
@@ -20,7 +23,7 @@ TEST(JsonTest1)
 
 TEST(JsonTest2)
 {
-    Json json = Json::fromString("12.5");
+    Json json("12.5");
     JsonValue value = json.getRoot();
     ASSERT_FALSE(value.isInvalid());
     ASSERT_FALSE(value.isFalse());  
@@ -38,7 +41,7 @@ TEST(JsonTest2)
 
 TEST(JsonTest3)
 {
-    Json json = Json::fromString("\"Hello\"");
+    Json json("\"Hello\"");
     JsonValue value = json.getRoot();
     ASSERT_FALSE(value.isInvalid());
     ASSERT_FALSE(value.isFalse());  
@@ -56,7 +59,7 @@ TEST(JsonTest3)
 
 TEST(JsonTest4)
 {
-    Json json = Json::fromString("[1,2,3]");
+    Json json("[1,2,3]");
     JsonValue value = json.getRoot();
     ASSERT_FALSE(value.isInvalid());
     ASSERT_FALSE(value.isFalse());  
@@ -75,7 +78,7 @@ TEST(JsonTest4)
 
 TEST(JsonTest5)
 {
-    Json json = Json::fromString("{\"test\" : 1, \"lala\" : \"value\"}");
+    Json json("{\"test\" : 1, \"lala\" : \"value\"}");
     JsonValue value = json.getRoot();
     ASSERT_FALSE(value.isInvalid());
     ASSERT_FALSE(value.isFalse());  
