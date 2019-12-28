@@ -4,9 +4,9 @@
 
 TEST(JsonTest1)
 {
-    FILE* fp = fopen("guy.jsn", "rb");
+    FILE* fp = fopen("..\\images\\guy.jsn", "rb");
     Json json(fp);
-    
+
     fclose(fp);
     JsonValue value = json.getRoot();
     ASSERT_FALSE(value.isInvalid());
