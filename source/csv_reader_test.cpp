@@ -22,3 +22,13 @@ TEST(CsvReaderTest2)
 
     ASSERT_TRUE(reader.get(10,38) == 622);
 }
+
+TEST(CsvReaderTest3)
+{
+    CsvReader reader("..\\images\\level1.csv");
+    ASSERT_TRUE(reader.width() == 20);
+    ASSERT_TRUE(reader.height() == 12);
+
+    ASSERT_TRUE(reader.get(0,11) == 122);
+    ASSERT_TRUE(reader.get(19,11) == 60);
+}

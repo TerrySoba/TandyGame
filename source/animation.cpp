@@ -9,11 +9,8 @@
 Animation::Animation(const char* jsonFilename, const char* tgaFilename) :
     m_image(tgaFilename)
 {
-
-    FILE* fp = fopen(jsonFilename, "rb");
-    Json json(fp);
-    fclose(fp);
-
+    Filename filename(jsonFilename);
+    Json json(filename);
     JsonValue value = json.getRoot();
     if (!value.isObject())
     {

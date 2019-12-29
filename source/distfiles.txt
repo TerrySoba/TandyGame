@@ -7,3 +7,4 @@ CELT.RAD
 ../images/tiles.tga
 ../images/guy.tga
 ../images/guy.jsn
+../images/level1.csv

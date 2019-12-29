@@ -36,11 +36,20 @@ private:
     cJSON* m_data;
 };
 
+class Filename
+{
+public:
+    Filename(const char* filename) : m_filename(filename) {}
+    const char* getFilename() const { return m_filename.c_str(); }
+private:
+    std::string m_filename;
+};
+
 class Json
 {
 public:
     Json(const char* data);
-    Json(FILE* fp);
+    Json(const Filename& filename);
     ~Json();
 
     JsonValue getRoot();

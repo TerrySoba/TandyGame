@@ -1,5 +1,5 @@
-objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o json.o cJSON.o
-objects_test = test_main.o unit_test.o physics.o physics_test.o csv_reader.o csv_reader_test.o tga_image.o tga_image_test.o json.o json_test.o cJSON.o
+objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o json.o cJSON.o level.o
+objects_test = test_main.o unit_test.o physics.o physics_test.o csv_reader.o csv_reader_test.o tga_image.o tga_image_test.o json.o json_test.o cJSON.o shared_ptr_test.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -31,6 +31,8 @@ tga_image.o: tga_image.h
 tga_image_test.o: tga_image.h
 json.o: json.h
 json_test.o: json.h
+shared_ptr_test.o: shared_ptr.h
+level.o: level.h image_base.h csv_reader.h
 
 
 cJSON.o: 3rd_party/cJSON/cJSON.h

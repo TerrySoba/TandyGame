@@ -6,6 +6,9 @@
 #include "version.h"
 #include "physics.h"
 #include "tga_image.h"
+#include "level.h"
+
+#include "shared_ptr.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,8 +24,10 @@ int main()
 		Keyboard keyboard;
 
 		// Image img("rgb.img");
-		Image bg("way.img");
-		// TgaImage bg("tiles.tga");
+		// Image bg("way.img");
+		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
+
+		Level level("level1.csv", tiles, 16, 16);
 
 		// return 0;
 
@@ -36,7 +41,7 @@ int main()
 		
 		// TandyGfx gfx;
 		VgaGfx gfx;
-		gfx.setBackground(bg);
+		gfx.setBackground(*tiles);
 		
 		int frames = 0;
 

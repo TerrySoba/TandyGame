@@ -17,13 +17,9 @@ Json::Json(const char* data)
     jsonRoot = cJSON_Parse(data);
 }
 
-Json::~Json()
+Json::Json(const Filename& filename)
 {
-    if (jsonRoot) cJSON_Delete(jsonRoot);
-}
-
-Json::Json(FILE* fp)
-{
+    FILE* fp = fopen(filename.getFilename(), "rb");
     if (!fp)
     {
         throw std::runtime_error("Could not open file.");
@@ -34,8 +30,14 @@ Json::Json(FILE* fp)
     fseek(fp, 0, SEEK_SET);
     std::vector<char> buffer(fileSize + 1);
     fread(&buffer[0], fileSize, 1, fp);
+    fclose(fp);
 
     jsonRoot = cJSON_Parse(&buffer[0]);
+}
+
+Json::~Json()
+{
+    if (jsonRoot) cJSON_Delete(jsonRoot);
 }
 
 JsonValue Json::getRoot()

@@ -10,6 +10,10 @@
 CsvReader::CsvReader(const char* path)
 {
     FILE* fp = fopen(path, "rb");
+    if (!fp)
+    {
+        throw std::runtime_error("Could not open CSV file.");
+    }
 
     std::vector<char> buf;
 

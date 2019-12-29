@@ -15,7 +15,6 @@ public:
 private:
     int m_height, m_width;
     std::vector<int> m_data;
-
 };
 
 #endif
