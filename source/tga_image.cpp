@@ -125,12 +125,12 @@ TgaImage::~TgaImage()
     free(m_data);
 }
 
-uint16_t TgaImage::width() const
+int16_t TgaImage::width() const
 {
     return m_width;
 }
 
-uint16_t TgaImage::height() const
+int16_t TgaImage::height() const
 {
     return m_height;
 }

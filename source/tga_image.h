@@ -12,14 +12,14 @@ public:
     TgaImage(const char* filename);
     ~TgaImage();
 
-    virtual uint16_t width() const;
-	virtual uint16_t height() const;
+    virtual int16_t width() const;
+	virtual int16_t height() const;
 	virtual char* data() const;
 
 private:
     int8_t* m_data;
-    uint16_t m_width;
-    uint16_t m_height;
+    int16_t m_width;
+    int16_t m_height;
 };
 
 

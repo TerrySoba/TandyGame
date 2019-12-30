@@ -6,15 +6,15 @@
 
 struct Frame
 {
-    uint16_t x,y;
-    uint16_t width, height;
-    uint16_t duration; // in milliseconds
+    int16_t x,y;
+    int16_t width, height;
+    int16_t duration; // in milliseconds
 };
 
 struct FrameTag
 {
     std::string name;
-    uint16_t startFrame, endFrame;
+    int16_t startFrame, endFrame;
 };
 
 struct AnimationInfo

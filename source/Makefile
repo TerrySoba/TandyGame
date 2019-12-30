@@ -1,5 +1,13 @@
-objects1 = main.o vgagfx.o image.o animation.o keyboard.o rad_player.o rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o json.o cJSON.o level.o
-objects_test = test_main.o unit_test.o physics.o physics_test.o csv_reader.o csv_reader_test.o tga_image.o tga_image_test.o json.o json_test.o cJSON.o shared_ptr_test.o
+objects_game_lib = \
+    vgagfx.o image.o animation.o keyboard.o rad_player.o \
+    rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o \
+    json.o cJSON.o level.o blit.o
+objects_game = \
+	main.o $(objects_game_lib)
+objects_test = \
+    $(objects_game_lib) test_main.o unit_test.o \
+	physics_test.o csv_reader_test.o tga_image_test.o json_test.o shared_ptr_test.o \
+	blit_test.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -14,11 +22,11 @@ all: $(dest) $(test)
 $(dest): _$(dest)
 	upx -9 --ultra-brute -f --8086 -o$(dest) _$(dest)
 
-main.o: vgagfx.h image.h animation.h keyboard.h rad_player.h version.h physics.h
+main.o: vgagfx.h image.h animation.h keyboard.h rad_player.h version.h physics.h json.h level.h blit.h
 vgagfx.o: image_base.h animation.h rectangle.h font_data.h
 image.o: image_base.h
 animation.o: image.h
-keyboard.o: 
+keyboard.o:
 rad_player.o: timer.h
 timer.o: 
 physics.o: rectangle.h
@@ -33,6 +41,7 @@ json.o: json.h
 json_test.o: json.h
 shared_ptr_test.o: shared_ptr.h
 level.o: level.h image_base.h csv_reader.h
+blit.o: rectangle.h image_base.h
 
 
 cJSON.o: 3rd_party/cJSON/cJSON.h
@@ -49,10 +58,10 @@ FORCE:
 version.h: FORCE
 	echo \#define BUILD_DATE \"$(BUILD_DATE)\" > version.h
 
-_$(dest): $(objects1)
+_$(dest): $(objects_game)
 	echo "NAME   $@" > game.lnk
 	echo "SYSTEM DOS" >> game.lnk
-	echo "FILE   {$(objects1)}" >> game.lnk
+	echo "FILE   {$(objects_game)}" >> game.lnk
 	wlink  @game.lnk
 
 $(test): $(objects_test)

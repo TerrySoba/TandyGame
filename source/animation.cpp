@@ -53,12 +53,12 @@ Animation::Animation(const char* jsonFilename, const char* tgaFilename) :
     nextFrame();
 }
 
-uint16_t Animation::width() const
+int16_t Animation::width() const
 {
     return m_width;
 }
 
-uint16_t Animation::height() const
+int16_t Animation::height() const
 {
     return m_height;
 }
@@ -71,7 +71,7 @@ void Animation::nextFrame()
     m_height = m_frames[m_currentFrame].height;
 }
 
-void Animation::useTag(uint16_t tag)
+void Animation::useTag(int16_t tag)
 {
     if (tag >= m_tags.size()) return;
 
@@ -92,7 +92,7 @@ void Animation::useTag(const char* name)
     }
 }
 
-void Animation::draw(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t targetY) const
+void Animation::draw(char* dest, int16_t lineLength, int16_t targetX, int16_t targetY) const
 {
     const Frame& frame = m_frames[m_currentFrame];
     char* data = m_image.data();
@@ -105,7 +105,7 @@ void Animation::draw(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t
     }
 }
 
-void Animation::drawTransparent(char* dest, uint16_t lineLength, uint16_t targetX, uint16_t targetY) const
+void Animation::drawTransparent(char* dest, int16_t lineLength, int16_t targetX, int16_t targetY) const
 {
     const Frame& frame = m_frames[m_currentFrame];
     char* data = m_image.data();

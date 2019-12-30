@@ -10,14 +10,14 @@
 
 struct Frame
 {
-    uint16_t x,y;
-    uint16_t width, height;
-    uint16_t duration; // in milliseconds
+    int16_t x,y;
+    int16_t width, height;
+    int16_t duration; // in milliseconds
 };
 
 struct FrameTag
 {
-    uint16_t startFrame, endFrame;
+    int16_t startFrame, endFrame;
     std::string name;
 };
 
@@ -26,19 +26,19 @@ class Animation
 public:
     Animation(const char* jsonFilename, const char* tgaFilename);
 
-    uint16_t width() const;
-	uint16_t height() const;
+    int16_t width() const;
+	int16_t height() const;
 
     void nextFrame();
-    void useTag(uint16_t);
+    void useTag(int16_t);
     void useTag(const char* name);
 
-    void draw(char* dest, uint16_t lineLength, uint16_t x, uint16_t y) const;
-    void drawTransparent(char* dest, uint16_t lineLength, uint16_t x, uint16_t y) const;
+    void draw(char* dest, int16_t lineLength, int16_t x, int16_t y) const;
+    void drawTransparent(char* dest, int16_t lineLength, int16_t x, int16_t y) const;
 
 private:
-    uint16_t m_width;
-    uint16_t m_height;
+    int16_t m_width;
+    int16_t m_height;
 
     std::vector<Frame> m_frames;
     std::vector<FrameTag> m_tags;

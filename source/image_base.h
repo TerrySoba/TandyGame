@@ -7,10 +7,16 @@ class ImageBase
 {
 public:
     virtual ~ImageBase() {}
-    virtual uint16_t width() const = 0;
-	virtual uint16_t height() const = 0;
+    virtual int16_t width() const = 0;
+	virtual int16_t height() const = 0;
 	virtual char* data() const = 0;
+
+
+    char* linePtr(int16_t line) const
+    {
+        return data() + (width() * line);
+    }
+
 };
 
 #endif
-

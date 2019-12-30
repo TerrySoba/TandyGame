@@ -16,13 +16,13 @@ public:
 
     virtual ~Image();
 
-    virtual uint16_t width() const { return m_width; }
-	virtual uint16_t height() const { return m_height; }
+    virtual int16_t width() const { return m_width; }
+	virtual int16_t height() const { return m_height; }
 	virtual char* data() const { return m_data; }
 
 private:
-    uint16_t m_width;
-    uint16_t m_height;
+    int16_t m_width;
+    int16_t m_height;
     char* m_data;
 };
 
