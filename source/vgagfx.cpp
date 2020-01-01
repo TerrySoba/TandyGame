@@ -122,54 +122,19 @@ void VgaGfx::draw(const Drawable& image, int16_t x, int16_t y)
     image.draw(img, x, y);
 }
 
-
-void VgaGfx::drawImage(const ImageBase& image, int16_t targetX, int16_t targetY)
+void VgaGfx::drawBackground(const Drawable& image, int16_t x, int16_t y)
 {
-    const char* imageData = image.data();
-    const int imageLineBytes = image.width();
-
     Rectangle rect(
-        targetX, targetY,
+        x, y,
         image.width(), image.height());
     m_dirtyRects.push_back(rect);
-    m_undrawnRects.push_back(rect);
+    // m_undrawnRects.push_back(rect);
 
-    for (int y = 0; y < image.height(); ++y)
-    {
-        memcpy(getBackBufferLine(y + targetY) + targetX, imageData + imageLineBytes * y, imageLineBytes);
-    }
+    MemoryImage img(SCREEN_W, SCREEN_H, m_backgroundImage);
+
+    image.draw(img, x, y);
 }
 
-void VgaGfx::drawImageTransparent(const ImageBase& image, int16_t targetX, int16_t targetY, uint8_t transparentColor)
-{
-    const char* imageData = image.data();
-    const int imageLineBytes = image.width();
-
-    Rectangle rect(
-        targetX, targetY,
-        image.width(), image.height());
-    m_dirtyRects.push_back(rect);
-    m_undrawnRects.push_back(rect); 
-
-    for (int y = 0; y < image.height(); ++y)
-    {
-        char* dest = getBackBufferLine(y + targetY) + targetX;
-        const char* src  = imageData + imageLineBytes * y;
-
-        for (uint16_t x = 0; x < image.width(); ++x)
-        {
-            if (*src != transparentColor)
-            {
-                *dest++ = *src++; 
-            }
-            else
-            {
-                ++dest;
-                ++src;
-            }
-        }
-    }
-}
 
 void VgaGfx::clear()
 {
@@ -229,9 +194,9 @@ void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
 {
     int len = strlen(text);
 
-    Rectangle rect(
-        targetX, targetY,
-        len * CHAR_WIDTH, CHAR_HEIGHT);
+    // Rectangle rect(
+    //     targetX, targetY,
+    //     len * CHAR_WIDTH, CHAR_HEIGHT);
     // m_dirtyRects.push_back(rect);
     // m_undrawnRects.push_back(rect);
 

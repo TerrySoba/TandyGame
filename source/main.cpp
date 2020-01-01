@@ -41,7 +41,10 @@ int main()
 		
 		// TandyGfx gfx;
 		VgaGfx gfx;
-		gfx.setBackground(*tiles);
+
+		gfx.drawBackground(level, 0, 0);
+
+		// gfx.setBackground(*tiles);
 		
 		int frames = 0;
 

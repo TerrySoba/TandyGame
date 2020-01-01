@@ -2,17 +2,19 @@
 #define LEVEL_H_INCLUDED
 
 #include "image_base.h"
-
+#include "drawable.h"
 #include "shared_ptr.h"
 
 #include <vector>
 
-class Level
+class Level : public Drawable
 {
 public:
     Level(const char* mapFilename, shared_ptr<ImageBase> tilesImage, int tileWidth, int tileHeight);
 
-    
+    virtual int16_t width() const;
+    virtual int16_t height() const;
+    virtual void draw(const ImageBase& target, int16_t x, int16_t y) const;
 
 private:
     shared_ptr<ImageBase> m_tilesImage;

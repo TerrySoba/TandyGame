@@ -40,7 +40,7 @@ tga_image_test.o: tga_image.h
 json.o: json.h
 json_test.o: json.h
 shared_ptr_test.o: shared_ptr.h
-level.o: level.h image_base.h csv_reader.h drawable.h
+level.o: level.h image_base.h csv_reader.h drawable.h blit.h
 blit.o: rectangle.h image_base.h
 
 

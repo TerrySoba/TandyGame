@@ -62,6 +62,11 @@ public:
         return *m_storage->ptr;
     }
 
+    const ValueT& operator*() const
+    {
+        return *m_storage->ptr;
+    }
+
 private:
     void delete_storage()
     {
