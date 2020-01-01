@@ -84,7 +84,7 @@ int main()
 
 			physics.getActorPos(player, playerX, playerY);
 
-			gfx.drawImageTransparent(guy, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
+			gfx.draw(guy, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
 
 		
 

@@ -3,6 +3,7 @@
 
 #include "tga_image.h"
 #include "image.h"
+#include "drawable.h"
 
 #include <stdint.h>
 #include <vector>
@@ -21,20 +22,18 @@ struct FrameTag
     std::string name;
 };
 
-class Animation
+class Animation : public Drawable
 {
 public:
-    Animation(const char* jsonFilename, const char* tgaFilename);
-
-    int16_t width() const;
-	int16_t height() const;
+    Animation(const char* jsonFilename, const char* tgaFilename, bool transparent = true);
 
     void nextFrame();
     void useTag(int16_t);
     void useTag(const char* name);
 
-    void draw(char* dest, int16_t lineLength, int16_t x, int16_t y) const;
-    void drawTransparent(char* dest, int16_t lineLength, int16_t x, int16_t y) const;
+    virtual int16_t width() const;
+	virtual int16_t height() const;
+    virtual void draw(const ImageBase& target, int16_t x, int16_t y) const;
 
 private:
     int16_t m_width;
@@ -47,6 +46,7 @@ private:
     int m_maxFrame;
 
     TgaImage m_image;
+    bool m_transparent;
 };
 
 #endif

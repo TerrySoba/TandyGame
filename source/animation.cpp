@@ -6,8 +6,8 @@
 #include <stdexcept>
 
 
-Animation::Animation(const char* jsonFilename, const char* tgaFilename) :
-    m_image(tgaFilename)
+Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool transparent) :
+    m_image(tgaFilename), m_transparent(transparent)
 {
     Filename filename(jsonFilename);
     Json json(filename);
@@ -92,40 +92,40 @@ void Animation::useTag(const char* name)
     }
 }
 
-void Animation::draw(char* dest, int16_t lineLength, int16_t targetX, int16_t targetY) const
+void Animation::draw(const ImageBase& target, int16_t targetX, int16_t targetY) const
 {
     const Frame& frame = m_frames[m_currentFrame];
     char* data = m_image.data();
-    for (int y = 0; y < frame.height; ++y)
-    {
-        memcpy(
-            dest + lineLength * (targetY + y) + targetX,
-            data + m_image.width() * (frame.y + y)  + frame.x,
-            frame.width);
-    }
-}
 
-void Animation::drawTransparent(char* dest, int16_t lineLength, int16_t targetX, int16_t targetY) const
-{
-    const Frame& frame = m_frames[m_currentFrame];
-    char* data = m_image.data();
-    for (int y = 0; y < frame.height; ++y)
+    if (!m_transparent)
     {
-        char* dst = dest + lineLength * (targetY + y) + targetX;
-        const char* src = data + m_image.width() * (frame.y + y)  + frame.x;
-
-        for (int i = 0; i < frame.width; ++i)
+        for (int y = 0; y < frame.height; ++y)
         {
-            if (*src != 0)
+            memcpy(
+                target.linePtr(targetY + y) + targetX,
+                data + m_image.width() * (frame.y + y)  + frame.x,
+                frame.width);
+        }
+    }
+    else
+    {
+        for (int y = 0; y < frame.height; ++y)
+        {
+            char *dst = target.linePtr(targetY + y) + targetX;
+            const char *src = data + m_image.width() * (frame.y + y) + frame.x;
+
+            for (int i = 0; i < frame.width; ++i)
             {
-                *dst++ = *src++;
+                if (*src != 0)
+                {
+                    *dst++ = *src++;
+                }
+                else
+                {
+                    ++dst;
+                    ++src;
+                }
             }
-            else
-            {
-                ++dst;
-                ++src;
-            }
-            
         }
     }
 }

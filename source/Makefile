@@ -23,9 +23,9 @@ $(dest): _$(dest)
 	upx -9 --ultra-brute -f --8086 -o$(dest) _$(dest)
 
 main.o: vgagfx.h image.h animation.h keyboard.h rad_player.h version.h physics.h json.h level.h blit.h
-vgagfx.o: image_base.h animation.h rectangle.h font_data.h
+vgagfx.o: image_base.h animation.h rectangle.h font_data.h drawable.h
 image.o: image_base.h
-animation.o: image.h
+animation.o: image.h drawable.h image_base.h
 keyboard.o:
 rad_player.o: timer.h
 timer.o: 
@@ -40,7 +40,7 @@ tga_image_test.o: tga_image.h
 json.o: json.h
 json_test.o: json.h
 shared_ptr_test.o: shared_ptr.h
-level.o: level.h image_base.h csv_reader.h
+level.o: level.h image_base.h csv_reader.h drawable.h
 blit.o: rectangle.h image_base.h
 
 
