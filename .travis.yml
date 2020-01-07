@@ -1,7 +1,7 @@
 language: minimal
 
 before_install:
-  - sudo apt-get -y install dosemu
+  - sudo apt-get -y install dosemu imagemagick xvfb
 
 services:
   - docker
@@ -10,6 +10,7 @@ script:
   - bash build.sh
   - bash test.sh
   - zip -r website/game.zip release/
+  - xvfb-run bash take_screenshot.sh
 
 deploy:
   provider: pages:git
