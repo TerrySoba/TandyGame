@@ -1,6 +1,6 @@
 objects_game_lib = \
     vgagfx.o image.o animation.o keyboard.o rad_player.o \
-    rad_player_asm.o timer.o physics.o csv_reader.o tga_image.o \
+    rad_player_asm.o timer.o physics.o tga_image.o \
     json.o cJSON.o level.o blit.o
 objects_game = \
 	main.o $(objects_game_lib)

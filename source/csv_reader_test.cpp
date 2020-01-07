@@ -4,7 +4,7 @@
 
 TEST(CsvReaderTest)
 {
-    CsvReader reader("test.csv");
+    CsvReader<int> reader("test.csv");
     ASSERT_TRUE(reader.width() == 3);
     ASSERT_TRUE(reader.height() == 4);
 
@@ -16,7 +16,7 @@ TEST(CsvReaderTest)
 
 TEST(CsvReaderTest2)
 {
-    CsvReader reader("test2.csv");
+    CsvReader<int> reader("test2.csv");
     ASSERT_TRUE(reader.width() == 58);
     ASSERT_TRUE(reader.height() == 47);
 
@@ -25,10 +25,17 @@ TEST(CsvReaderTest2)
 
 TEST(CsvReaderTest3)
 {
-    CsvReader reader("..\\images\\level1.csv");
+    CsvReader<int> reader("..\\images\\level1.csv");
     ASSERT_TRUE(reader.width() == 20);
     ASSERT_TRUE(reader.height() == 12);
 
     ASSERT_TRUE(reader.get(0,11) == 122);
     ASSERT_TRUE(reader.get(19,11) == 60);
+}
+
+TEST(CsvReaderTest4)
+{
+    CsvReader<int> reader("..\\testdata\\lines.csv");
+    ASSERT_TRUE(reader.width() == 7);
+    ASSERT_TRUE(reader.height() == 17);
 }
