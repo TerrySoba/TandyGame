@@ -11,6 +11,7 @@ script:
   - bash test.sh
   - zip -r website/game.zip release/
   - xvfb-run bash take_screenshot.sh
+  - cp screenshot.png website
 
 deploy:
   provider: pages:git

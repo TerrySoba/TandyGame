@@ -12,3 +12,7 @@ As the game is a 16bit DOS application it will not work natively on modern Windo
 
 ## Download:
 Current Build: [game.zip](game.zip)
+
+
+## Screenshot:
+![screenshot](screenshot.png)
