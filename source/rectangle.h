@@ -3,12 +3,10 @@
 
 #include <stdint.h>
 
+#define _MY_MIN_INT16 -32768
+
 struct Point
 {
-	Point() :
-		x(0), y(0)
-	{}
-
 	Point(int _x, int _y) :
 		x(_x), y(_y)
 	{}
@@ -27,6 +25,16 @@ struct Rectangle
 		x(_x), y(_y),
 		width(_width), height(_height)
 	{}
+
+	bool operator==(const Rectangle& other)
+	{
+		return
+			x == other.x &&
+			y == other.y &&
+			width == other.width &&
+			height == other.height;
+			
+	}
 
 	int16_t x,y;
 	int16_t width, height;

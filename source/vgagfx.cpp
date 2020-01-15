@@ -72,7 +72,7 @@ VgaGfx::~VgaGfx()
     while (inportb(CGA_STATUS_REG) & VERTICAL_RETRACE_BIT); \
     while (!(inportb(CGA_STATUS_REG) & VERTICAL_RETRACE_BIT))
 
-#define LINE_BYTES 320L
+#define LINE_BYTES SCREEN_W
 
 static char far* screen = (char far*)(0xA0000000L);
 
