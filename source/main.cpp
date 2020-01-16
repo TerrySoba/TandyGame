@@ -73,7 +73,7 @@ int main()
 		snprintf(buf, 255, "Build date: %s", BUILD_DATE);
 
 
-		gfx.drawText(buf, 10, 10);
+		gfx.drawText(buf, 50, 193);
 
 		// gfx.drawText("ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789#", 10, 10);
 		// gfx.drawText("What is your name, please?", 10, 20);
