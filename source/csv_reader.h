@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <exception>
+#include <string>
 
 template <class ValueT>
 class CsvReader
@@ -17,7 +18,7 @@ public:
         FILE* fp = fopen(path, "rb");
         if (!fp)
         {
-            throw std::runtime_error("Could not open CSV file.");
+            throw std::runtime_error("Could not open CSV file: " + std::string(path));
         }
 
         std::vector<char> buf;

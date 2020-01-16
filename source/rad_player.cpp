@@ -35,7 +35,7 @@ void* radLoadModule(const char* filename)
 
 	if (!fp)
 	{
-        printf("Could not open file.");
+        printf("Could not open file %s\n", filename);
 		return NULL;
 	}
 

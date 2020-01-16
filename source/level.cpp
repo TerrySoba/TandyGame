@@ -1,17 +1,26 @@
 #include "level.h"
 #include "csv_reader.h"
 #include "blit.h"
+#include "detect_lines.h"
 
 
-Level::Level(const char* mapFilename, shared_ptr<ImageBase> tilesImage, int tileWidth, int tileHeight) :
+Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<ImageBase> tilesImage, int tileWidth, int tileHeight) :
     m_tilesImage(tilesImage),
     m_tileWidth(tileWidth),
     m_tileHeight(tileHeight)
 {
-    CsvReader<uint8_t> reader(mapFilename);
-    m_mapWidth = reader.width();
-    m_mapHeight = reader.height();
-    m_mapData = reader.data();
+    {
+        CsvReader<uint8_t> reader(mapFilename);
+        m_mapWidth = reader.width();
+        m_mapHeight = reader.height();
+        m_mapData = reader.data();
+    }
+    {
+        CsvReader<uint8_t> bg(groundFilename);
+        m_walls = detectLines(bg, HORIZONTAL, 1);
+        for (int i = 0; i < m_walls.size(); ++i)
+            m_walls[i].scale(tileWidth * 16, tileHeight * 16);
+    }
 }
 
 int16_t Level::width() const

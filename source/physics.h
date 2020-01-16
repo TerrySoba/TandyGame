@@ -48,7 +48,7 @@ public:
     void startActorJump(int index);
     void stopActorJump(int index);
 
-    void addWall(const Rectangle& rect);
+    void setWalls(const std::vector<Rectangle>& walls);
 
     void calc();
 

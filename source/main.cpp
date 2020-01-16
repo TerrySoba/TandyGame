@@ -27,7 +27,7 @@ int main()
 		// Image bg("way.img");
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
 
-		Level level("level1.csv", tiles, 16, 16);
+		Level level("l01_gnd.csv", "l01_obj.csv", tiles, 16, 16);
 
 		// return 0;
 
@@ -59,9 +59,10 @@ int main()
 		actor.jumpFrame = 1;
 		int player = physics.addActor(actor);
 
-		Rectangle ground(0, PIXEL_TO_SUBPIXEL(80), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(20));
+		// Rectangle ground(0, PIXEL_TO_SUBPIXEL(80), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(20));
 
-		physics.addWall(ground);
+		// physics.addWall(ground);
+		physics.setWalls(level.getWalls());
 
 		int16_t playerX;
 		int16_t playerY;

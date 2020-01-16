@@ -7,6 +7,7 @@
 
 #include <stdexcept>
 #include <vector>
+#include <string>
 
 Json::Json(const char* data)
 {
@@ -22,7 +23,7 @@ Json::Json(const Filename& filename)
     FILE* fp = fopen(filename.getFilename(), "rb");
     if (!fp)
     {
-        throw std::runtime_error("Could not open file.");
+        throw std::runtime_error("Could not open file:" + std::string(filename.getFilename()));
     }
 
     fseek(fp, 0, SEEK_END);

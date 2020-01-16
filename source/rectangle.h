@@ -36,6 +36,23 @@ struct Rectangle
 			
 	}
 
+	Rectangle& operator*=(int16_t factor)
+	{
+		x *= factor;
+		y *= factor;
+		width *= factor;
+		height *= factor;
+		return *this;
+	}
+
+	void scale(int16_t horizontalFactor, int16_t verticalFactor)
+	{
+		x *= horizontalFactor;
+		y *= verticalFactor;
+		width *= horizontalFactor;
+		height *= verticalFactor;
+	}
+
 	int16_t x,y;
 	int16_t width, height;
 };

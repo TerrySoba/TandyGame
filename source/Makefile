@@ -1,7 +1,7 @@
 objects_game_lib = \
     vgagfx.o image.o animation.o keyboard.o rad_player.o \
     rad_player_asm.o timer.o physics.o tga_image.o \
-    json.o cJSON.o level.o blit.o
+    json.o cJSON.o level.o blit.o detect_lines.o
 objects_game = \
 	main.o $(objects_game_lib)
 objects_test = \
@@ -40,8 +40,9 @@ tga_image_test.o: tga_image.h
 json.o: json.h
 json_test.o: json.h
 shared_ptr_test.o: shared_ptr.h
-level.o: level.h image_base.h csv_reader.h drawable.h blit.h
+level.o: level.h image_base.h csv_reader.h drawable.h blit.h detect_lines.h
 blit.o: rectangle.h image_base.h
+detect_lines.o: detect_lines.h rectangle.h csv_reader.h
 
 
 cJSON.o: 3rd_party/cJSON/cJSON.h

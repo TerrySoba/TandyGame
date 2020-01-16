@@ -1,5 +1,7 @@
 #include "image.h"
 
+#include <string>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -27,7 +29,7 @@ Image::Image(const char* filename)
 
 	if (!fp)
 	{
-        throw std::runtime_error("Could not open file.");
+        throw std::runtime_error("Could not open file: " + std::string(filename));
 	}
 
     fread(&m_width, 2, 1, fp);

@@ -21,9 +21,9 @@ void Physics::setActor(int index, const Actor &rect)
     m_actors[index] = rect;
 }
 
-void Physics::addWall(const Rectangle &rect)
+void Physics::setWalls(const std::vector<Rectangle>& walls)
 {
-    m_walls.push_back(rect);
+    m_walls = walls;
 }
 
 void Physics::getActorPos(int index, int16_t& x, int16_t& y)

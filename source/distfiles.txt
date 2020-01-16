@@ -1,10 +1,7 @@
 game.exe
-rgb.img
-way.img
-CELT.RAD
-../images/gradient.tga
-../images/gradcomp.tga
+../music/CELT.RAD
 ../images/tiles.tga
 ../images/guy.tga
 ../images/guy.jsn
-../images/level1.csv
+../images/l01_obj.csv
+../images/l01_gnd.csv
