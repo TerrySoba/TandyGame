@@ -27,7 +27,7 @@ int main()
 		// Image bg("way.img");
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
 
-		Level level("l01_gnd.csv", "l01_obj.csv", tiles, 16, 16);
+		Level level("l01_bg.csv", "l01_col.csv", tiles, 16, 16);
 
 		// return 0;
 
@@ -50,10 +50,10 @@ int main()
 
 		Physics physics;
 		Actor actor;
-		actor.rect.x = PIXEL_TO_SUBPIXEL(300);
-		actor.rect.y = PIXEL_TO_SUBPIXEL(30);
-		actor.rect.width = guy.width();
-		actor.rect.height = guy.height();
+		actor.rect.x = PIXEL_TO_SUBPIXEL(150);
+		actor.rect.y = PIXEL_TO_SUBPIXEL(100);
+		actor.rect.width = PIXEL_TO_SUBPIXEL(guy.width());
+		actor.rect.height = PIXEL_TO_SUBPIXEL(guy.height());
 		actor.dx = 0;// 30;
 		actor.dy = 0;// -50;
 		actor.jumpFrame = 1;

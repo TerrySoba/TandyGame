@@ -3,5 +3,5 @@ game.exe
 ../images/tiles.tga
 ../images/guy.tga
 ../images/guy.jsn
-../images/l01_obj.csv
-../images/l01_gnd.csv
+../images/l01_bg.csv
+../images/l01_col.csv
