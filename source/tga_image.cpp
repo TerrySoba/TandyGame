@@ -1,6 +1,6 @@
 #include "tga_image.h"
 
-#include <exception>
+#include "exception.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +11,7 @@ TgaImage::TgaImage(const char* filename)
     FILE* fp = fopen(filename, "rb");
 	if (!fp)
 	{
-        throw std::runtime_error("Could not open file.");
+        throw Exception("Could not open file: ", filename);
 	}
 
     uint8_t idLength;
@@ -44,14 +44,14 @@ TgaImage::TgaImage(const char* filename)
     if (colorMapType != 1 )
     {
         printf("Color map type: %d\n", colorMapType);
-        throw std::runtime_error("Invalid image format.");
+        throw Exception("Invalid image format.");
     }
     
     // make sure this is a Color-mapped Image
     if (imageType != 1 && imageType != 9)
     {
         printf("Image type: %d\n", imageType);
-        throw std::runtime_error("Invalid image format.");
+        throw Exception("Invalid image format.");
     }
 
     uint16_t paletteEntrySize = (colorMapDepth == 15)? 16 : colorMapDepth;
@@ -65,7 +65,7 @@ TgaImage::TgaImage(const char* filename)
     if (bitsPerPixel != 8)
     {
         printf("Only 8 bit images are supported, but got: %d\n", bitsPerPixel);
-        throw std::runtime_error("Invalid image format.");
+        throw Exception("Invalid image format.");
     }
 
     size_t size = width * height;
@@ -137,5 +137,5 @@ int16_t TgaImage::height() const
 
 char* TgaImage::data() const
 {
-    return (char*)&m_data[0];
+    return (char*)m_data;
 }

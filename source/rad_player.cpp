@@ -1,11 +1,10 @@
 #include "rad_player.h"
 
+#include "exception.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdexcept>
-
 
 extern "C"
 {
@@ -71,7 +70,7 @@ RadPlayer::RadPlayer(const char* modulePath)
 	m_songData = radLoadModule(modulePath);
 	if (!m_songData)
 	{
-		throw std::runtime_error("Error loading rad module.");
+		throw Exception("Error loading rad module: ", modulePath);
 	}
 	m_timer = new DosTimer(timerFunction, 50);
 }

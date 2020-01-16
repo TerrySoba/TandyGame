@@ -3,7 +3,6 @@
 
 #include "image_base.h"
 
-#include <vector>
 #include <stdint.h>
 
 class TgaImage : public ImageBase

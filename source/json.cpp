@@ -1,19 +1,16 @@
 #include "json.h"
+#include "exception.h"
 
 #include "3rd_party/cJSON/cJSON.h"
 
-
 #include <stdio.h>
-
-#include <stdexcept>
-#include <vector>
-#include <string>
+#include <malloc.h>
 
 Json::Json(const char* data)
 {
     if (!data)
     {
-        throw std::runtime_error("Invalid data.");
+        throw Exception("Invalid data.");
     }
     jsonRoot = cJSON_Parse(data);
 }
@@ -23,17 +20,18 @@ Json::Json(const Filename& filename)
     FILE* fp = fopen(filename.getFilename(), "rb");
     if (!fp)
     {
-        throw std::runtime_error("Could not open file:" + std::string(filename.getFilename()));
+        throw Exception("Could not open file:", filename.getFilename());
     }
 
     fseek(fp, 0, SEEK_END);
     size_t fileSize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
-    std::vector<char> buffer(fileSize + 1);
-    fread(&buffer[0], fileSize, 1, fp);
+    char* buffer = (char*)malloc(fileSize + 1);
+    fread(buffer, fileSize, 1, fp);
     fclose(fp);
 
-    jsonRoot = cJSON_Parse(&buffer[0]);
+    jsonRoot = cJSON_Parse(buffer);
+    free((void*)buffer);
 }
 
 Json::~Json()
@@ -45,8 +43,6 @@ JsonValue Json::getRoot()
 {
     return JsonValue(jsonRoot);
 }
-
-
 
 JsonValue::JsonValue(cJSON* data) :
     m_data(data)
@@ -66,7 +62,7 @@ JsonValue JsonValue::at(int pos)
     cJSON* res = cJSON_GetArrayItem(m_data, pos);
     if (!res)
     {
-        throw std::runtime_error("Index out of range.");
+        throw Exception("Index out of range.");
     }
     return JsonValue(res);
 }
@@ -76,7 +72,7 @@ JsonValue JsonValue::at(const char* name)
     cJSON* res = cJSON_GetObjectItemCaseSensitive(m_data, name);
     if (!res)
     {
-        throw std::runtime_error("Invalid object key.");
+        throw Exception("Invalid object key.");
     }
     return JsonValue(res);
 }
@@ -90,7 +86,7 @@ std::string JsonValue::toString()
 {
     if (!isString())
     {
-        throw std::runtime_error("Not a string.");
+        throw Exception("Not a string.");
     }
     return m_data->valuestring;
 }
@@ -99,7 +95,7 @@ int JsonValue::toInt()
 {
     if (!isNumber())
     {
-        throw std::runtime_error("Not a number.");
+        throw Exception("Not a number.");
     }
     return m_data->valueint;
 }
@@ -108,7 +104,7 @@ double JsonValue::toDouble()
 {
     if (!isNumber())
     {
-        throw std::runtime_error("Not a number.");
+        throw Exception("Not a number.");
     }
     return m_data->valuedouble;
 }

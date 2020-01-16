@@ -2,7 +2,6 @@
 #define VGAGFX_H_INCLUDED
 
 #include <vector>
-#include <string>
 
 #include "image_base.h"
 #include "drawable.h"

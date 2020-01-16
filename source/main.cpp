@@ -10,11 +10,10 @@
 
 #include "shared_ptr.h"
 
+#include "exception.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <iostream>
-
-#include "unit_test.h"
 
 int main()
 {
@@ -117,6 +116,11 @@ int main()
 			physics.calc();
 		}
 
+	}
+	catch(const Exception& e)
+	{
+		fprintf(stderr, "Exception: %s\n", e.what());
+		return 1;
 	}
 	catch(const std::exception& e)
 	{

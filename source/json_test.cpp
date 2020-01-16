@@ -1,6 +1,6 @@
 #include "unit_test.h"
 #include "json.h"
-
+#include "exception.h"
 
 TEST(JsonTest1)
 {
@@ -71,7 +71,7 @@ TEST(JsonTest4)
     ASSERT_FALSE(value.isRaw());  
 
     ASSERT_TRUE(value.size() == 3);
-    ASSERT_THROW(value.at(value.size()), std::runtime_error);
+    ASSERT_THROW(value.at(value.size()), Exception);
 }
 
 TEST(JsonTest5)
@@ -90,15 +90,15 @@ TEST(JsonTest5)
     ASSERT_FALSE(value.isRaw());  
 
     ASSERT_TRUE(value.size() == 2);
-    ASSERT_THROW(value.at(100), std::runtime_error);
+    ASSERT_THROW(value.at(100), Exception);
     
-    ASSERT_THROW(value.at("Test"), std::runtime_error);
+    ASSERT_THROW(value.at("Test"), Exception);
 
     ASSERT_TRUE(value.at("lala").toString() == "value");
     ASSERT_TRUE(value.at("test").toInt() == 1);
     ASSERT_TRUE(value.at("test").toDouble() == 1.0);
 
-    ASSERT_THROW(value.at("test").toString(), std::runtime_error);
+    ASSERT_THROW(value.at("test").toString(), Exception);
 
     ASSERT_TRUE(value.at(0).keyString() == "test");
     ASSERT_TRUE(value.at(1).keyString() == "lala");

@@ -1,5 +1,7 @@
 #include "unit_test.h"
 
+#include "exception.h"
+
 #include <iostream>
 
 std::map<std::string, TestFunctionPtr>& getTests()
@@ -24,6 +26,11 @@ bool runTests()
         try
         {
             it->second();
+        }
+        catch(const Exception& e)
+        {
+            std::cout << "Unexpected exception:" << e.what() << '\n';
+            s_currentTestResult = TEST_FAILURE;
         }
         catch(const std::exception& e)
         {

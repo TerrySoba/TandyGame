@@ -1,11 +1,10 @@
 #include "image.h"
 
-#include <string>
+#include "exception.h"
 
 #include <stdio.h>
 #include <string.h>
 
-#include <stdexcept>
 
 Image::Image(const Image& image)
 {
@@ -29,7 +28,7 @@ Image::Image(const char* filename)
 
 	if (!fp)
 	{
-        throw std::runtime_error("Could not open file: " + std::string(filename));
+        throw Exception("Could not open file: ", filename);
 	}
 
     fread(&m_width, 2, 1, fp);

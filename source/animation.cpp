@@ -1,10 +1,9 @@
 #include "animation.h"
 #include "json.h"
+#include "exception.h"
 
 #include <stdio.h>
 #include <string.h>
-#include <stdexcept>
-
 
 Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool transparent) :
     m_image(tgaFilename), m_transparent(transparent)
@@ -14,7 +13,7 @@ Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool tra
     JsonValue value = json.getRoot();
     if (!value.isObject())
     {
-        throw std::runtime_error("Invalid json file.");
+        throw Exception("Invalid json file: ", jsonFilename);
     }
 
     JsonValue frames = value.at("frames");

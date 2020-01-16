@@ -1,7 +1,7 @@
 objects_game_lib = \
     vgagfx.o image.o animation.o keyboard.o rad_player.o \
     rad_player_asm.o timer.o physics.o tga_image.o \
-    json.o cJSON.o level.o blit.o detect_lines.o
+    json.o cJSON.o level.o blit.o detect_lines.o exception.o
 objects_game = \
 	main.o $(objects_game_lib)
 objects_test = \
@@ -43,7 +43,7 @@ shared_ptr_test.o: shared_ptr.h
 level.o: level.h image_base.h csv_reader.h drawable.h blit.h detect_lines.h
 blit.o: rectangle.h image_base.h
 detect_lines.o: detect_lines.h rectangle.h csv_reader.h
-
+exception.o: exception.h
 
 cJSON.o: 3rd_party/cJSON/cJSON.h
 	wpp $(coptions) 3rd_party/cJSON/cJSON.c
