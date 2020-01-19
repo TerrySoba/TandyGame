@@ -21,7 +21,7 @@ void Physics::setActor(int index, const Actor &rect)
     m_actors[index] = rect;
 }
 
-void Physics::setWalls(const std::vector<Rectangle>& walls)
+void Physics::setWalls(const tnd::vector<Rectangle>& walls)
 {
     m_walls = walls;
 }

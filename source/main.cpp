@@ -122,9 +122,9 @@ int main()
 		fprintf(stderr, "Exception: %s\n", e.what());
 		return 1;
 	}
-	catch(const std::exception& e)
+	catch(...)
 	{
-		fprintf(stderr, "Exception: %s\n", e.what());
+		fprintf(stderr, "Unknown excxeption.");
 		return 1;
 	}
 

@@ -77,12 +77,12 @@ JsonValue JsonValue::at(const char* name)
     return JsonValue(res);
 }
 
-std::string JsonValue::keyString()
+TinyString JsonValue::keyString()
 {
     return m_data->string;
 }
 
-std::string JsonValue::toString()
+TinyString JsonValue::toString()
 {
     if (!isString())
     {

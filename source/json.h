@@ -1,8 +1,7 @@
 #ifndef JSON_H_INCLUDED
 #define JSON_H_INCLUDED
 
-#include <stdio.h>
-#include <string>
+#include "tiny_string.h"
 
 // forward declare
 struct cJSON;
@@ -27,8 +26,8 @@ public:
     JsonValue at(int pos);
     JsonValue at(const char* name);
 
-    std::string keyString();
-    std::string toString();
+    TinyString keyString();
+    TinyString toString();
     int toInt();
     double toDouble();
     
@@ -42,7 +41,7 @@ public:
     Filename(const char* filename) : m_filename(filename) {}
     const char* getFilename() const { return m_filename.c_str(); }
 private:
-    std::string m_filename;
+    TinyString m_filename;
 };
 
 class Json

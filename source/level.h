@@ -6,7 +6,7 @@
 #include "shared_ptr.h"
 #include "rectangle.h"
 
-#include <vector>
+#include "vector.h"
 
 class Level : public Drawable
 {
@@ -17,7 +17,7 @@ public:
     virtual int16_t height() const;
     virtual void draw(const ImageBase& target, int16_t x, int16_t y) const;
 
-    virtual std::vector<Rectangle> getWalls() { return m_walls; }
+    virtual tnd::vector<Rectangle> getWalls() { return m_walls; }
 private:
     shared_ptr<ImageBase> m_tilesImage;
     int m_tileWidth;  // width of a single tile in pixles
@@ -25,8 +25,8 @@ private:
 
     int m_mapWidth;   // number of tiles in horizontal direction
     int m_mapHeight;  // number of tiles in vertical direction
-    std::vector<uint8_t> m_mapData;
-    std::vector<Rectangle> m_walls;
+    tnd::vector<uint8_t> m_mapData;
+    tnd::vector<Rectangle> m_walls;
 };
 
 #endif

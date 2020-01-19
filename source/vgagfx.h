@@ -1,7 +1,7 @@
 #ifndef VGAGFX_H_INCLUDED
 #define VGAGFX_H_INCLUDED
 
-#include <vector>
+#include "vector.h"
 
 #include "image_base.h"
 #include "drawable.h"
@@ -34,8 +34,8 @@ public:
 private:
 	char* m_backgroundImage;
 	char* m_screenBuffer;
-	std::vector<Rectangle> m_undrawnRects;
-	std::vector<Rectangle> m_dirtyRects;
+	tnd::vector<Rectangle> m_undrawnRects;
+	tnd::vector<Rectangle> m_dirtyRects;
 
 	uint8_t m_oldVideoMode;
 };

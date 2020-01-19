@@ -3,7 +3,7 @@
 
 #include "rectangle.h"
 
-#include <vector>
+#include "vector.h"
 #include <stdint.h>
 
 // Physics calculations are done on subpixel.
@@ -48,7 +48,7 @@ public:
     void startActorJump(int index);
     void stopActorJump(int index);
 
-    void setWalls(const std::vector<Rectangle>& walls);
+    void setWalls(const tnd::vector<Rectangle>& walls);
 
     void calc();
 
@@ -63,8 +63,8 @@ public:
 
 public:
 
-    std::vector<Rectangle> m_walls;
-    std::vector<Actor> m_actors;
+    tnd::vector<Rectangle> m_walls;
+    tnd::vector<Actor> m_actors;
 };
 
 #endif

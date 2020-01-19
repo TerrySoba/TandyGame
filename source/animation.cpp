@@ -39,10 +39,10 @@ Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool tra
     for (int i = 0; i < tags.size(); ++i)
     {
         JsonValue tag = tags.at(i);
-        FrameTag frameTag;
+        FrameTag frameTag; //(, , tag.at("name").toString().c_str());
         frameTag.startFrame = tag.at("from").toInt();
         frameTag.endFrame = tag.at("to").toInt();
-        frameTag.name = tag.at("name").toString();
+        frameTag.name = tag.at("name").toString().c_str();
         m_tags.push_back(frameTag);
     }
 

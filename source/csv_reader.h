@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <vector>
-
+#include "vector.h"
 #include "exception.h"
 
 template <class ValueT>
@@ -20,7 +19,7 @@ public:
             throw Exception("Could not open CSV file: ", path);
         }
 
-        std::vector<char> buf;
+        tnd::vector<char> buf;
 
         int width = -1;
         int tokenCount = 0;
@@ -44,7 +43,7 @@ public:
                     if (ch == '\n')
                     {
                         if (width == -1) width = tokenCount;
-                        else if (width != tokenCount) throw std::runtime_error("Invalid CSV format.");
+                        else if (width != tokenCount) throw Exception("Invalid CSV format.");
                         tokenCount = 0;
                     }
                 }
@@ -60,14 +59,14 @@ public:
     }
 
     ValueT get(int x, int y) { return m_data[x + y * m_width]; }
-    std::vector<ValueT>& data() { return m_data; }
+    tnd::vector<ValueT>& data() { return m_data; }
     
     int width() { return m_width; }
     int height() { return m_height; }
 
 private:
     int m_height, m_width;
-    std::vector<ValueT> m_data;
+    tnd::vector<ValueT> m_data;
 };
 
 #endif

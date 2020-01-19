@@ -13,9 +13,9 @@ uint8_t getCsvEntrySwapped(CsvReader<uint8_t>& reader, int x, int y)
     return reader.get(y,x);
 }
 
-std::vector<Rectangle> detectLines(CsvReader<uint8_t>& reader, Direction direction, uint8_t lineIndex)
+tnd::vector<Rectangle> detectLines(CsvReader<uint8_t>& reader, Direction direction, uint8_t lineIndex)
 {
-    std::vector<Rectangle> rectangles;
+    tnd::vector<Rectangle> rectangles;
 
     int width;
     int height;

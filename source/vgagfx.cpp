@@ -33,7 +33,7 @@ int compareRectangles(const void* a, const void* b) {
 }
 
 
-void sortRects(std::vector<Rectangle>& rects)
+void sortRects(tnd::vector<Rectangle>& rects)
 {
     qsort(&rects[0], rects.size(), sizeof(Rectangle), compareRectangles);
 }

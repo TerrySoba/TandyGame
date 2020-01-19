@@ -46,16 +46,16 @@ TEST(LineDetectorTest)
 {
     CsvReader<uint8_t> reader("..\\testdata\\lines.csv");
 
-    std::vector<Rectangle> horizontalLines = detectLines(reader, HORIZONTAL, 1);
+    tnd::vector<Rectangle> horizontalLines = detectLines(reader, HORIZONTAL, 1);
     ASSERT_TRUE(horizontalLines.size() == 3);
-    ASSERT_TRUE(horizontalLines.at(0) == Rectangle(0, 1, 2, 1));
-    ASSERT_TRUE(horizontalLines.at(1) == Rectangle(3, 1, 1, 1));
-    ASSERT_TRUE(horizontalLines.at(2) == Rectangle(3, 2, 1, 1));
+    ASSERT_TRUE(horizontalLines[0] == Rectangle(0, 1, 2, 1));
+    ASSERT_TRUE(horizontalLines[1] == Rectangle(3, 1, 1, 1));
+    ASSERT_TRUE(horizontalLines[2] == Rectangle(3, 2, 1, 1));
 
 
-    std::vector<Rectangle> verticalLines = detectLines(reader, VERTICAL, 1);
+    tnd::vector<Rectangle> verticalLines = detectLines(reader, VERTICAL, 1);
     ASSERT_TRUE(verticalLines.size() == 3);
-    ASSERT_TRUE(verticalLines.at(0) == Rectangle(0, 1, 1, 1));
-    ASSERT_TRUE(verticalLines.at(1) == Rectangle(1, 1, 1, 1));
-    ASSERT_TRUE(verticalLines.at(2) == Rectangle(3, 1, 1, 2));
+    ASSERT_TRUE(verticalLines[0] == Rectangle(0, 1, 1, 1));
+    ASSERT_TRUE(verticalLines[1] == Rectangle(1, 1, 1, 1));
+    ASSERT_TRUE(verticalLines[2] == Rectangle(3, 1, 1, 2));
 }

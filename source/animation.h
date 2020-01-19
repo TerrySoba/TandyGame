@@ -6,8 +6,9 @@
 #include "drawable.h"
 
 #include <stdint.h>
-#include <vector>
-
+#include <string.h>
+#include "vector.h"
+#include "tiny_string.h"
 
 struct Frame
 {
@@ -19,7 +20,7 @@ struct Frame
 struct FrameTag
 {
     int16_t startFrame, endFrame;
-    std::string name;
+    TinyString name;
 };
 
 class Animation : public Drawable
@@ -39,8 +40,8 @@ private:
     int16_t m_width;
     int16_t m_height;
 
-    std::vector<Frame> m_frames;
-    std::vector<FrameTag> m_tags;
+    tnd::vector<Frame> m_frames;
+    tnd::vector<FrameTag> m_tags;
     int m_currentFrame;
     int m_minFrame;
     int m_maxFrame;

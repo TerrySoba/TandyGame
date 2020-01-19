@@ -3,7 +3,7 @@
 
 #include "csv_reader.h"
 #include "rectangle.h"
-#include <vector>
+#include "vector.h"
 
 enum Direction
 {
@@ -11,6 +11,6 @@ enum Direction
     VERTICAL = 2,
 };
 
-std::vector<Rectangle> detectLines(CsvReader<uint8_t>& reader, Direction direction, uint8_t lineIndex);
+tnd::vector<Rectangle> detectLines(CsvReader<uint8_t>& reader, Direction direction, uint8_t lineIndex);
 
 #endif
