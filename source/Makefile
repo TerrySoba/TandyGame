@@ -2,13 +2,13 @@ objects_game_lib = \
     vgagfx.o image.o animation.o keyboard.o rad_player.o \
     rad_player_asm.o timer.o physics.o tga_image.o \
     json.o cJSON.o level.o blit.o detect_lines.o exception.o \
-	rectangle.o
+	rectangle.o tiny_string.o
 objects_game = \
 	main.o $(objects_game_lib)
 objects_test = \
     $(objects_game_lib) test_main.o unit_test.o \
 	physics_test.o csv_reader_test.o tga_image_test.o json_test.o shared_ptr_test.o \
-	blit_test.o vector_test.o line_intersection_test.o
+	blit_test.o vector_test.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -46,8 +46,8 @@ blit.o: rectangle.h image_base.h
 detect_lines.o: detect_lines.h rectangle.h csv_reader.h
 exception.o: exception.h
 vector_test.o: vector.h unit_test.h
-line_intersection_test.o: unit_test.h
 rectangle.o: rectangle.h 
+tiny_string.o: tiny_string.h
 
 cJSON.o: 3rd_party/cJSON/cJSON.h
 	wpp $(coptions) 3rd_party/cJSON/cJSON.c

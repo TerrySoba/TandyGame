@@ -1,15 +1,5 @@
 #include "physics.h"
 
-// This variable contains the jump curve.
-// The values are speed values for each frame.
-const int16_t jumpCurve[] = 
-{
-    32, 31, 29, 28, 27, 26, 24, 23, 22, 20, 19, 18, 16, 15, 14, 12, 11, 10, 9, 7, 6, 5, 3, 2, 1, 
-    -2, -3, -4, -6, -7, -8, -10, -11, -12, -14, -15, -16, -17, -19, -20, -21, -23, -24, -25, -27, -28, -29, -30, -32
-};
-
-int16_t jumpCurveCount = 49;
-
 int Physics::addActor(const Actor &rect)
 {
     m_actors.push_back(rect);
@@ -59,14 +49,6 @@ void Physics::calc()
         actor.dx *= 0.99;
         actor.dy *= 0.99;
 
-        // if (actor.jumpFrame > jumpCurveCount) actor.jumpFrame = jumpCurveCount;
-
-        // if (actor.jumpFrame > 0)
-        // {
-        //     actor.rect.y -= jumpCurve[actor.jumpFrame - 1];
-        //     ++actor.jumpFrame;
-        // }
-
         actor.isOnGround = false;
 
         for (int n = 0; n < m_walls.size(); ++n)
@@ -76,7 +58,7 @@ void Physics::calc()
             {
                 
                 
-                IntersectionType wallType = getIntersectionType(extendRectangle(wall, 0, actor.rect.height - 10), actor.rect);
+                IntersectionType wallType = getIntersectionType(extendRectangle(wall, 0, actor.rect.height - 32), actor.rect);
                 switch(wallType)
                 {
                     case INTERSECTION_LEFT:
@@ -90,7 +72,7 @@ void Physics::calc()
                 }
 
                 
-                IntersectionType groundType = getIntersectionType(extendRectangle(wall, actor.rect.width - 10, 0), actor.rect);
+                IntersectionType groundType = getIntersectionType(extendRectangle(wall, actor.rect.width - 32, 0), actor.rect);
                 
                 switch(groundType)
                 {
@@ -106,15 +88,11 @@ void Physics::calc()
 
                 }
 
-
-              
-
-                
-                
             }
         }
 
         actor.dy += 3;
+        if (actor.dy > 32) actor.dy = 32;
     }
 }
 
