@@ -33,64 +33,96 @@ void Physics::getActorPos(int index, int16_t& x, int16_t& y)
     y = actor.rect.y;
 }
 
+#define abs(x) (((x) > 0)?x:-x)
+
+Rectangle extendRectangle(Rectangle rect, int16_t horizontal, int16_t vertical)
+{
+    rect.x -= horizontal;
+    rect.width += horizontal * 2;
+    rect.y -= vertical;
+    rect.height += vertical * 2;
+    return rect;
+}
+
 void Physics::calc()
 {
     for (int i = 0; i < m_actors.size(); ++i)
     {
         Actor& actor = m_actors[i];
+
+
+        Point oldPos(actor.rect.x, actor.rect.y);
+
         actor.rect.x += actor.dx;
         actor.rect.y += actor.dy;
 
         actor.dx *= 0.99;
         actor.dy *= 0.99;
 
-        if (actor.jumpFrame > jumpCurveCount) actor.jumpFrame = jumpCurveCount;
+        // if (actor.jumpFrame > jumpCurveCount) actor.jumpFrame = jumpCurveCount;
 
-        if (actor.jumpFrame > 0)
-        {
-            actor.rect.y -= jumpCurve[actor.jumpFrame - 1];
-            ++actor.jumpFrame;
-        }
+        // if (actor.jumpFrame > 0)
+        // {
+        //     actor.rect.y -= jumpCurve[actor.jumpFrame - 1];
+        //     ++actor.jumpFrame;
+        // }
+
+        actor.isOnGround = false;
 
         for (int n = 0; n < m_walls.size(); ++n)
         {
-            if (intersectRect(m_walls[n], actor.rect))
+            Rectangle& wall = m_walls[n];
+            if (intersectRect(wall, actor.rect))
             {
-                IntersectionType type = getIntersectionType(m_walls[n], actor.rect);
-                // actor.rect.x -= actor.dx;
-                // actor.rect.y -= actor.dy;
-                actor.jumpFrame = 0;
-                actor.dy = 0;
+                
+                
+                IntersectionType wallType = getIntersectionType(extendRectangle(wall, 0, actor.rect.height - 10), actor.rect);
+                switch(wallType)
+                {
+                    case INTERSECTION_LEFT:
+                        actor.dx = 0;
+                        actor.rect.x = wall.x - actor.rect.width;
+                        break;
+                    case INTERSECTION_RIGHT:
+                        actor.dx = 0;
+                        actor.rect.x = wall.x + wall.width;
+                        break;
+                }
 
-                // switch(type)
-                // {
-                //     case INTERSECTION_TOP:
-                //         // falthrough
-                //     case INTERSECTION_BOTTOM:
-                //         actor.dy = 0;
-                //         actor.jumpFrame = 0;
-                //         break;
-                //     case INTERSECTION_LEFT:
-                //         // fallthrough
-                //     case INTERSECTION_RIGHT:
-                //         actor.dx = 0;
-                //     case INTERSECTION_OTHER:
-                //         actor.dy = 0;
-                //         actor.dx = 0;
-                //         break;
-                // }
+                
+                IntersectionType groundType = getIntersectionType(extendRectangle(wall, actor.rect.width - 10, 0), actor.rect);
+                
+                switch(groundType)
+                {
+                    case INTERSECTION_TOP:
+                        actor.rect.y = wall.y - actor.rect.height;
+                        actor.dy = 0;
+                        actor.isOnGround = true;
+                        break;
+                    case INTERSECTION_BOTTOM:
+                        actor.rect.y = wall.y + wall.height;
+                        actor.dy = abs(actor.dy);
+                        break;
+
+                }
+
+
+              
+
+                
                 
             }
         }
 
-        // actor.dy += 2;
+        actor.dy += 3;
     }
 }
 
 void Physics::startActorJump(int index)
 {
     Actor& actor = m_actors[index];
-    if (actor.jumpFrame == 0) actor.jumpFrame = 1;
+    // if (actor.jumpFrame == 0) actor.jumpFrame = 1;
+    if (actor.isOnGround) actor.dy = -64;
 }
 
 void Physics::stopActorJump(int index)
@@ -98,10 +130,15 @@ void Physics::stopActorJump(int index)
 
 }
 
-void Physics::setActorSpeed(int index, int16_t dx, int16_t dy)
+void Physics::setActorSpeedX(int index, int16_t dx)
 {
     Actor& actor = m_actors[index];
     actor.dx = dx;
+}
+
+void Physics::setActorSpeedY(int index, int16_t dy)
+{
+    Actor& actor = m_actors[index];
     actor.dy = dy;
 }
 

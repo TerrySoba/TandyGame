@@ -17,7 +17,7 @@ struct Actor
 {
     Actor() :
         jumpFrame(0),
-        dx(0), dy(0)
+        dx(0), dy(0), isOnGround(false)
     {
     }
 
@@ -25,6 +25,7 @@ struct Actor
     Rectangle rect;
     int16_t dx, dy;
     int16_t jumpFrame;
+    bool isOnGround;
 };
 
 enum IntersectionType
@@ -44,7 +45,8 @@ public:
     int addActor(const Actor& rect);
     void setActor(int index, const Actor& rect);
     void getActorPos(int index, int16_t& x, int16_t& y);
-    void setActorSpeed(int index, int16_t dx, int16_t dy);
+    void setActorSpeedX(int index, int16_t dx);
+    void setActorSpeedY(int index, int16_t dy);
     void startActorJump(int index);
     void stopActorJump(int index);
 

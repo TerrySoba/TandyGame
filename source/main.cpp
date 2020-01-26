@@ -97,19 +97,23 @@ int main()
 
 			if (s_keyRight)
 			{
-				physics.setActorSpeed(player, 16, 0);
+				physics.setActorSpeedX(player, 16);
 				++x;
 			}
 			
 			if (s_keyLeft)
 			{
-				physics.setActorSpeed(player, -16, 0);
+				physics.setActorSpeedX(player, -16);
 				--x;
 			}
 			if (s_keyUp) --y;
 			if (s_keyDown) ++y;
 
-			if (s_keyAlt) physics.startActorJump(player);
+			if (s_keyAlt)
+			{
+				// physics.setActorSpeedY(player, -32);
+				physics.startActorJump(player);
+			}
 
 
 			if (frames % 4 == 0) guy.nextFrame();

@@ -1,7 +1,7 @@
 #ifndef _INCLUDE_VECTOR_H
 #define _INCLUDE_VECTOR_H
 
-namespace tnd
+namespace tnd // TaNDy game
 {
 
 template <class ValueT>

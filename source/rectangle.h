@@ -11,8 +11,18 @@ struct Point
 		x(_x), y(_y)
 	{}
 
+	bool operator==(const Point& other)
+	{
+		return (x == other.x && y == other.y);
+	}
+
 	int16_t x,y;
 };
+
+Point operator+(const Point& a, const Point& b);
+Point operator-(const Point& a, const Point& b);
+Point operator*(const Point& a, int16_t b);
+Point operator*(int16_t b, const Point& a);
 
 struct Rectangle
 {
