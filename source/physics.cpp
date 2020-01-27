@@ -100,6 +100,8 @@ void Physics::calc()
             {
                 actor.rect.x = m_spawn.x;
                 actor.rect.y = m_spawn.y;
+                actor.dx = 0;
+                actor.dy = 0;
             }
         }
 
