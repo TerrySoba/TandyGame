@@ -16,6 +16,16 @@ void Physics::setWalls(const tnd::vector<Rectangle>& walls)
     m_walls = walls;
 }
 
+void Physics::setDeath(const tnd::vector<Rectangle>& death)
+{
+    m_death = death;
+}
+
+void Physics::setSpawnPoint(const Point& point)
+{
+    m_spawn = point;
+}
+
 void Physics::getActorPos(int index, int16_t& x, int16_t& y)
 {
     Actor& actor = m_actors[index];
@@ -39,8 +49,6 @@ void Physics::calc()
     for (int i = 0; i < m_actors.size(); ++i)
     {
         Actor& actor = m_actors[i];
-
-
         Point oldPos(actor.rect.x, actor.rect.y);
 
         actor.rect.x += actor.dx;
@@ -56,8 +64,6 @@ void Physics::calc()
             Rectangle& wall = m_walls[n];
             if (intersectRect(wall, actor.rect))
             {
-                
-                
                 IntersectionType wallType = getIntersectionType(extendRectangle(wall, 0, actor.rect.height - 32), actor.rect);
                 switch(wallType)
                 {
@@ -71,9 +77,7 @@ void Physics::calc()
                         break;
                 }
 
-                
                 IntersectionType groundType = getIntersectionType(extendRectangle(wall, actor.rect.width - 32, 0), actor.rect);
-                
                 switch(groundType)
                 {
                     case INTERSECTION_TOP:
@@ -85,9 +89,17 @@ void Physics::calc()
                         actor.rect.y = wall.y + wall.height;
                         actor.dy = abs(actor.dy);
                         break;
-
                 }
+            }
+        }
 
+        for (int n = 0; n < m_death.size(); ++n)
+        {
+            Rectangle& death = m_death[n];
+            if (intersectRect(death, actor.rect))
+            {
+                actor.rect.x = m_spawn.x;
+                actor.rect.y = m_spawn.y;
             }
         }
 

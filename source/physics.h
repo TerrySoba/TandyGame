@@ -51,6 +51,8 @@ public:
     void stopActorJump(int index);
 
     void setWalls(const tnd::vector<Rectangle>& walls);
+    void setDeath(const tnd::vector<Rectangle>& death);
+    void setSpawnPoint(const Point& point);
 
     void calc();
 
@@ -66,6 +68,8 @@ public:
 public:
 
     tnd::vector<Rectangle> m_walls;
+    tnd::vector<Rectangle> m_death;
+    Point m_spawn;
     tnd::vector<Actor> m_actors;
 };
 

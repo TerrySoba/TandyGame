@@ -21,36 +21,21 @@ int main()
 	{
 		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
-
-		// Image img("rgb.img");
-		// Image bg("way.img");
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
-
 		Level level("l01_bg.csv", "l01_col.csv", tiles, 16, 16);
-
-		// return 0;
-
-		// Animation guy("guy.ani");
 		Animation guy("guy.jsn", "guy.tga");
-		// guy.useTag(1);
 		guy.useTag("Loop");
 
-		int y = 100;
-		int x = 100;
-		
-		// TandyGfx gfx;
 		VgaGfx gfx;
 
 		gfx.drawBackground(level, 0, 0);
 
-		// gfx.setBackground(*tiles);
-		
 		int frames = 0;
 
 		Physics physics;
 		Actor actor;
-		actor.rect.x = PIXEL_TO_SUBPIXEL(150);
-		actor.rect.y = PIXEL_TO_SUBPIXEL(100);
+		actor.rect.x = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().x);
+		actor.rect.y = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().y);
 		actor.rect.width = PIXEL_TO_SUBPIXEL(guy.width());
 		actor.rect.height = PIXEL_TO_SUBPIXEL(guy.height());
 		actor.dx = 0;// 30;
@@ -58,10 +43,9 @@ int main()
 		actor.jumpFrame = 1;
 		int player = physics.addActor(actor);
 
-		// Rectangle ground(0, PIXEL_TO_SUBPIXEL(80), PIXEL_TO_SUBPIXEL(320), PIXEL_TO_SUBPIXEL(20));
-
-		// physics.addWall(ground);
 		physics.setWalls(level.getWalls());
+		physics.setDeath(level.getDeath());
+		physics.setSpawnPoint(level.getSpawnPoint() * 16);
 
 		int16_t playerX;
 		int16_t playerY;
@@ -88,9 +72,6 @@ int main()
 			physics.getActorPos(player, playerX, playerY);
 
 			gfx.draw(guy, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
-
-		
-
 			gfx.drawScreen();
 
 			++frames;
@@ -98,23 +79,17 @@ int main()
 			if (s_keyRight)
 			{
 				physics.setActorSpeedX(player, 16);
-				++x;
 			}
 			
 			if (s_keyLeft)
 			{
 				physics.setActorSpeedX(player, -16);
-				--x;
 			}
-			if (s_keyUp) --y;
-			if (s_keyDown) ++y;
 
 			if (s_keyAlt)
 			{
-				// physics.setActorSpeedY(player, -32);
 				physics.startActorJump(player);
 			}
-
 
 			if (frames % 4 == 0) guy.nextFrame();
 			physics.calc();

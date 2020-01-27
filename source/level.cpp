@@ -20,6 +20,23 @@ Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<Ima
         m_walls = detectLines(bg, HORIZONTAL, 1);
         for (int i = 0; i < m_walls.size(); ++i)
             m_walls[i].scale(tileWidth * 16, tileHeight * 16);
+
+        m_death = detectLines(bg, HORIZONTAL, 3);
+        for (int i = 0; i < m_death.size(); ++i)
+            m_death[i].scale(tileWidth * 16, tileHeight * 16);
+
+        for (int x = 0; x < bg.width(); ++x)
+        {
+            for (int y = 0; y < bg.height(); ++y)
+            {
+                if (bg.get(x,y) == 2)
+                {
+                    m_spawn.x = x * tileWidth;
+                    m_spawn.y = y * tileHeight;
+                }
+            }
+        }
+
     }
 }
 
