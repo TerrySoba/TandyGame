@@ -194,10 +194,10 @@ void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
 {
     int len = strlen(text);
 
-    // Rectangle rect(
-    //     targetX, targetY,
-    //     len * CHAR_WIDTH, CHAR_HEIGHT);
-    // m_dirtyRects.push_back(rect);
+    Rectangle rect(
+        targetX, targetY,
+        len * CHAR_WIDTH, CHAR_HEIGHT);
+    m_dirtyRects.push_back(rect);
     // m_undrawnRects.push_back(rect);
 
 
@@ -206,7 +206,7 @@ void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
         char* charImg = alphabet[getCharacterIndex(text[i])];
         for (int y = 0; y < CHAR_HEIGHT; ++y)
         {
-            memcpy(getBackBufferLine(targetY + y) + targetX + i * CHAR_WIDTH, charImg + CHAR_WIDTH * y, CHAR_WIDTH);
+            memcpy(getBackgroundImageLine(targetY + y) + targetX + i * CHAR_WIDTH, charImg + CHAR_WIDTH * y, CHAR_WIDTH);
         }
     }
 }
