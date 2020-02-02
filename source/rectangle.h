@@ -28,6 +28,9 @@ Point operator-(const Point& a, const Point& b);
 Point operator*(const Point& a, int16_t b);
 Point operator*(int16_t b, const Point& a);
 
+#define my_max(x,y) ((x) > (y))?(x):(y)
+#define my_min(x,y) ((x) > (y))?(y):(x)
+
 struct Rectangle
 {
 	Rectangle() :
@@ -65,6 +68,30 @@ struct Rectangle
 		y *= verticalFactor;
 		width *= horizontalFactor;
 		height *= verticalFactor;
+	}
+
+	Rectangle intersection(const Rectangle& other)
+	{
+		int16_t left = my_max(x, other.y);
+		int16_t top = my_max(y, other.y);
+		int16_t right = my_min(x + width, other.x + other.width);
+		int16_t bottom = my_min(y + height, other.y + other.height);
+
+		if ((right > left) && (bottom > top))
+		{
+			// we got a non empty intersection
+			return Rectangle(left, top, right - left, bottom - top);
+		}
+		else
+		{
+			// intersection is empty
+			return Rectangle();
+		}
+	}
+
+	bool empty()
+	{
+		return width == 0 || height == 0;
 	}
 
 	int16_t x,y;
