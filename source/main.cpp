@@ -22,13 +22,13 @@ int main()
 		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
-		Level level("l01_bg.csv", "l01_col.csv", tiles, 16, 16);
+		Level level("l01_bg.csv", "l01_col.csv", tiles, 16, 16, -8, -8);
 		Animation guy("guy.jsn", "guy.tga");
 		guy.useTag("Loop");
 
 		VgaGfx gfx;
 
-		gfx.drawBackground(level, 0, 0);
+		gfx.drawBackground(level, -8, -8);
 
 		int frames = 0;
 

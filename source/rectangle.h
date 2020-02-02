@@ -83,6 +83,13 @@ struct Rectangle
 		return r;
 	}
 
+	Rectangle& operator+=(const Point& offset)
+	{
+		x += offset.x;
+		y += offset.y;
+		return *this;
+	}
+
 
 	void scale(int16_t horizontalFactor, int16_t verticalFactor)
 	{
