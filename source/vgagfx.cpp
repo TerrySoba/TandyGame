@@ -114,6 +114,7 @@ void VgaGfx::draw(const Drawable& image, int16_t x, int16_t y)
     Rectangle rect(
         x, y,
         image.width(), image.height());
+    rect = rect.intersection(Rectangle(0, 0, SCREEN_W, SCREEN_H));
     m_dirtyRects.push_back(rect);
     m_undrawnRects.push_back(rect);
 
@@ -127,6 +128,7 @@ void VgaGfx::drawBackground(const Drawable& image, int16_t x, int16_t y)
     Rectangle rect(
         x, y,
         image.width(), image.height());
+    rect = rect.intersection(Rectangle(0, 0, SCREEN_W, SCREEN_H));
     m_dirtyRects.push_back(rect);
     // m_undrawnRects.push_back(rect);
 
@@ -197,6 +199,7 @@ void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
     Rectangle rect(
         targetX, targetY,
         len * CHAR_WIDTH, CHAR_HEIGHT);
+    rect = rect.intersection(Rectangle(0, 0, SCREEN_W, SCREEN_H));
     m_dirtyRects.push_back(rect);
     // m_undrawnRects.push_back(rect);
 

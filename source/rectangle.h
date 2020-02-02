@@ -43,7 +43,12 @@ struct Rectangle
 		width(_width), height(_height)
 	{}
 
-	bool operator==(const Rectangle& other)
+	Rectangle(const Rectangle& other) :
+		x(other.x), y(other.y),
+		width(other.width), height(other.height)
+	{}
+
+	bool operator==(const Rectangle& other) const
 	{
 		return
 			x == other.x &&
@@ -62,6 +67,23 @@ struct Rectangle
 		return *this;
 	}
 
+	Rectangle operator+(const Point& offset) const
+	{
+		Rectangle r = *this;
+		r.x += offset.x;
+		r.y += offset.y;
+		return r;
+	}
+
+	Rectangle operator-(const Point& offset) const
+	{
+		Rectangle r = *this;
+		r.x -= offset.x;
+		r.y -= offset.y;
+		return r;
+	}
+
+
 	void scale(int16_t horizontalFactor, int16_t verticalFactor)
 	{
 		x *= horizontalFactor;
@@ -70,9 +92,9 @@ struct Rectangle
 		height *= verticalFactor;
 	}
 
-	Rectangle intersection(const Rectangle& other)
+	Rectangle intersection(const Rectangle& other) const
 	{
-		int16_t left = my_max(x, other.y);
+		int16_t left = my_max(x, other.x);
 		int16_t top = my_max(y, other.y);
 		int16_t right = my_min(x + width, other.x + other.width);
 		int16_t bottom = my_min(y + height, other.y + other.height);
@@ -89,7 +111,7 @@ struct Rectangle
 		}
 	}
 
-	bool empty()
+	bool empty() const
 	{
 		return width == 0 || height == 0;
 	}
