@@ -99,6 +99,14 @@ struct Rectangle
 		height *= verticalFactor;
 	}
 
+	void shrink(int16_t offset)
+	{
+		x += offset;
+		y += offset;
+		width -= 2 * offset;
+		height -= 2 * offset;
+	}
+
 	Rectangle intersection(const Rectangle& other) const
 	{
 		int16_t left = my_max(x, other.x);
