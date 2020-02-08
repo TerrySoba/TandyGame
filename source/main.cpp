@@ -3,11 +3,10 @@
 #include "animation.h"
 #include "keyboard.h"
 #include "rad_player.h"
-#include "version.h"
-#include "physics.h"
 #include "tga_image.h"
 #include "level.h"
-
+#include "game.h"
+#include "version.h"
 #include "shared_ptr.h"
 
 #include "exception.h"
@@ -15,86 +14,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
 int main()
 {
 	try
 	{
 		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
+
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
-		Level level("l01_bg.csv", "l01_col.csv", tiles, 16, 16, -8, -8);
-		Animation guy("guy.jsn", "guy.tga");
-		guy.useTag("Loop");
+		
+		shared_ptr<Animation> guy(new Animation("guy.jsn", "guy.tga"));
+		shared_ptr<VgaGfx> gfx(new VgaGfx);
 
-		VgaGfx gfx;
+		Game game(gfx, tiles, guy);
 
-		gfx.drawBackground(level, -8, -8);
+		game.loadLevel("l01");
 
-		int frames = 0;
-
-		Physics physics;
-		Actor actor;
-		actor.rect.x = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().x);
-		actor.rect.y = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().y);
-		actor.rect.width = PIXEL_TO_SUBPIXEL(guy.width());
-		actor.rect.height = PIXEL_TO_SUBPIXEL(guy.height());
-		actor.dx = 0;// 30;
-		actor.dy = 0;// -50;
-		actor.jumpFrame = 1;
-		int player = physics.addActor(actor);
-
-		physics.setWalls(level.getWalls());
-		physics.setDeath(level.getDeath());
-		physics.setSpawnPoint(level.getSpawnPoint() * 16);
-
-		int16_t playerX;
-		int16_t playerY;
-
-		gfx.clear();
-
-		char buf[255];
-
-		snprintf(buf, 255, "Build date: %s", BUILD_DATE);
-
-
-		gfx.drawText(buf, 50, 193);
-
-		// gfx.drawText("ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789#", 10, 10);
-		// gfx.drawText("What is your name, please?", 10, 20);
-		// gfx.drawText("That is a secret! Name: Unknown.", 10, 30);
+		long int i = 0;
 
 		while (!s_keyEsc)
-		{
-			gfx.clear();
-			// gfx.drawImage(guy, x, y);
-			// gfx.drawImageTransparent(guy, x, 100);
-
-			physics.getActorPos(player, playerX, playerY);
-
-			gfx.draw(guy, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
-			gfx.drawScreen();
-
-			++frames;
-
-			if (s_keyRight)
+    	{	
+			++i;
+			if (i == 500)
 			{
-				physics.setActorSpeedX(player, 16);
+				game.loadLevel("l02");
 			}
-			
-			if (s_keyLeft)
-			{
-				physics.setActorSpeedX(player, -16);
-			}
-
-			if (s_keyAlt)
-			{
-				physics.startActorJump(player);
-			}
-
-			if (frames % 4 == 0) guy.nextFrame();
-			physics.calc();
+			game.drawFrame();
 		}
-
+		
 	}
 	catch(const Exception& e)
 	{
@@ -103,7 +52,7 @@ int main()
 	}
 	catch(...)
 	{
-		fprintf(stderr, "Unknown excxeption.");
+		fprintf(stderr, "Unknown exception.");
 		return 1;
 	}
 

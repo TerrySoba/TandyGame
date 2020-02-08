@@ -13,6 +13,10 @@ template <class ValueT>
 class shared_ptr
 {
 public:
+    shared_ptr() : m_storage((shared_ptr_storage<ValueT>*)0)
+    {
+    }
+
     shared_ptr(ValueT* ptr)
     {
         m_storage = new shared_ptr_storage<ValueT>;
@@ -29,8 +33,8 @@ public:
     shared_ptr<ValueT>& operator=(const shared_ptr<ValueT>& other)
     {
         if (this == &other)
-            return;
-            
+            return *this;
+        
         delete_storage();
         m_storage = other.m_storage;
         m_storage->user_count++;
@@ -44,11 +48,19 @@ public:
 
     ValueT* get()
     {
+        if (!m_storage)
+        {
+            return (ValueT*)0;
+        }
         return m_storage->ptr;
     }
 
     int use_count()
     {
+        if (!m_storage)
+        {
+            return 0;
+        }
         return m_storage->user_count;
     }
 
@@ -70,14 +82,17 @@ public:
 private:
     void delete_storage()
     {
-        if (m_storage->user_count == 1)
+        if (m_storage)
         {
-            delete m_storage->ptr;
-            delete m_storage;
-        }
-        else
-        {
-            m_storage->user_count--;
+            if (m_storage->user_count == 1)
+            {
+                delete m_storage->ptr;
+                delete m_storage;
+            }
+            else
+            {
+                m_storage->user_count--;
+            }
         }
     }
 

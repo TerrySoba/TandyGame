@@ -12,7 +12,7 @@ class VgaGfx
 {
 public:
 	VgaGfx();
-	~VgaGfx();
+	virtual ~VgaGfx();
 
 	void drawScreen();
 

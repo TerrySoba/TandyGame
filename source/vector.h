@@ -26,6 +26,13 @@ public:
         m_data = (ValueT*)0;
     }
 
+    vector(int size)
+    {
+        m_capacity = size;
+        m_size = size;
+        m_data = new ValueT[m_size];
+    }
+
     ~vector()
     {
         delete[] m_data;
@@ -80,6 +87,10 @@ public:
         return m_size;
     }
 
+    ValueT* data()
+    {
+        return m_data;
+    }
 
 private:
     ValueT* m_data;

@@ -5,4 +5,6 @@ game.exe
 ../images/guy.jsn
 ../images/l01_bg.csv
 ../images/l01_col.csv
+../images/l02_bg.csv
+../images/l02_col.csv
 ../readme/readme.txt

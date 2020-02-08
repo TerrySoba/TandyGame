@@ -44,3 +44,31 @@ TinyString::~TinyString()
 {
     free((void*)m_data);
 }
+
+TinyString mergeStrings(const char* a, const char* b)
+{
+    int lenA = strlen(a);
+    int lenB = strlen(b);
+    char* buf = new char[lenA + lenB + 1];
+    memcpy(buf, a, lenA);
+    memcpy(buf + lenA, b, lenB);
+    buf[lenA + lenB] = 0;
+    TinyString str(buf);
+    delete[] buf;
+    return str;
+}
+
+TinyString operator+(const TinyString& a, const TinyString& b)
+{
+    return mergeStrings(a.c_str(), b.c_str());
+}
+
+TinyString operator+(const TinyString& a, const char* b)
+{
+    return mergeStrings(a.c_str(), b);
+}
+
+TinyString operator+(const char* a, const TinyString& b)
+{
+    return mergeStrings(a, b.c_str());
+}
