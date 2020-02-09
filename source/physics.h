@@ -2,6 +2,7 @@
 #define PHYSICS_H_INCLUDED
 
 #include "rectangle.h"
+#include "physics_event.h"
 
 #include "vector.h"
 #include <stdint.h>
@@ -41,7 +42,7 @@ enum IntersectionType
 class Physics
 {
 public:
-
+    Physics(PhysicsCallback* callback);
     int addActor(const Actor& rect);
     void setActor(int index, const Actor& rect);
     void getActorPos(int index, int16_t& x, int16_t& y);
@@ -66,11 +67,13 @@ public:
     static IntersectionType getIntersectionType(const Rectangle &r1, const Rectangle &r2);
 
 public:
-
     tnd::vector<Rectangle> m_walls;
     tnd::vector<Rectangle> m_death;
+    Rectangle m_rightLevelTransition;
+    Rectangle m_leftLevelTransition;
     Point m_spawn;
     tnd::vector<Actor> m_actors;
+    PhysicsCallback* m_callback;
 };
 
 #endif

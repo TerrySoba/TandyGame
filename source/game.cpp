@@ -11,22 +11,29 @@
 
 #include <stdio.h>
 
-Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, shared_ptr<Animation> actorAnimation) :
-    m_vgaGfx(vgaGfx), m_tiles(tiles), m_actorAnimation(actorAnimation), m_frames(0)
+Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
+           shared_ptr<Animation> actorAnimation, const char* levelBasename) :
+    m_vgaGfx(vgaGfx), m_tiles(tiles), m_actorAnimation(actorAnimation),
+    m_frames(0), m_levelBasename(levelBasename)
 {
 }
 
-void Game::loadLevel(const char* levelBasename)
+void Game::loadLevel(int levelNumber)
 {
-    TinyString levelBg = TinyString(levelBasename + TinyString("_bg.csv"));
-    TinyString levelCol = TinyString(levelBasename + TinyString("_col.csv"));
+    m_levelNumber = levelNumber;
+    tnd::vector<char> buf(100);
+
+    sprintf(buf.data(), m_levelBasename.c_str(), m_levelNumber);
+
+    TinyString levelBg = TinyString(buf.data() + TinyString("_bg.csv"));
+    TinyString levelCol = TinyString(buf.data() + TinyString("_col.csv"));
 
     Level level(levelBg.c_str(), levelCol.c_str(), m_tiles, 16, 16, -8, -8);
     m_actorAnimation->useTag("Loop");
 
     m_vgaGfx->drawBackground(level, -8, -8);
 
-    m_physics = shared_ptr<Physics>(new Physics);
+    m_physics = shared_ptr<Physics>(new Physics(this));
     Actor actor;
     actor.rect.x = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().x);
     actor.rect.y = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().y);
@@ -43,7 +50,7 @@ void Game::loadLevel(const char* levelBasename)
 
     m_vgaGfx->clear();
 
-    tnd::vector<char> buf(100);
+    
     snprintf(buf.data(), buf.size(), "Build date: %s", BUILD_DATE);
     m_vgaGfx->drawText(buf.data(), 50, 193);
 }
@@ -51,7 +58,6 @@ void Game::loadLevel(const char* levelBasename)
 
 void Game::drawFrame()
 {
-
     m_vgaGfx->clear();
 
     int16_t playerX;
@@ -80,4 +86,17 @@ void Game::drawFrame()
 
     if (m_frames % 4 == 0) m_actorAnimation->nextFrame();
     m_physics->calc();
+}
+
+void Game::levelTransition(LevelTransition transition)
+{
+    switch(transition)
+    {
+        case RIGHT:
+            loadLevel(++m_levelNumber);
+            break;
+        case LEFT:
+            loadLevel(--m_levelNumber);
+            break;
+    }
 }

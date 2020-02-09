@@ -2,6 +2,8 @@
 #define GAME_H_INCLUDED
 
 #include "shared_ptr.h"
+#include "physics_event.h"
+#include "tiny_string.h"
 
 // forward declarations
 class VgaGfx;
@@ -9,13 +11,16 @@ class ImageBase;
 class Animation;
 class Physics;
 
-class Game
+class Game : public PhysicsCallback
 {
 public:
-	Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, shared_ptr<Animation> actorAnimation);
+	Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, shared_ptr<Animation> actorAnimation, const char* levelBasename);
 
-	void loadLevel(const char* levelBasename);
+	void loadLevel(int levelNumber);
     void drawFrame();
+
+	// PhysicsCallback interface
+	virtual void levelTransition(LevelTransition transition);
 
 private:
 	shared_ptr<VgaGfx> m_vgaGfx;
@@ -24,6 +29,8 @@ private:
     shared_ptr<Physics> m_physics;
     long int m_frames;
     int m_player;
+	TinyString m_levelBasename;
+	int m_levelNumber;
 };
 
 

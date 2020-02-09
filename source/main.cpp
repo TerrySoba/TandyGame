@@ -28,19 +28,12 @@ int main()
 		shared_ptr<Animation> guy(new Animation("guy.jsn", "guy.tga"));
 		shared_ptr<VgaGfx> gfx(new VgaGfx);
 
-		Game game(gfx, tiles, guy);
+		Game game(gfx, tiles, guy, "l%02d");
 
-		game.loadLevel("l01");
-
-		long int i = 0;
+		game.loadLevel(1);
 
 		while (!s_keyEsc)
     	{	
-			++i;
-			if (i == 500)
-			{
-				game.loadLevel("l02");
-			}
 			game.drawFrame();
 		}
 		
