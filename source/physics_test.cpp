@@ -1,6 +1,6 @@
 #include "unit_test.h"
 #include "physics.h"
-
+#include "shared_ptr.h"
 
 TEST(RectCollision)
 {
@@ -33,3 +33,8 @@ TEST(getIntersectionTypeTest)
     ASSERT_TRUE(Physics::getIntersectionType(ref, left)   == INTERSECTION_LEFT);
     ASSERT_TRUE(Physics::getIntersectionType(ref, bottom) == INTERSECTION_BOTTOM);
 }
+
+class CallBackTest : public PhysicsCallback
+{
+    void levelTransition(LevelTransition transition) {}
+};

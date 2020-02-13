@@ -3,7 +3,7 @@
 Physics::Physics(PhysicsCallback* callback) :
     m_callback(callback)
 {
-    m_rightLevelTransition = Rectangle(312, 0, 4, 200);
+    m_rightLevelTransition = Rectangle(316, 0, 4, 200);
     m_rightLevelTransition *= 16;
     m_leftLevelTransition =  Rectangle(  0, 0, 4, 200); 
     m_leftLevelTransition *= 16;
@@ -69,16 +69,20 @@ void Physics::calc()
         actor.isOnGround = false;
 
         // check for level transitions
-        bool rightTransition = intersectRect(actor.rect, m_rightLevelTransition);
-        bool leftTransition = intersectRect(actor.rect, m_leftLevelTransition);
 
-        if (rightTransition)
+        if (m_callback)
         {
-            m_callback->levelTransition(RIGHT);
-        }
-        else if (leftTransition)
-        {
-            m_callback->levelTransition(LEFT);
+            bool rightTransition = intersectRect(actor.rect, m_rightLevelTransition);
+            bool leftTransition = intersectRect(actor.rect, m_leftLevelTransition);
+
+            if (rightTransition)
+            {
+                m_callback->levelTransition(RIGHT);
+            }
+            else if (leftTransition)
+            {
+                m_callback->levelTransition(LEFT);
+            }
         }
 
         for (int n = 0; n < m_walls.size(); ++n)

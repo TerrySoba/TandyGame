@@ -6,11 +6,21 @@
 
 struct TestThingy
 {
-    ~TestThingy()
+    TestThingy(const char* text) :
+        m_text(text)
     {
     }
 
-    void doIt() {}
+    ~TestThingy()
+    {
+        printf("~TestThingy: %s\n", m_text);
+    }
+
+    void doIt() {
+        printf("doIt: %s\n", m_text);
+    }
+
+    const char* m_text;
 };
 
 
@@ -27,9 +37,32 @@ TEST(SharedPtrTest1)
 
 TEST(SharedPtrTest2)
 {
-    shared_ptr<TestThingy> i(new TestThingy);
+    shared_ptr<TestThingy> i(new TestThingy("test1"));
     shared_ptr<TestThingy> j = i;
+
+    i = new TestThingy("test2");
 
     j->doIt();
     i->doIt();
+}
+
+TEST(SharedPtrTest3)
+{
+    shared_ptr<TestThingy> i(new TestThingy("test1"));
+    shared_ptr<TestThingy> j = i;
+
+    i = new TestThingy("test2");
+    j = new TestThingy("test3");
+
+    j->doIt();
+    i->doIt();
+}
+
+TEST(SharedPtrTest4)
+{
+    shared_ptr<TestThingy> i(new TestThingy("test1"));
+    shared_ptr<TestThingy> j = i;
+    i.reset();
+    j.reset();
+    
 }

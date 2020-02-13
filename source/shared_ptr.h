@@ -46,6 +46,12 @@ public:
         delete_storage();
     }
 
+    void reset()
+    {
+        delete_storage();
+        m_storage = (shared_ptr_storage<ValueT>*)0;
+    }
+
     ValueT* get()
     {
         if (!m_storage)

@@ -93,10 +93,12 @@ void Game::levelTransition(LevelTransition transition)
     switch(transition)
     {
         case RIGHT:
-            loadLevel(++m_levelNumber);
+            m_physics.reset();
+            loadLevel(m_levelNumber + 1);
             break;
         case LEFT:
-            loadLevel(--m_levelNumber);
+            m_physics.reset();
+            loadLevel(m_levelNumber - 1);
             break;
     }
 }
