@@ -14,7 +14,7 @@
 Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
            shared_ptr<Animation> actorAnimation, const char* levelBasename) :
     m_vgaGfx(vgaGfx), m_tiles(tiles), m_actorAnimation(actorAnimation),
-    m_frames(0), m_levelBasename(levelBasename)
+    m_frames(0), m_levelBasename(levelBasename), m_nextLevel(-1)
 {
 }
 
@@ -58,6 +58,12 @@ void Game::loadLevel(int levelNumber)
 
 void Game::drawFrame()
 {
+    if (m_nextLevel >= 0)
+    {
+        loadLevel(m_nextLevel);
+        m_nextLevel = -1;
+    }
+
     m_vgaGfx->clear();
 
     int16_t playerX;
@@ -93,12 +99,10 @@ void Game::levelTransition(LevelTransition transition)
     switch(transition)
     {
         case RIGHT:
-            m_physics.reset();
-            loadLevel(m_levelNumber + 1);
+            m_nextLevel = m_levelNumber + 1;
             break;
         case LEFT:
-            m_physics.reset();
-            loadLevel(m_levelNumber - 1);
+            m_nextLevel = m_levelNumber - 1;
             break;
     }
 }

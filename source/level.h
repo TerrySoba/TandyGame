@@ -15,6 +15,8 @@ public:
           int16_t tileWidth, int16_t tileHeight,
           int16_t offsetX, int16_t offsetY);
 
+    virtual ~Level();
+
     virtual int16_t width() const;
     virtual int16_t height() const;
     virtual void draw(const ImageBase& target, int16_t x, int16_t y) const;

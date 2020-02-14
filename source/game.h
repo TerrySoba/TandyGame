@@ -2,6 +2,7 @@
 #define GAME_H_INCLUDED
 
 #include "shared_ptr.h"
+#include "physics.h"
 #include "physics_event.h"
 #include "tiny_string.h"
 
@@ -9,7 +10,6 @@
 class VgaGfx;
 class ImageBase;
 class Animation;
-class Physics;
 
 class Game : public PhysicsCallback
 {
@@ -31,6 +31,7 @@ private:
     int m_player;
 	TinyString m_levelBasename;
 	int m_levelNumber;
+	int m_nextLevel;
 };
 
 

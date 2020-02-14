@@ -3,6 +3,10 @@
 #include "blit.h"
 #include "detect_lines.h"
 
+Level::~Level()
+{
+}
+
 
 Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<ImageBase> tilesImage,
              int16_t tileWidth, int16_t tileHeight,
