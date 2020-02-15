@@ -94,6 +94,8 @@ TgaImage::TgaImage(const char* filename)
         }
     }
 
+    fclose(fp);
+
     m_width = width;
     m_height = height;
 
@@ -115,9 +117,7 @@ TgaImage::TgaImage(const char* filename)
         }
 
         free(lineStore);
-    }
-
-	fclose(fp);
+    }	
 }
 
 TgaImage::~TgaImage()

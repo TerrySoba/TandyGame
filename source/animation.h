@@ -29,14 +29,18 @@ public:
     Animation(const char* jsonFilename, const char* tgaFilename, bool transparent = true);
 
     void nextFrame();
-    void useTag(int16_t);
+    
     void useTag(const char* name);
-
+    tnd::vector<FrameTag> getTags();
+    
     virtual int16_t width() const;
 	virtual int16_t height() const;
     virtual void draw(const ImageBase& target, int16_t x, int16_t y) const;
+private:
+    void useTag(int16_t);
 
 private:
+
     int16_t m_width;
     int16_t m_height;
 

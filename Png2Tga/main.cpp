@@ -227,7 +227,7 @@ void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
 
 void convertToTga(const Image& image, std::string outputFile, bool useRleCompression = true)
 {
-    std::cout << "w:" << image.width << " h:" << image.height << std::endl;
+    // std::cout << "w:" << image.width << " h:" << image.height << std::endl;
 
     auto rgbiImage = convertToRgbi(image);
 

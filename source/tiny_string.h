@@ -11,6 +11,7 @@ public:
 
     bool operator==(const char* str);
     void operator=(const char* str);
+    void operator=(const TinyString& other);
 
     int size() const;
     const char* c_str() const;

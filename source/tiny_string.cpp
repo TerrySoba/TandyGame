@@ -30,6 +30,12 @@ void TinyString::operator=(const char* str)
     m_data = strdup(str);
 }
 
+void TinyString::operator=(const TinyString& other)
+{
+    free((void*)m_data);
+    m_data = strdup(other.m_data);
+}
+
 int TinyString::size() const
 {
     return strlen(m_data);

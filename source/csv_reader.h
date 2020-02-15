@@ -53,6 +53,8 @@ public:
             }
         }
 
+        fclose(fp);
+
         m_width = width;
         m_height = m_data.size() / m_width;
 

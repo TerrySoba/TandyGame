@@ -42,7 +42,7 @@ Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool tra
         FrameTag frameTag; //(, , tag.at("name").toString().c_str());
         frameTag.startFrame = tag.at("from").toInt();
         frameTag.endFrame = tag.at("to").toInt();
-        frameTag.name = tag.at("name").toString().c_str();
+        frameTag.name = tag.at("name").toString(); //.c_str();
         m_tags.push_back(frameTag);
     }
 
@@ -89,6 +89,11 @@ void Animation::useTag(const char* name)
             return;
         }
     }
+}
+
+tnd::vector<FrameTag> Animation::getTags()
+{
+    return m_tags;
 }
 
 void Animation::draw(const ImageBase& target, int16_t targetX, int16_t targetY) const
