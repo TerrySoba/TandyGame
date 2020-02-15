@@ -3,10 +3,8 @@ game.exe
 ../images/tiles.tga
 ../images/guy.tga
 ../images/guy.jsn
-../images/l01_bg.csv
-../images/l01_col.csv
-../images/l02_bg.csv
-../images/l02_col.csv
-../images/l03_bg.csv
-../images/l03_col.csv
+../levels/l01_bg.csv
+../levels/l01_col.csv
+../levels/l02_bg.csv
+../levels/l02_col.csv
 ../readme/readme.txt

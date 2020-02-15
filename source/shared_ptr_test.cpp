@@ -13,11 +13,11 @@ struct TestThingy
 
     ~TestThingy()
     {
-        printf("~TestThingy: %s\n", m_text);
+        // printf("~TestThingy: %s\n", m_text);
     }
 
     void doIt() {
-        printf("doIt: %s\n", m_text);
+        // printf("doIt: %s\n", m_text);
     }
 
     const char* m_text;

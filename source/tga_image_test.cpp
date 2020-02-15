@@ -4,7 +4,7 @@
 
 TEST(TgaImageTest)
 {
-    TgaImage tgaImage1("..\\images\\gradient.tga");
-    TgaImage tgaImage2("..\\images\\gradcomp.tga");
+    TgaImage tgaImage1("..\\testdata\\gradient.tga");
+    TgaImage tgaImage2("..\\testdata\\gradcomp.tga");
 }
 

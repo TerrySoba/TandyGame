@@ -26,7 +26,7 @@ TEST(CsvReaderTest2)
 
 TEST(CsvReaderTest3)
 {
-    CsvReader<int> reader("..\\images\\level1.csv");
+    CsvReader<int> reader("..\\testdata\\level1.csv");
     ASSERT_TRUE(reader.width() == 20);
     ASSERT_TRUE(reader.height() == 12);
 
