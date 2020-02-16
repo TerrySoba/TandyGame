@@ -1,6 +1,7 @@
 #include "rad_player.h"
 
 #include "exception.h"
+#include "safe_file.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,29 +27,21 @@ static void* allignedMalloc(int size, void** origBlock = NULL)
 
 void* radLoadModule(const char* filename)
 {
-	FILE* fp = fopen(filename, "rb");
+	SafeFile fp(filename, "rb");
 
-    fseek(fp, 0, SEEK_END);
-    int len = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-
-	if (!fp)
-	{
-        printf("Could not open file %s\n", filename);
-		return NULL;
-	}
+    fseek(fp.file(), 0, SEEK_END);
+    int len = ftell(fp.file());
+	fseek(fp.file(), 0, SEEK_SET);
 
 	void* origBlock;
 	uint8_t* songData = (uint8_t*)allignedMalloc(len, &origBlock);
 	uint8_t* buf = songData;
 
-	while (!feof(fp))
+	while (!feof(fp.file()))
 	{
-		int bytes = fread(buf, 1, 1000, fp);
+		int bytes = fread(buf, 1, 1000, fp.file());
 		buf += bytes;
 	}
-
-	fclose(fp);
 
 	if (!radInitPlayer(songData))
 	{

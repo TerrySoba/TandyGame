@@ -6,6 +6,8 @@
 
 #include "vector.h"
 #include "exception.h"
+#include "safe_file.h"
+
 
 template <class ValueT>
 class CsvReader
@@ -13,19 +15,15 @@ class CsvReader
 public:
     CsvReader(const char* path)
     {
-        FILE* fp = fopen(path, "rb");
-        if (!fp)
-        {
-            throw Exception("Could not open CSV file: ", path);
-        }
+        SafeFile fp(path, "rb");
 
         tnd::vector<char> buf;
 
         int width = -1;
         int tokenCount = 0;
-        while(!feof(fp))
+        while(!feof(fp.file()))
         {
-            char ch = getc(fp);
+            char ch = getc(fp.file());
             
             if (ch == ',' || ch == '\n')
             {
@@ -52,8 +50,6 @@ public:
                 buf.push_back(ch);
             }
         }
-
-        fclose(fp);
 
         m_width = width;
         m_height = m_data.size() / m_width;

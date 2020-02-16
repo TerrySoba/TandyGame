@@ -27,6 +27,7 @@ cycledown=20
 mount c release
 c:
 @echo If game does not run lower number in next line to free memory!
-loadfix -150 game
+mem
+loadfix -180 game
 pause
 exit

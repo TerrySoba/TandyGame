@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "safe_file.h"
+
 
 Image::Image(const Image& image)
 {
@@ -24,21 +26,14 @@ Image& Image::operator=(const Image& other)
 
 Image::Image(const char* filename)
 {
-    FILE* fp = fopen(filename, "rb");
+    SafeFile fp(filename, "rb");
 
-	if (!fp)
-	{
-        throw Exception("Could not open file: ", filename);
-	}
-
-    fread(&m_width, 2, 1, fp);
-    fread(&m_height, 2, 1, fp);
+    fread(&m_width, 2, 1, fp.file());
+    fread(&m_height, 2, 1, fp.file());
 
     m_data = new char[m_width * m_height];
 
-    fread(m_data, 1, m_width * m_height, fp);
-
-	fclose(fp);
+    fread(m_data, 1, m_width * m_height, fp.file());
 }
 
 Image::Image(int width, int height, uint8_t value) :

@@ -1,5 +1,6 @@
 #include "json.h"
 #include "exception.h"
+#include "safe_file.h"
 
 #include "3rd_party/cJSON/cJSON.h"
 
@@ -17,18 +18,13 @@ Json::Json(const char* data)
 
 Json::Json(const Filename& filename)
 {
-    FILE* fp = fopen(filename.getFilename(), "rb");
-    if (!fp)
-    {
-        throw Exception("Could not open file:", filename.getFilename());
-    }
+    SafeFile fp(filename.getFilename(), "rb");
 
-    fseek(fp, 0, SEEK_END);
-    size_t fileSize = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    fseek(fp.file(), 0, SEEK_END);
+    size_t fileSize = ftell(fp.file());
+    fseek(fp.file(), 0, SEEK_SET);
     char* buffer = (char*)malloc(fileSize + 1);
-    fread(buffer, fileSize, 1, fp);
-    fclose(fp);
+    fread(buffer, fileSize, 1, fp.file());
 
     jsonRoot = cJSON_Parse(buffer);
     free((void*)buffer);
