@@ -30,7 +30,7 @@ int main()
 
 		Game game(gfx, tiles, guy, "l%02d");
 
-		game.loadLevel(1);
+		game.loadLevel(1, UseSpawnPoint::YES);
 
 		while (!s_keyEsc)
     	{	

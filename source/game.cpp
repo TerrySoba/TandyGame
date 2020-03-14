@@ -18,7 +18,7 @@ Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
 {
 }
 
-void Game::loadLevel(int levelNumber)
+void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint)
 {
     m_levelNumber = levelNumber;
     tnd::vector<char> buf(100);
@@ -33,14 +33,37 @@ void Game::loadLevel(int levelNumber)
 
     m_vgaGfx->drawBackground(level, -8, -8);
 
+    int16_t actorPosX, actorPosY;
+    if (m_physics.get() == 0 || useSpawnPoint == UseSpawnPoint::YES)
+    {
+        // so no previous position existed, or use of spawn point was explicitele requested
+        // because of that we just put the actor to the define spawn point of the level
+        actorPosX = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().x);
+        actorPosY = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().y);
+    }
+    else
+    {
+        // we use the y position of the actor from the previous level
+        m_physics->getActorPos(m_player, actorPosX, actorPosY);
+        if (SUBPIXEL_TO_PIXEL(actorPosX) > 160)
+        {
+            actorPosX = PIXEL_TO_SUBPIXEL(10);
+        }
+        else
+        {
+            actorPosX = PIXEL_TO_SUBPIXEL(310 - m_actorAnimation->width());
+        }
+    }
+    
+    m_physics.reset(); // reset first, so we do not have two instances of physics at once
     m_physics = shared_ptr<Physics>(new Physics(this));
     Actor actor;
-    actor.rect.x = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().x);
-    actor.rect.y = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().y);
+    actor.rect.x = actorPosX;
+    actor.rect.y = actorPosY;
     actor.rect.width = PIXEL_TO_SUBPIXEL(m_actorAnimation->width());
     actor.rect.height = PIXEL_TO_SUBPIXEL(m_actorAnimation->height());
-    actor.dx = 0;// 30;
-    actor.dy = 0;// -50;
+    actor.dx = 0;
+    actor.dy = 0;
     actor.jumpFrame = 1;
     m_player = m_physics->addActor(actor);
 
@@ -56,11 +79,12 @@ void Game::loadLevel(int levelNumber)
 }
 
 
+
 void Game::drawFrame()
 {
     if (m_nextLevel >= 0)
     {
-        loadLevel(m_nextLevel);
+        loadLevel(m_nextLevel, UseSpawnPoint::NO);
         m_nextLevel = -1;
     }
 

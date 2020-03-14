@@ -7,6 +7,7 @@ enum LevelTransition
     LEFT  = 2
 };
 
+
 class PhysicsCallback
 {
 public:

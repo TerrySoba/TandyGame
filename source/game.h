@@ -11,12 +11,23 @@ class VgaGfx;
 class ImageBase;
 class Animation;
 
+
+namespace UseSpawnPoint
+{
+	enum UseSpawnPointT
+	{
+		NO,
+		YES
+	};
+}
+
+
 class Game : public PhysicsCallback
 {
 public:
 	Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, shared_ptr<Animation> actorAnimation, const char* levelBasename);
 
-	void loadLevel(int levelNumber);
+	void loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint);
     void drawFrame();
 
 	// PhysicsCallback interface

@@ -7,4 +7,6 @@ game.exe
 ../levels/l01_col.csv
 ../levels/l02_bg.csv
 ../levels/l02_col.csv
+../levels/l03_bg.csv
+../levels/l03_col.csv
 ../readme/readme.txt

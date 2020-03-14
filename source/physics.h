@@ -7,7 +7,7 @@
 #include "vector.h"
 #include <stdint.h>
 
-// Physics calculations are done on subpixel.
+// Physics calculations are done on subpixels.
 // One pixel constitutes 16 subpixels, so shifting by 4
 // is used to transform between pixels and subpixels.
 
