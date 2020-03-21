@@ -5,6 +5,7 @@
 #include "physics.h"
 #include "physics_event.h"
 #include "tiny_string.h"
+#include "actor_animation_controller.h"
 
 // forward declarations
 class VgaGfx;
@@ -43,6 +44,7 @@ private:
 	TinyString m_levelBasename;
 	int m_levelNumber;
 	int m_nextLevel;
+	ActorAnimationController m_animationController;
 };
 
 

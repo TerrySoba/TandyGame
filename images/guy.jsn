@@ -174,6 +174,54 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
     "sourceSize": { "w": 10, "h": 15 },
     "duration": 100
+   },
+   "guy_anim 22.ase": {
+    "frame": { "x": 220, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 23.ase": {
+    "frame": { "x": 230, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 24.ase": {
+    "frame": { "x": 240, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 25.ase": {
+    "frame": { "x": 250, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 26.ase": {
+    "frame": { "x": 260, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 27.ase": {
+    "frame": { "x": 270, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
    }
  },
  "meta": {
@@ -181,13 +229,14 @@
   "version": "1.0-dev",
   "image": "/home/yoshi252/program_sources/TandyGame/images/guy.png",
   "format": "I8",
-  "size": { "w": 220, "h": 15 },
+  "size": { "w": 280, "h": 15 },
   "scale": "1",
   "frameTags": [
-   { "name": "Start", "from": 0, "to": 2, "direction": "forward" },
-   { "name": "Loop", "from": 3, "to": 10, "direction": "forward" },
-   { "name": "StartR", "from": 11, "to": 13, "direction": "forward" },
-   { "name": "LoopR", "from": 14, "to": 21, "direction": "forward" }
+   { "name": "Stand", "from": 0, "to": 5, "direction": "forward" },
+   { "name": "Start", "from": 6, "to": 8, "direction": "forward" },
+   { "name": "Loop", "from": 9, "to": 16, "direction": "forward" },
+   { "name": "StartR", "from": 17, "to": 19, "direction": "forward" },
+   { "name": "LoopR", "from": 20, "to": 27, "direction": "forward" }
   ],
   "layers": [
    { "name": "Background", "opacity": 255, "blendMode": "normal" }

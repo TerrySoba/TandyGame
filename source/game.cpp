@@ -14,7 +14,8 @@
 Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
            shared_ptr<Animation> actorAnimation, const char* levelBasename) :
     m_vgaGfx(vgaGfx), m_tiles(tiles), m_actorAnimation(actorAnimation),
-    m_frames(0), m_levelBasename(levelBasename), m_nextLevel(-1)
+    m_frames(0), m_levelBasename(levelBasename), m_nextLevel(-1),
+    m_animationController(actorAnimation)
 {
 }
 
@@ -29,7 +30,7 @@ void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoin
     TinyString levelCol = TinyString(buf.data() + TinyString("_col.csv"));
 
     Level level(levelBg.c_str(), levelCol.c_str(), m_tiles, 16, 16, -8, -8);
-    m_actorAnimation->useTag("Loop");
+    m_actorAnimation->useTag("LoopR");
 
     m_vgaGfx->drawBackground(level, -8, -8);
 
@@ -79,7 +80,6 @@ void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoin
 }
 
 
-
 void Game::drawFrame()
 {
     if (m_nextLevel >= 0)
@@ -93,6 +93,8 @@ void Game::drawFrame()
     int16_t playerX;
     int16_t playerY;
     m_physics->getActorPos(m_player, playerX, playerY);
+
+    m_animationController.setPos(playerX, playerY);
 
     m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
     m_vgaGfx->drawScreen();
