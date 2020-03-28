@@ -49,7 +49,7 @@ vector_test.o: vector.h unit_test.h
 rectangle.o: rectangle.h 
 tiny_string.o: tiny_string.h
 rectangle_test.o: rectangle.h unit_test.h
-game.o: game.h shared_ptr.h level.h animation.h physics.h vgagfx.h keyboard.h
+game.o: game.h shared_ptr.h level.h animation.h physics.h vgagfx.h keyboard.h actor_animation_controller.h
 tiny_string_test.o: tiny_string.h
 animation_test.o: animation.h unit_test.h
 

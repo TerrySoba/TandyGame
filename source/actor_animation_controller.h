@@ -35,7 +35,7 @@ public:
 
         AnimationEnum nextAnim = m_activeAnimation;
 
-        if (my_abs(dy) < 10)
+        if (my_abs(dy) < 2)
         {
             if (dx > 0)
             {
