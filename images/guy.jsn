@@ -222,6 +222,38 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
     "sourceSize": { "w": 10, "h": 15 },
     "duration": 100
+   },
+   "guy_anim 28.ase": {
+    "frame": { "x": 280, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 29.ase": {
+    "frame": { "x": 290, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 30.ase": {
+    "frame": { "x": 300, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 31.ase": {
+    "frame": { "x": 310, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
    }
  },
  "meta": {
@@ -229,14 +261,16 @@
   "version": "1.0-dev",
   "image": "/home/yoshi252/program_sources/TandyGame/images/guy.png",
   "format": "I8",
-  "size": { "w": 280, "h": 15 },
+  "size": { "w": 320, "h": 15 },
   "scale": "1",
   "frameTags": [
    { "name": "Stand", "from": 0, "to": 5, "direction": "forward" },
-   { "name": "Start", "from": 6, "to": 8, "direction": "forward" },
-   { "name": "Loop", "from": 9, "to": 16, "direction": "forward" },
-   { "name": "StartR", "from": 17, "to": 19, "direction": "forward" },
-   { "name": "LoopR", "from": 20, "to": 27, "direction": "forward" }
+   { "name": "StartR", "from": 6, "to": 8, "direction": "forward" },
+   { "name": "WalkR", "from": 9, "to": 16, "direction": "forward" },
+   { "name": "StartL", "from": 17, "to": 19, "direction": "forward" },
+   { "name": "WalkL", "from": 20, "to": 27, "direction": "forward" },
+   { "name": "JumpR", "from": 28, "to": 29, "direction": "forward" },
+   { "name": "JumpL", "from": 30, "to": 31, "direction": "forward" }
   ],
   "layers": [
    { "name": "Background", "opacity": 255, "blendMode": "normal" }

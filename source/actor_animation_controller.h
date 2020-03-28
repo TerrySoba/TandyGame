@@ -10,7 +10,12 @@ enum AnimationEnum
     ANIM_WALK_RIGHT,
     ANIM_WALK_LEFT,
     ANIM_STAND,
+    ANIM_JUMP_RIGHT,
+    ANIM_JUMP_LEFT,
 };
+
+#define my_abs(x) ((x > 0)?(x):-(x))
+
 
 class ActorAnimationController
 {
@@ -30,18 +35,33 @@ public:
 
         AnimationEnum nextAnim = m_activeAnimation;
 
-        if (dx > 0)
+        if (my_abs(dy) < 10)
         {
-            nextAnim = ANIM_WALK_RIGHT;
+            if (dx > 0)
+            {
+                nextAnim = ANIM_WALK_RIGHT;
+            }
+            else if (dx < 0)
+            {
+                nextAnim = ANIM_WALK_LEFT;
+            }
+            else if (dx == 0)
+            {
+                nextAnim = ANIM_STAND;
+            }
         }
-        else if (dx < 0)
+        else
         {
-            nextAnim = ANIM_WALK_LEFT;
+            if (dx >= 0)
+            {
+                nextAnim = ANIM_JUMP_RIGHT;
+            }
+            else
+            {
+                nextAnim = ANIM_JUMP_LEFT;
+            }
         }
-        else if (dx == 0)
-        {
-            nextAnim = ANIM_STAND;
-        }
+        
 
         if (nextAnim != m_activeAnimation)
         {
@@ -49,13 +69,19 @@ public:
             switch (nextAnim)
             {
             case ANIM_WALK_RIGHT:
-                m_actorAnimation->useTag("Loop");
+                m_actorAnimation->useTag("WalkR");
                 break;
             case ANIM_WALK_LEFT:
-                m_actorAnimation->useTag("LoopR");
+                m_actorAnimation->useTag("WalkL");
                 break;
             case ANIM_STAND:
                 m_actorAnimation->useTag("Stand");
+                break;
+            case ANIM_JUMP_RIGHT:
+                m_actorAnimation->useTag("JumpR");
+                break;
+            case ANIM_JUMP_LEFT:
+                m_actorAnimation->useTag("JumpL");
                 break;
             }
         }

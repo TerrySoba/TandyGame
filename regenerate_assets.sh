@@ -18,6 +18,8 @@ do
     $png2tga -c ${directory}/${filename}.png ${directory}/${filename}.tga
 done
 
+cp images/guy.json images/guy.jsn
+
 # now convert tiled maps to csv
 for tmxfile in levels/*.tmx
 do
