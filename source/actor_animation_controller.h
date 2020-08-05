@@ -14,6 +14,12 @@ enum AnimationEnum
     ANIM_JUMP_LEFT,
 };
 
+enum Direction
+{
+    UP,
+    DOWN
+};
+
 #define my_abs(x) ((x > 0)?(x):-(x))
 
 
@@ -21,33 +27,43 @@ class ActorAnimationController
 {
 public:
     ActorAnimationController(shared_ptr<Animation> actorAnimation) :
-        m_actorAnimation(actorAnimation), m_lastX(0), m_lastY(0), m_activeAnimation(ANIM_INITIAL)
+        m_actorAnimation(actorAnimation), m_lastX(0), m_lastY(0), m_activeAnimation(ANIM_INITIAL), m_lastDirection(DOWN), airFrames(0)
     {
     }
     
     void setPos(int16_t x, int16_t y)
     {
-        
         int16_t dx = x - m_lastX;
         int16_t dy = y - m_lastY;
         m_lastX = x;
         m_lastY = y;
 
+        Direction direction = (dy > 0) ? DOWN : UP;
+
         AnimationEnum nextAnim = m_activeAnimation;
 
         if (my_abs(dy) < 2)
         {
-            if (dx > 0)
+            if (m_lastDirection == DOWN || airFrames++ > 4)
             {
-                nextAnim = ANIM_WALK_RIGHT;
+                airFrames = 0;
+                if (dx > 0)
+                {
+                    nextAnim = ANIM_WALK_RIGHT;
+                }
+                else if (dx < 0)
+                {
+                    nextAnim = ANIM_WALK_LEFT;
+                }
+                else if (dx == 0)
+                {
+                    nextAnim = ANIM_STAND;
+                }
             }
-            else if (dx < 0)
+            else
             {
-                nextAnim = ANIM_WALK_LEFT;
-            }
-            else if (dx == 0)
-            {
-                nextAnim = ANIM_STAND;
+                ++airFrames;
+                nextAnim = m_activeAnimation;
             }
         }
         else
@@ -62,6 +78,7 @@ public:
             }
         }
         
+        if (dy != 0) m_lastDirection = direction;
 
         if (nextAnim != m_activeAnimation)
         {
@@ -93,6 +110,8 @@ private:
     int16_t m_lastX;
     int16_t m_lastY;
     AnimationEnum m_activeAnimation;
+    Direction m_lastDirection;
+    int airFrames;
 };
 
 #endif
