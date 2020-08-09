@@ -44,8 +44,9 @@ private:
 
 
 Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool transparent) :
-    m_image(tgaFilename), m_transparent(transparent)
+    m_transparent(transparent)
 {
+    TgaImage image(tgaFilename);
     Filename filename(jsonFilename);
     Json json(filename);
     JsonValue value = json.getRoot();
@@ -71,7 +72,7 @@ Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool tra
         };
 
         m_frames.push_back(f);
-        FrameImage frameImage(m_image, x, y, w, h);
+        FrameImage frameImage(image, x, y, w, h);
         m_frameSprites.push_back(CompiledSprite::compileSprite(frameImage, 320));
     }
 

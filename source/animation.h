@@ -52,8 +52,6 @@ private:
     int m_currentFrame;
     int m_minFrame;
     int m_maxFrame;
-
-    TgaImage m_image;
     bool m_transparent;
 };
 
