@@ -8,6 +8,7 @@
 #include "version.h"
 #include "vector.h"
 #include "exception.h"
+#include "compiled_sprite.h"
 
 #include <stdio.h>
 
@@ -17,6 +18,7 @@ Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
     m_frames(0), m_levelBasename(levelBasename), m_nextLevel(-1),
     m_animationController(actorAnimation)
 {
+    m_compiledSprite = shared_ptr<CompiledSprite>(new CompiledSprite("guyframe.tga", 320));
 }
 
 void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint)
@@ -96,7 +98,18 @@ void Game::drawFrame()
 
     m_animationController.setPos(playerX, playerY);
 
+    // m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
+    m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX) + 10, SUBPIXEL_TO_PIXEL(playerY));
+    // m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX) + 20, SUBPIXEL_TO_PIXEL(playerY));
+    // m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX) + 30, SUBPIXEL_TO_PIXEL(playerY));
+
+    // m_vgaGfx->draw(*m_actorAnimation, 10, 10);
+    // m_vgaGfx->draw(*m_actorAnimation, 30, 10);
+    // m_vgaGfx->draw(*m_actorAnimation, 50, 10);
+    // m_vgaGfx->draw(*m_actorAnimation, 70, 10);
+
     m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
+    // m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX) + 10, SUBPIXEL_TO_PIXEL(playerY));
     m_vgaGfx->drawScreen();
 
     ++m_frames;

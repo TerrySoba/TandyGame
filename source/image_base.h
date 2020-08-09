@@ -11,8 +11,7 @@ public:
 	virtual int16_t height() const = 0;
 	virtual char* data() const = 0;
 
-
-    char* linePtr(int16_t line) const
+    inline char* linePtr(int16_t line) const
     {
         return data() + (width() * line);
     }

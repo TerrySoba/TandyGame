@@ -15,12 +15,16 @@ void blit(const ImageBase& source, const Rectangle& sourceRect, const ImageBase&
 
     int16_t copyWidth = dest.width;
     int16_t copyHeight = dest.height;
+    int16_t destY = dest.y;
+    int16_t destX = dest.x;
+    int16_t srcX = src.x;
+    int16_t srcY = src.y;
 
     for (int16_t y = 0; y < copyHeight; ++y)
     {
         memcpy(
-            target.linePtr(dest.y + y) + dest.x,
-            source.linePtr(src.y + y) + src.x,
+            target.linePtr(destY + y) + destX,
+            source.linePtr(srcY + y) + srcX,
             copyWidth);
     }
 }

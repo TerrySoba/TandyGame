@@ -114,12 +114,19 @@ void Animation::draw(const ImageBase& target, int16_t targetX, int16_t targetY) 
     }
     else
     {
-        for (int y = 0; y < frame.height; ++y)
+        int16_t imageWidth = m_image.width();
+        int16_t frameHeight = frame.height;
+        int16_t frameWidth = frame.width;
+        int16_t frameY = frame.y;
+        int16_t frameX = frame.x;
+        int16_t targetWidth = target.width();
+        char* targetData = target.data();
+        for (int y = 0; y < frameHeight; ++y)
         {
-            char *dst = target.linePtr(targetY + y) + targetX;
-            const char *src = data + m_image.width() * (frame.y + y) + frame.x;
+            char *dst = targetData + targetWidth * (targetY + y) + targetX;
+            const char *src = data + imageWidth * (frameY + y) + frameX;
 
-            for (int i = 0; i < frame.width; ++i)
+            for (int i = 0; i < frameWidth; ++i)
             {
                 if (*src != 0)
                 {

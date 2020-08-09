@@ -2,6 +2,7 @@ game.exe
 ../music/CELT.RAD
 ../images/tiles.tga
 ../images/guy.tga
+../images/guyframe.tga
 ../images/guy.jsn
 ../levels/l01_bg.csv
 ../levels/l01_col.csv

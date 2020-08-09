@@ -144,12 +144,16 @@ void VgaGfx::clear()
     {
         m_undrawnRects.push_back(m_dirtyRects[i]);
         const Rectangle& rect = m_dirtyRects[i];
-        for (int y = 0; y < rect.height; ++y)
+        int16_t rectHeight = rect.height;
+        int16_t rectWidth = rect.width;
+        int16_t rectY = rect.y;
+        int16_t rectX = rect.x;
+        for (int16_t y = 0; y < rectHeight; ++y)
         {
             // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
             // memset(getScreenLine(y + rect.y) + rect.x / 2, 0, rect.width / 2);
             // memset(getBackBufferLine(y + rect.y) + rect.x / 2, 0, rect.width / 2);
-            memcpy(getBackBufferLine(y + rect.y) + rect.x, getBackgroundImageLine(y + rect.y) + rect.x, rect.width);
+            memcpy(getBackBufferLine(y + rectY) + rectX, getBackgroundImageLine(y + rectY) + rectX, rectWidth);
         }
     }
     m_dirtyRects.clear();
@@ -164,10 +168,14 @@ void VgaGfx::drawScreen()
     for (int i = 0; i < m_undrawnRects.size(); ++i)
     {
         Rectangle& rect = m_undrawnRects[i];
-        for (int y = 0; y < rect.height; ++y)
+        int16_t rectHeight = rect.height;
+        int16_t rectWidth = rect.width;
+        int16_t rectY = rect.y;
+        int16_t rectX = rect.x;
+        for (int16_t y = 0; y < rectHeight; ++y)
         {
             // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
-            memcpy(getScreenLine(y + rect.y) + rect.x, getBackBufferLine(y + rect.y) + rect.x, rect.width);
+            memcpy(getScreenLine(y + rectY) + rectX, getBackBufferLine(y + rectY) + rectX, rectWidth);
         }
     }
 
@@ -190,8 +198,6 @@ void VgaGfx::setBackground(const ImageBase& image)
 }
 
 
-
-
 void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
 {
     int len = strlen(text);
@@ -207,7 +213,7 @@ void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
     for (int i = 0; i < len; ++i)
     {
         char* charImg = alphabet[getCharacterIndex(text[i])];
-        for (int y = 0; y < CHAR_HEIGHT; ++y)
+        for (int16_t y = 0; y < CHAR_HEIGHT; ++y)
         {
             memcpy(getBackgroundImageLine(targetY + y) + targetX + i * CHAR_WIDTH, charImg + CHAR_WIDTH * y, CHAR_WIDTH);
         }
