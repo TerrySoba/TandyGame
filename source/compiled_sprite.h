@@ -3,6 +3,16 @@
 
 #include "drawable.h"
 
+typedef void (*DrawCompiledSpritePtr)(char* img);
+
+class PixelSource
+{
+public:
+    virtual int16_t width() const = 0;
+    virtual int16_t height() const = 0;
+    virtual char pixel(int16_t x, int16_t y) const = 0;
+    virtual char transparentColor() const = 0;
+};
 
 /**
  * A compiled sprite loads the given tga file and compiles it to
@@ -26,9 +36,12 @@ public:
     virtual int16_t height() const;
     virtual void draw(char* target, int16_t targetWidth, int16_t targetHeight, int16_t targetX, int16_t targetY) const;
 
+    static DrawCompiledSpritePtr compileSprite(const PixelSource& image, int16_t targetWidth);
+    static void freeCompiledSprite(DrawCompiledSpritePtr sprite);
+
 private:
     int16_t m_width, m_height;
-    char* m_compiledFunction;
+    DrawCompiledSpritePtr m_compiledFunction;
 };
 
 #endif

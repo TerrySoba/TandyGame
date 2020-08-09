@@ -99,7 +99,7 @@ void Game::drawFrame()
     m_animationController.setPos(playerX, playerY);
 
     // m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
-    // m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX) + 10, SUBPIXEL_TO_PIXEL(playerY));
+    m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX) + 10, SUBPIXEL_TO_PIXEL(playerY));
     // m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX) + 20, SUBPIXEL_TO_PIXEL(playerY));
     // m_vgaGfx->draw(*m_compiledSprite, SUBPIXEL_TO_PIXEL(playerX) + 30, SUBPIXEL_TO_PIXEL(playerY));
 
