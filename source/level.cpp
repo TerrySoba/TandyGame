@@ -3,6 +3,7 @@
 #include "blit.h"
 #include "detect_lines.h"
 
+
 Level::~Level()
 {
 }
@@ -68,17 +69,37 @@ int16_t Level::height() const
     return m_tileHeight * m_mapHeight;
 }
 
+class MemoryImage : public ImageBase
+{
+public:
+    MemoryImage(int16_t width, int16_t height, char* data) :
+        m_width(width), m_height(height), m_data(data)
+    {}
 
-void Level::draw(const ImageBase& target, int16_t x, int16_t y) const
+    int16_t width() const { return m_width; }
+	int16_t height() const { return m_height; }
+	char* data() const { return m_data; }
+
+private:
+    int16_t m_width;
+    int16_t m_height;
+    char* m_data;
+
+};
+
+
+void Level::draw(char* target, int16_t targetWidth, int16_t targetHeight, int16_t x, int16_t y) const
 {
     static const int16_t tileSetWidth = 20;
     static const int16_t tileSetHeight = 12;
+
+    MemoryImage targetImage(targetWidth, targetHeight, target);
 
     for (int i = 0; i < m_mapData.size(); ++i)
     {
         int index = m_mapData[i];
         Rectangle src((index % tileSetWidth) * m_tileWidth, (index / tileSetWidth) * m_tileHeight, m_tileWidth, m_tileHeight);
         Point pos((i % m_mapWidth) * m_tileWidth + x, (i / m_mapWidth) * m_tileHeight + y);
-        blit(*m_tilesImage, src, target, pos);
+        blit(*m_tilesImage, src, targetImage, pos);
     }
 }

@@ -97,33 +97,32 @@ tnd::vector<FrameTag> Animation::getTags()
     return m_tags;
 }
 
-void Animation::draw(const ImageBase& target, int16_t targetX, int16_t targetY) const
+void Animation::draw(char* target, int16_t targetWidth, int16_t targetHeight, int16_t targetX, int16_t targetY) const
 {
     const Frame& frame = m_frames[m_currentFrame];
     char* data = m_image.data();
 
+    int16_t imageWidth = m_image.width();
+    int16_t frameHeight = frame.height;
+    int16_t frameWidth = frame.width;
+    int16_t frameY = frame.y;
+    int16_t frameX = frame.x;
+
     if (!m_transparent)
     {
-        for (int y = 0; y < frame.height; ++y)
+        for (int16_t y = 0; y < frameHeight; ++y)
         {
             memcpy(
-                target.linePtr(targetY + y) + targetX,
-                data + m_image.width() * (frame.y + y)  + frame.x,
-                frame.width);
+                target + targetWidth * (targetY + y) + targetX,
+                data + imageWidth * (frameY + y)  + frameX,
+                frameWidth);
         }
     }
     else
     {
-        int16_t imageWidth = m_image.width();
-        int16_t frameHeight = frame.height;
-        int16_t frameWidth = frame.width;
-        int16_t frameY = frame.y;
-        int16_t frameX = frame.x;
-        int16_t targetWidth = target.width();
-        char* targetData = target.data();
-        for (int y = 0; y < frameHeight; ++y)
+        for (int16_t y = 0; y < frameHeight; ++y)
         {
-            char *dst = targetData + targetWidth * (targetY + y) + targetX;
+            char *dst = target + targetWidth * (targetY + y) + targetX;
             const char *src = data + imageWidth * (frameY + y) + frameX;
 
             for (int i = 0; i < frameWidth; ++i)

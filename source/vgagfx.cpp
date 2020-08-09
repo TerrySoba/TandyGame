@@ -91,24 +91,6 @@ void VgaGfx::vsync()
 #define set_lower(x, val) ((x & 0xf0) | val)
 #define set_upper(x, val) ((x & 0x0f) | (val << 4))
 
-class MemoryImage : public ImageBase
-{
-public:
-    MemoryImage(int16_t width, int16_t height, char* data) :
-        m_width(width), m_height(height), m_data(data)
-    {}
-
-    int16_t width() const { return m_width; }
-	int16_t height() const { return m_height; }
-	char* data() const { return m_data; }
-
-private:
-    int16_t m_width;
-    int16_t m_height;
-    char* m_data;
-
-};
-
 void VgaGfx::draw(const Drawable& image, int16_t x, int16_t y)
 {
     Rectangle rect(
@@ -118,9 +100,7 @@ void VgaGfx::draw(const Drawable& image, int16_t x, int16_t y)
     m_dirtyRects.push_back(rect);
     m_undrawnRects.push_back(rect);
 
-    MemoryImage img(SCREEN_W, SCREEN_H, m_screenBuffer);
-
-    image.draw(img, x, y);
+    image.draw(m_screenBuffer, SCREEN_W, SCREEN_H, x, y);
 }
 
 void VgaGfx::drawBackground(const Drawable& image, int16_t x, int16_t y)
@@ -130,11 +110,8 @@ void VgaGfx::drawBackground(const Drawable& image, int16_t x, int16_t y)
         image.width(), image.height());
     rect = rect.intersection(Rectangle(0, 0, SCREEN_W, SCREEN_H));
     m_dirtyRects.push_back(rect);
-    // m_undrawnRects.push_back(rect);
 
-    MemoryImage img(SCREEN_W, SCREEN_H, m_backgroundImage);
-
-    image.draw(img, x, y);
+    image.draw(m_backgroundImage, SCREEN_W, SCREEN_H, x, y);
 }
 
 

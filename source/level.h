@@ -19,7 +19,7 @@ public:
 
     virtual int16_t width() const;
     virtual int16_t height() const;
-    virtual void draw(const ImageBase& target, int16_t x, int16_t y) const;
+    virtual void draw(char* target, int16_t targetWidth, int16_t targetHeight, int16_t targetX, int16_t targetY) const;
 
     virtual tnd::vector<Rectangle> getWalls() { return m_walls; }
     virtual tnd::vector<Rectangle> getDeath() { return m_death; }

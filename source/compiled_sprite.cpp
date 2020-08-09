@@ -149,10 +149,8 @@ void sprite2(char* img)
 }
 */
 
-void CompiledSprite::draw(const ImageBase& target, int16_t x, int16_t y) const
+void CompiledSprite::draw(char* target, int16_t targetWidth, int16_t targetHeight, int16_t targetX, int16_t targetY) const
 {
-    char* img = target.data();
-    img += target.width() * y + x;
- 
+    char* img = target + targetWidth * targetY + targetX;
     ((spriteFun)m_compiledFunction)(img);
 }
