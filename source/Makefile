@@ -60,9 +60,9 @@ cJSON.o: 3rd_party/cJSON/cJSON.h
 %.o : %.cpp
 	wpp $(coptions) $<
 
-compiled_sprite.o : compiled_sprite.cpp
-	wpp $(coptions) compiled_sprite.cpp
-	wdis compiled_sprite.o
+#compiled_sprite.o : compiled_sprite.cpp
+#	wpp $(coptions) compiled_sprite.cpp
+#	wdis compiled_sprite.o
 
 rad_player_asm.o: 3rd_party/rad_tracker/c_interface.asm 3rd_party/rad_tracker/player_nasm.asm
 	nasm -f obj -i 3rd_party/rad_tracker  3rd_party/rad_tracker/c_interface.asm -o rad_player_asm.o -DRAD_NO_DEFAULT_PLAYER
