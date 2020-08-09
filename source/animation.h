@@ -4,6 +4,7 @@
 #include "tga_image.h"
 #include "image.h"
 #include "drawable.h"
+#include "compiled_sprite.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -27,6 +28,7 @@ class Animation : public Drawable
 {
 public:
     Animation(const char* jsonFilename, const char* tgaFilename, bool transparent = true);
+    ~Animation();
 
     void nextFrame();
     
@@ -45,6 +47,7 @@ private:
     int16_t m_height;
 
     tnd::vector<Frame> m_frames;
+    tnd::vector<DrawCompiledSpritePtr> m_frameSprites;
     tnd::vector<FrameTag> m_tags;
     int m_currentFrame;
     int m_minFrame;

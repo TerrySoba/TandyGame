@@ -6,6 +6,43 @@
 #include <stdio.h>
 #include <string.h>
 
+class FrameImage : public PixelSource
+{
+public:
+    FrameImage(TgaImage& img, int16_t x, int16_t y, int16_t w, int16_t h) :
+        m_img(img), m_x(x), m_y(y), m_w(w), m_h(h)
+    {
+    }
+
+    virtual int16_t width() const
+    {
+        return m_w;
+    }
+
+    virtual int16_t height() const
+    {
+        return m_h;
+    }
+
+    virtual char pixel(int16_t x, int16_t y) const
+    {
+        return m_img.data()[m_img.width() * (m_y + y) + m_x + x];
+    }
+
+    virtual char transparentColor() const
+    {
+        return 0;
+    }
+
+private:
+    TgaImage& m_img;
+    int16_t m_x;
+    int16_t m_y;
+    int16_t m_w;
+    int16_t m_h;
+};
+
+
 Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool transparent) :
     m_image(tgaFilename), m_transparent(transparent)
 {
@@ -34,6 +71,8 @@ Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool tra
         };
 
         m_frames.push_back(f);
+        FrameImage frameImage(m_image, x, y, w, h);
+        m_frameSprites.push_back(CompiledSprite::compileSprite(frameImage, 320));
     }
 
     JsonValue tags = value.at("meta").at("frameTags");
@@ -52,6 +91,15 @@ Animation::Animation(const char* jsonFilename, const char* tgaFilename, bool tra
     m_currentFrame = m_maxFrame;
     nextFrame();
 }
+
+Animation::~Animation()
+{
+    for (int i = 0; i < m_frameSprites.size(); ++i)
+    {
+        CompiledSprite::freeCompiledSprite(m_frameSprites[i]);
+    }
+}
+
 
 int16_t Animation::width() const
 {
@@ -99,44 +147,6 @@ tnd::vector<FrameTag> Animation::getTags()
 
 void Animation::draw(char* target, int16_t targetWidth, int16_t targetHeight, int16_t targetX, int16_t targetY) const
 {
-    const Frame& frame = m_frames[m_currentFrame];
-    char* data = m_image.data();
-
-    int16_t imageWidth = m_image.width();
-    int16_t frameHeight = frame.height;
-    int16_t frameWidth = frame.width;
-    int16_t frameY = frame.y;
-    int16_t frameX = frame.x;
-
-    if (!m_transparent)
-    {
-        for (int16_t y = 0; y < frameHeight; ++y)
-        {
-            memcpy(
-                target + targetWidth * (targetY + y) + targetX,
-                data + imageWidth * (frameY + y)  + frameX,
-                frameWidth);
-        }
-    }
-    else
-    {
-        for (int16_t y = 0; y < frameHeight; ++y)
-        {
-            char *dst = target + targetWidth * (targetY + y) + targetX;
-            const char *src = data + imageWidth * (frameY + y) + frameX;
-
-            for (int i = 0; i < frameWidth; ++i)
-            {
-                if (*src != 0)
-                {
-                    *dst++ = *src++;
-                }
-                else
-                {
-                    ++dst;
-                    ++src;
-                }
-            }
-        }
-    }
+    char *dst = target + targetWidth * targetY + targetX;
+    m_frameSprites[m_currentFrame](dst);
 }
