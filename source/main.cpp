@@ -28,9 +28,10 @@ int main()
 		shared_ptr<Animation> guy(new Animation("guy.jsn", "guy.tga"));
 		shared_ptr<VgaGfx> gfx(new VgaGfx);
 
-		Game game(gfx, tiles, guy, "l%02d");
+		Game game(gfx, tiles, guy, "%02x%02x");
 
-		game.loadLevel(1, UseSpawnPoint::YES);
+		LevelNumber levelNumber = {1,1};
+		game.loadLevel(levelNumber, UseSpawnPoint::YES);
 
 		while (!s_keyEsc)
     	{	

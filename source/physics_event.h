@@ -3,8 +3,10 @@
 
 enum LevelTransition
 {
-    RIGHT = 1,
-    LEFT  = 2
+    RIGHT  = 1,
+    LEFT   = 2,
+    BOTTOM = 3,
+    TOP    = 4
 };
 
 

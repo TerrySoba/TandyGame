@@ -7,6 +7,10 @@ Physics::Physics(PhysicsCallback* callback) :
     m_rightLevelTransition *= 16;
     m_leftLevelTransition =  Rectangle(  0, 0, 4, 200); 
     m_leftLevelTransition *= 16;
+    m_bottomLevelTransition = Rectangle(0, 196, 200, 4);
+    m_bottomLevelTransition *= 16;
+    m_topLevelTransition = Rectangle(0, 0, 200, 4);
+    m_topLevelTransition *= 16;
 }
 
 int Physics::addActor(const Actor &rect)
@@ -72,16 +76,21 @@ void Physics::calc()
 
         if (m_callback)
         {
-            bool rightTransition = intersectRect(actor.rect, m_rightLevelTransition);
-            bool leftTransition = intersectRect(actor.rect, m_leftLevelTransition);
-
-            if (rightTransition)
+            if (intersectRect(actor.rect, m_rightLevelTransition))
             {
                 m_callback->levelTransition(RIGHT);
-            }
-            else if (leftTransition)
+            } 
+            else if (intersectRect(actor.rect, m_leftLevelTransition))
             {
                 m_callback->levelTransition(LEFT);
+            }
+            else if (intersectRect(actor.rect, m_bottomLevelTransition))
+            {
+                m_callback->levelTransition(BOTTOM);
+            }
+            else if (intersectRect(actor.rect, m_topLevelTransition))
+            {
+                m_callback->levelTransition(TOP);
             }
         }
 

@@ -71,6 +71,8 @@ public:
     tnd::vector<Rectangle> m_death;
     Rectangle m_rightLevelTransition;
     Rectangle m_leftLevelTransition;
+    Rectangle m_bottomLevelTransition;
+    Rectangle m_topLevelTransition;
     Point m_spawn;
     tnd::vector<Actor> m_actors;
     PhysicsCallback* m_callback;

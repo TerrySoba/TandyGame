@@ -16,7 +16,7 @@ scaler=none
 [cpu]
 core=auto
 cputype=8086
-cycles=fixed 600
+cycles=fixed 6000
 cycleup=10
 cycledown=20
 

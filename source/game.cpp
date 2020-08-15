@@ -15,17 +15,20 @@
 Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
            shared_ptr<Animation> actorAnimation, const char* levelBasename) :
     m_vgaGfx(vgaGfx), m_tiles(tiles), m_actorAnimation(actorAnimation),
-    m_frames(0), m_levelBasename(levelBasename), m_nextLevel(-1),
+    m_frames(0), m_levelBasename(levelBasename),
     m_animationController(actorAnimation)
 {
+    m_nextLevel.x = -1;
+    m_nextLevel.y = -1;
 }
 
-void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint)
+void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint)
 {
+    LevelNumber previousLevel = m_levelNumber;
     m_levelNumber = levelNumber;
     tnd::vector<char> buf(100);
 
-    sprintf(buf.data(), m_levelBasename.c_str(), m_levelNumber);
+    sprintf(buf.data(), m_levelBasename.c_str(), m_levelNumber.x, m_levelNumber.y);
 
     TinyString levelBg = TinyString(buf.data() + TinyString("_bg.csv"));
     TinyString levelCol = TinyString(buf.data() + TinyString("_col.csv"));
@@ -38,8 +41,8 @@ void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoin
     int16_t actorPosX, actorPosY;
     if (m_physics.get() == 0 || useSpawnPoint == UseSpawnPoint::YES)
     {
-        // so no previous position existed, or use of spawn point was explicitele requested
-        // because of that we just put the actor to the define spawn point of the level
+        // so no previous position existed, or use of spawn point was explicitly requested
+        // because of that we just put the actor to the defined spawn point of the level
         actorPosX = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().x);
         actorPosY = PIXEL_TO_SUBPIXEL(level.getSpawnPoint().y);
     }
@@ -47,13 +50,21 @@ void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoin
     {
         // we use the y position of the actor from the previous level
         m_physics->getActorPos(m_player, actorPosX, actorPosY);
-        if (SUBPIXEL_TO_PIXEL(actorPosX) > 160)
+        if (previousLevel.x < levelNumber.x) // left to right
         {
             actorPosX = PIXEL_TO_SUBPIXEL(10);
         }
-        else
+        else if (previousLevel.x > levelNumber.x) // right to left
         {
             actorPosX = PIXEL_TO_SUBPIXEL(310 - m_actorAnimation->width());
+        }
+        else if (previousLevel.y < levelNumber.y) // top to bottom
+        {
+            actorPosY = PIXEL_TO_SUBPIXEL(10);
+        }
+        else if (previousLevel.y > levelNumber.y) // bottom to tom
+        {
+            actorPosY = PIXEL_TO_SUBPIXEL(190 - m_actorAnimation->height());
         }
     }
     
@@ -71,7 +82,8 @@ void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoin
 
     m_physics->setWalls(level.getWalls());
     m_physics->setDeath(level.getDeath());
-    m_physics->setSpawnPoint(level.getSpawnPoint() * 16);
+    
+    m_physics->setSpawnPoint(Point(actorPosX, actorPosY));
 
     m_vgaGfx->clear();
 
@@ -83,10 +95,10 @@ void Game::loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoin
 
 void Game::drawFrame()
 {
-    if (m_nextLevel >= 0)
+    if (m_nextLevel.x != -1)
     {
         loadLevel(m_nextLevel, UseSpawnPoint::NO);
-        m_nextLevel = -1;
+        m_nextLevel.x = -1;
     }
 
     m_vgaGfx->clear();
@@ -129,10 +141,20 @@ void Game::levelTransition(LevelTransition transition)
     switch(transition)
     {
         case RIGHT:
-            m_nextLevel = m_levelNumber + 1;
+            m_nextLevel = m_levelNumber;
+            m_nextLevel.x += 1;
             break;
         case LEFT:
-            m_nextLevel = m_levelNumber - 1;
+            m_nextLevel = m_levelNumber;
+            m_nextLevel.x -= 1;
+            break;
+        case BOTTOM:
+            m_nextLevel = m_levelNumber;
+            m_nextLevel.y += 1;
+            break;
+        case TOP:
+            m_nextLevel = m_levelNumber;
+            m_nextLevel.y -= 1;
             break;
     }
 }

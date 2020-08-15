@@ -22,13 +22,18 @@ namespace UseSpawnPoint
 	};
 }
 
+struct LevelNumber
+{
+	int8_t x;
+	int8_t y;
+};
 
 class Game : public PhysicsCallback
 {
 public:
 	Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, shared_ptr<Animation> actorAnimation, const char* levelBasename);
 
-	void loadLevel(int levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint);
+	void loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint);
     void drawFrame();
 
 	// PhysicsCallback interface
@@ -42,8 +47,8 @@ private:
     long int m_frames;
     int m_player;
 	TinyString m_levelBasename;
-	int m_levelNumber;
-	int m_nextLevel;
+	LevelNumber m_levelNumber;
+	LevelNumber m_nextLevel;
 	ActorAnimationController m_animationController;
 };
 
