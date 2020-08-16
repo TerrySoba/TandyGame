@@ -64,7 +64,7 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
         }
         else if (previousLevel.y > levelNumber.y) // bottom to tom
         {
-            actorPosY = PIXEL_TO_SUBPIXEL(190 - m_actorAnimation->height());
+            actorPosY = PIXEL_TO_SUBPIXEL(185 - m_actorAnimation->height());
         }
     }
     

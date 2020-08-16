@@ -12,4 +12,8 @@ game.exe
 ../levels/0202_col.csv
 ../levels/0201_bg.csv
 ../levels/0201_col.csv
+../levels/0301_bg.csv
+../levels/0301_col.csv
+../levels/0302_bg.csv
+../levels/0302_col.csv
 ../readme/readme.txt
