@@ -20,7 +20,7 @@ int main()
 {
 	try
 	{
-		// RadPlayer music("CELT.RAD");
+		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
