@@ -18,7 +18,8 @@ struct Actor
 {
     Actor() :
         jumpFrame(0),
-        dx(0), dy(0), isOnGround(false)
+        dx(0), dy(0), isOnGround(false),
+        isDucking(false), isFallingThrough(false)
     {
     }
 
@@ -27,6 +28,8 @@ struct Actor
     int16_t dx, dy;
     int16_t jumpFrame;
     bool isOnGround;
+    bool isDucking;
+    bool isFallingThrough;
 };
 
 enum IntersectionType
@@ -48,11 +51,13 @@ public:
     void getActorPos(int index, int16_t& x, int16_t& y);
     void setActorSpeedX(int index, int16_t dx);
     void setActorSpeedY(int index, int16_t dy);
+    void setActorDuck(int index, bool isDucking);
     void startActorJump(int index);
     void stopActorJump(int index);
 
     void setWalls(const tnd::vector<Rectangle>& walls);
     void setDeath(const tnd::vector<Rectangle>& death);
+    void setFallThrough(const tnd::vector<Rectangle>& fallThrough);
     void setSpawnPoint(const Point& point);
 
     void calc();
@@ -69,6 +74,7 @@ public:
 public:
     tnd::vector<Rectangle> m_walls;
     tnd::vector<Rectangle> m_death;
+    tnd::vector<Rectangle> m_fallThrough;
     Rectangle m_rightLevelTransition;
     Rectangle m_leftLevelTransition;
     Rectangle m_bottomLevelTransition;

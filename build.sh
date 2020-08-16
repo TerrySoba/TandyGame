@@ -2,7 +2,7 @@
 
 ./create_docker_image.sh
 
-# rm source/*.o source/*.exe
+rm source/*.o source/*.exe
 
 docker run --user $(id -u):$(id -g) -v `pwd`/source/:/build open_watcom &&
 rm -rf release && mkdir release &&

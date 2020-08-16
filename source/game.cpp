@@ -82,6 +82,7 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
 
     m_physics->setWalls(level.getWalls());
     m_physics->setDeath(level.getDeath());
+    m_physics->setFallThrough(level.getFallThrough());
     
     m_physics->setSpawnPoint(Point(actorPosX, actorPosY));
 
@@ -131,6 +132,16 @@ void Game::drawFrame()
     {
         m_physics->startActorJump(m_player);
     }
+
+    if (s_keyDown)
+    {
+        m_physics->setActorDuck(m_player, true);
+    }
+    else
+    {
+        m_physics->setActorDuck(m_player, false);
+    }
+    
 
     if (m_frames % 4 == 0) m_actorAnimation->nextFrame();
     m_physics->calc();

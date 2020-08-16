@@ -1,4 +1,6 @@
 #include "physics.h"
+#include "log.h"
+
 
 Physics::Physics(PhysicsCallback* callback) :
     m_callback(callback)
@@ -32,6 +34,11 @@ void Physics::setWalls(const tnd::vector<Rectangle>& walls)
 void Physics::setDeath(const tnd::vector<Rectangle>& death)
 {
     m_death = death;
+}
+
+void Physics::setFallThrough(const tnd::vector<Rectangle>& fallThrough)
+{
+    m_fallThrough = fallThrough;
 }
 
 void Physics::setSpawnPoint(const Point& point)
@@ -94,33 +101,57 @@ void Physics::calc()
             }
         }
 
+        bool fallThrough = false;
+
+        if (actor.isDucking)
+        {
+            for (int n = 0; n < m_fallThrough.size(); ++n)
+            {
+                if (intersectRect(m_fallThrough[n], actor.rect))
+                {
+                    fallThrough = true;
+                }
+            }
+        }
+
         for (int n = 0; n < m_walls.size(); ++n)
         {
             Rectangle& wall = m_walls[n];
             if (intersectRect(wall, actor.rect))
             {
                 IntersectionType wallType = getIntersectionType(extendRectangle(wall, 0, actor.rect.height - 32), actor.rect);
-                switch(wallType)
+                if (!actor.isFallingThrough)
                 {
-                    case INTERSECTION_LEFT:
-                        actor.dx = 0;
-                        actor.rect.x = wall.x - actor.rect.width;
-                        break;
-                    case INTERSECTION_RIGHT:
-                        actor.dx = 0;
-                        actor.rect.x = wall.x + wall.width;
-                        break;
+                    switch(wallType)
+                    {
+                        case INTERSECTION_LEFT:
+                            actor.dx = 0;
+                            actor.rect.x = wall.x - actor.rect.width;
+                            break;
+                        case INTERSECTION_RIGHT:
+                            actor.dx = 0;
+                            actor.rect.x = wall.x + wall.width;
+                            break;
+                    }
                 }
 
                 IntersectionType groundType = getIntersectionType(extendRectangle(wall, actor.rect.width - 32, 0), actor.rect);
                 switch(groundType)
                 {
                     case INTERSECTION_TOP:
-                        actor.rect.y = wall.y - actor.rect.height;
-                        actor.dy = 0;
-                        actor.isOnGround = true;
+                        if (fallThrough)
+                        {
+                            actor.isFallingThrough = true;
+                        }
+                        if (!fallThrough && !actor.isFallingThrough)
+                        {
+                            actor.rect.y = wall.y - actor.rect.height;
+                            actor.dy = 0;
+                            actor.isOnGround = true;
+                        }
                         break;
                     case INTERSECTION_BOTTOM:
+                        actor.isFallingThrough = false;
                         actor.rect.y = wall.y + wall.height;
                         actor.dy = abs(actor.dy);
                         break;
@@ -167,6 +198,11 @@ void Physics::setActorSpeedY(int index, int16_t dy)
 {
     Actor& actor = m_actors[index];
     actor.dy = dy;
+}
+
+void Physics::setActorDuck(int index, bool isDucking)
+{
+    m_actors[index].isDucking = isDucking;
 }
 
 bool Physics::intersectRect(const Rectangle &r1, const Rectangle &r2)

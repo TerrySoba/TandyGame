@@ -44,6 +44,16 @@ Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<Ima
             m_death[i].shrink(20);
         }
 
+        m_fallThrough = detectLines(bg, HORIZONTAL, 4);
+        for (int i = 0; i < m_fallThrough.size(); ++i)
+        {
+            m_fallThrough[i].scale(tileWidth * 16, tileHeight * 16);
+            m_fallThrough[i] += offset * 16;
+            m_fallThrough[i].shrink(20);
+
+            m_walls.push_back(m_fallThrough[i]);
+        }
+
         for (int x = 0; x < bg.width(); ++x)
         {
             for (int y = 0; y < bg.height(); ++y)
