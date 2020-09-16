@@ -4,12 +4,14 @@
 #include <stdint.h>
 
 
-struct JoystickStatus
+struct RawJoystickState
 {
     uint8_t buttons;
     uint16_t x1, y1, x2, y2;
 };
 
-JoystickStatus readJoystick();
+void calibrateJoystick();
+
+RawJoystickState readJoystickRaw();
 
 #endif
