@@ -2,7 +2,8 @@ objects_game_lib = \
     vgagfx.o image.o animation.o keyboard.o rad_player.o \
     rad_player_asm.o timer.o physics.o tga_image.o \
     json.o cJSON.o level.o blit.o detect_lines.o exception.o \
-	rectangle.o tiny_string.o game.o compiled_sprite.o
+	rectangle.o tiny_string.o game.o compiled_sprite.o \
+	joystick.o
 objects_game = \
 	main.o $(objects_game_lib)
 objects_test = \
@@ -23,7 +24,7 @@ all: $(dest) $(test)
 $(dest): _$(dest)
 	upx -9 --ultra-brute -f --8086 -o$(dest) _$(dest)
 
-main.o: vgagfx.h image.h animation.h keyboard.h rad_player.h version.h physics.h json.h level.h blit.h
+main.o: vgagfx.h image.h animation.h keyboard.h rad_player.h version.h physics.h json.h level.h blit.h joystick.h
 vgagfx.o: image_base.h animation.h rectangle.h font_data.h drawable.h
 image.o: image_base.h
 animation.o: image.h drawable.h image_base.h
@@ -53,6 +54,7 @@ game.o: game.h shared_ptr.h level.h animation.h physics.h vgagfx.h keyboard.h ac
 tiny_string_test.o: tiny_string.h
 animation_test.o: animation.h unit_test.h
 compiled_sprite.o: compiled_sprite.h drawable.h
+joystick.o: joystick.h
 
 cJSON.o: 3rd_party/cJSON/cJSON.h
 	wpp $(coptions) 3rd_party/cJSON/cJSON.c

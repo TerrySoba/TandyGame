@@ -16,9 +16,13 @@ scaler=none
 [cpu]
 core=auto
 cputype=8086
-cycles=fixed 600
+cycles=fixed 30000
 cycleup=10
 cycledown=20
+
+[joystick]
+joysticktype=2axis
+
 
 [autoexec]
 # Lines in this section will be run at startup.
