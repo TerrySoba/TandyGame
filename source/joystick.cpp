@@ -8,6 +8,13 @@ uint16_t s_jsDeadzoneXMax = 0;
 uint16_t s_jsDeadzoneYMin = 0;
 uint16_t s_jsDeadzoneYMax = 0;
 
+bool s_joystickConnected = false;
+
+struct RawJoystickState
+{
+    uint8_t buttons;
+    uint16_t x1, y1, x2, y2;
+};
 
 RawJoystickState readJoystickRaw()
 {
@@ -80,25 +87,16 @@ extern void setCursor(uint8_t row, uint8_t col);
         modify[ah bh dx] \
         parm [dh] [dl];
 
-enum JoystickState
-{
-    JOY_LEFT = 1,
-    JOY_RIGHT = 2,
-    JOY_UP = 4,
-    JOY_DOWN = 8,
-    JOY_BUTTON_1 = 16,
-    JOY_BUTTON_2 = 32
-};
-
 uint8_t readJoystick()
 {
+    if (!s_joystickConnected) return 0;
     RawJoystickState s = readJoystickRaw();
     return (((s.x1 < s_jsDeadzoneXMin)?JOY_LEFT:0) |
             ((s.x1 > s_jsDeadzoneXMax)?JOY_RIGHT:0) |
             ((s.y1 < s_jsDeadzoneYMin)?JOY_UP:0) |
-            ((s.y1 > s_jsDeadzoneYMax)?JOY_DOWN:0));
+            ((s.y1 > s_jsDeadzoneYMax)?JOY_DOWN:0) |
+            ( ((~s.buttons) & (1 << 4))?JOY_BUTTON_1:0 ) );
 }
-
 
 enum CalibrationState
 {
@@ -116,6 +114,12 @@ void calibrateJoystick()
     CalibrationState state = FIND_MIN_MAX;
 
     RawJoystickState s = readJoystickRaw();
+
+    // if joystick is not connected do not execute calibration
+    if (s.x1 == 0 && s.y1 == 0)
+    {
+        return;
+    }
 
     // initialize with current value
     uint16_t jsCenterX = s.x1;
@@ -190,6 +194,7 @@ void calibrateJoystick()
                     s_jsDeadzoneXMax = jsCenterX + (jsMaxX - jsMinX) * DEADZONE_FACTOR;
                     s_jsDeadzoneYMin = jsCenterY - (jsMaxY - jsMinY) * DEADZONE_FACTOR;
                     s_jsDeadzoneYMax = jsCenterY + (jsMaxY - jsMinY) * DEADZONE_FACTOR;
+                    s_joystickConnected = true;
                 }
                 break;
             case WAIT_FOR_BUTTON_UP2:

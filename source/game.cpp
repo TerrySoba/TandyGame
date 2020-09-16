@@ -9,6 +9,7 @@
 #include "vector.h"
 #include "exception.h"
 #include "compiled_sprite.h"
+#include "joystick.h"
 
 #include <stdio.h>
 
@@ -118,22 +119,25 @@ void Game::drawFrame()
 
     ++m_frames;
 
-    if (s_keyRight)
+    uint8_t joystick = readJoystick();
+
+
+    if (s_keyRight || joystick & JOY_RIGHT)
     {
         m_physics->setActorSpeedX(m_player, 16);
     }
     
-    if (s_keyLeft)
+    if (s_keyLeft || joystick & JOY_LEFT)
     {
         m_physics->setActorSpeedX(m_player, -16);
     }
 
-    if (s_keyAlt)
+    if (s_keyAlt || joystick & JOY_BUTTON_1)
     {
         m_physics->startActorJump(m_player);
     }
 
-    if (s_keyDown)
+    if (s_keyDown || joystick & JOY_DOWN)
     {
         m_physics->setActorDuck(m_player, true);
     }

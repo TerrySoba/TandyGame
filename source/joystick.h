@@ -3,15 +3,17 @@
 
 #include <stdint.h>
 
-
-struct RawJoystickState
+enum JoystickState
 {
-    uint8_t buttons;
-    uint16_t x1, y1, x2, y2;
+    JOY_LEFT = 1,
+    JOY_RIGHT = 2,
+    JOY_UP = 4,
+    JOY_DOWN = 8,
+    JOY_BUTTON_1 = 16,
+    JOY_BUTTON_2 = 32
 };
 
 void calibrateJoystick();
-
-RawJoystickState readJoystickRaw();
+uint8_t readJoystick();
 
 #endif
