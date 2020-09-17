@@ -21,44 +21,74 @@ RawJoystickState readJoystickRaw()
     uint8_t buttons = 0;
     uint16_t x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 
-    __asm   {
-        push ax
-        push bx
-        push cx
-        push dx
+
+    __asm{cli}
+    outp(0x201, 1);
+    uint16_t counter = 0;
+    for(counter = 0; counter < 0xffff; ++counter)
+    {
+        buttons = inp(0x201);
+        bool xDone = ((buttons & 1) == 0);
+        bool yDone = ((buttons & 2) == 0);
+        if (xDone & x1 == 0) x1 = counter;
+        if (yDone & y1 == 0) y1 = counter;
+        if (x1 != 0 && y1 != 0) break;
+    }
+    __asm{sti}
+
+    // __asm   {
+    //     push ax
+    //     push bx
+    //     push cx
+
+    //     out 
+
+    //     pop cx
+    //     pop bx
+    //     pop ax
+
+    // }
+
+    // __asm   {
+    //     push ax
+    //     push bx
+    //     push cx
+    //     push dx
         
-        // read buttons
-        mov ah, 84h      // 
-        mov dx, 0    // 0000h == read joystick switches
+    //     // read buttons
+    //     mov ah, 84h      // 
+    //     mov dx, 0    // 0000h == read joystick switches
 
-        int 15h
-        jc error         // jump if carry -> error!
+    //     int 15h
+    //     jc error         // jump if carry -> error!
 
-        mov buttons, al  // store buttons in variable
+    //     mov buttons, al  // store buttons in variable
 
-        // read axis data
-        mov ah, 84h      // 
-        mov dx, 1    // 0000h == read joystick axis data
-        int 15h
+    //     // read axis data
+    //     mov ah, 84h      // 
+    //     mov dx, 1    // 0000h == read joystick axis data
+    //     cli
+    //     int 15h
+    //     sti
 
-        mov x1, ax
-        mov y1, bx
-        mov x2, cx
-        mov y2, dx
+    //     mov x1, ax
+    //     mov y1, bx
+    //     mov x2, cx
+    //     mov y2, dx
 
-        jc error         // jump if carry -> error!
-        jmp end
+    //     jc error         // jump if carry -> error!
+    //     jmp end
 
-        error:
-        mov bh, 255
-        mov buttons, bh
+    //     error:
+    //     mov bh, 255
+    //     mov buttons, bh
 
-        end:
-        pop dx
-        pop cx
-        pop bx
-        pop ax
-    };
+    //     end:
+    //     pop dx
+    //     pop cx
+    //     pop bx
+    //     pop ax
+    // };
 
     RawJoystickState status;
     status.buttons = buttons;
@@ -188,7 +218,7 @@ void calibrateJoystick()
                     jsCenterX = s.x1;
                     jsCenterY = s.y1;
 
-                    #define DEADZONE_FACTOR 0.1
+                    #define DEADZONE_FACTOR 0.2
 
                     s_jsDeadzoneXMin = jsCenterX - (jsMaxX - jsMinX) * DEADZONE_FACTOR;
                     s_jsDeadzoneXMax = jsCenterX + (jsMaxX - jsMinX) * DEADZONE_FACTOR;
