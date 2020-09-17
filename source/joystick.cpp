@@ -19,83 +19,41 @@ struct RawJoystickState
 RawJoystickState readJoystickRaw()
 {
     uint8_t buttons = 0;
-    uint16_t x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+    uint16_t x1 = 0;
+    uint16_t y1 = 0;
 
+    // The joystick is read by writing a byte of data to port 0x201, the actual
+    // value does not matter.
+    // Then periodically read port 0x201 until the bits 0-3 of the read value
+    // become 0. The waiting time until the bits become 0 corresponds to the
+    // analogue value of the joystick axis. Because the timing needs to be
+    // acurate, interrups are disabled using "cli".
+    //
+    // Thers is also a BIOS interrupt that may be use to read joystick values,
+    // but this code seems to be faster. At least on an IBM PS/2 Model 30 286.
 
-    __asm{cli}
-    outp(0x201, 1);
+    __asm{cli} // disable interrupts
+    outp(0x201, 1); // start analogue joystick value acquisition
     uint16_t counter = 0;
     for(counter = 0; counter < 0xffff; ++counter)
     {
-        buttons = inp(0x201);
-        bool xDone = ((buttons & 1) == 0);
-        bool yDone = ((buttons & 2) == 0);
-        if (xDone & x1 == 0) x1 = counter;
-        if (yDone & y1 == 0) y1 = counter;
+        buttons = inp(0x201); // read current joystick status
+
+        // The single "&" operator in the next two lines is intentional to
+        // prevent short-circuit operation of "&&"" operator.
+        // This would change the timing and would skew the results.
+        if (((buttons & 1) == 0) & x1 == 0) x1 = counter; // check if x-axis has finished
+        if (((buttons & 2) == 0) & y1 == 0) y1 = counter; // check if y-axis has finished
         if (x1 != 0 && y1 != 0) break;
     }
-    __asm{sti}
-
-    // __asm   {
-    //     push ax
-    //     push bx
-    //     push cx
-
-    //     out 
-
-    //     pop cx
-    //     pop bx
-    //     pop ax
-
-    // }
-
-    // __asm   {
-    //     push ax
-    //     push bx
-    //     push cx
-    //     push dx
-        
-    //     // read buttons
-    //     mov ah, 84h      // 
-    //     mov dx, 0    // 0000h == read joystick switches
-
-    //     int 15h
-    //     jc error         // jump if carry -> error!
-
-    //     mov buttons, al  // store buttons in variable
-
-    //     // read axis data
-    //     mov ah, 84h      // 
-    //     mov dx, 1    // 0000h == read joystick axis data
-    //     cli
-    //     int 15h
-    //     sti
-
-    //     mov x1, ax
-    //     mov y1, bx
-    //     mov x2, cx
-    //     mov y2, dx
-
-    //     jc error         // jump if carry -> error!
-    //     jmp end
-
-    //     error:
-    //     mov bh, 255
-    //     mov buttons, bh
-
-    //     end:
-    //     pop dx
-    //     pop cx
-    //     pop bx
-    //     pop ax
-    // };
+    __asm{sti} // re-enable interrupts
 
     RawJoystickState status;
     status.buttons = buttons;
     status.x1 = x1;
     status.y1 = y1;
-    status.x2 = x2;
-    status.y2 = y2;
+    status.x2 = 0;
+    status.y2 = 0;
 
     return status;
 }
@@ -188,10 +146,10 @@ void calibrateJoystick()
         char buf[8];
 
         setCursor(6,3);
-        sprintf(buf, "x:%04hd", s.x1);
+        sprintf(buf, "x:%05hu", s.x1);
         puts(buf);
         setCursor(7,3);
-        sprintf(buf, "y:%04hd", s.y1);
+        sprintf(buf, "y:%05hu", s.y1);
         puts(buf);
 
         #define BUTTON_PRESSED() ((~s.buttons) & (1 << 4))
