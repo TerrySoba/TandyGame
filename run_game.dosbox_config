@@ -21,7 +21,7 @@ cycleup=10
 cycledown=20
 
 [joystick]
-joysticktype=4axis
+joysticktype=none
 
 
 [autoexec]

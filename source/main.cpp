@@ -26,10 +26,11 @@ int main()
 
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
 		
+		shared_ptr<Animation> enemy(new Animation("enemy.jsn", "enemy.tga"));
 		shared_ptr<Animation> guy(new Animation("guy.jsn", "guy.tga"));
 		shared_ptr<VgaGfx> gfx(new VgaGfx);
 
-		Game game(gfx, tiles, guy, "%02x%02x");
+		Game game(gfx, tiles, guy, enemy, "%02x%02x");
 
 		LevelNumber levelNumber = {1,1};
 		game.loadLevel(levelNumber, UseSpawnPoint::YES);

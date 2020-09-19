@@ -36,6 +36,11 @@ void Physics::setDeath(const tnd::vector<Rectangle>& death)
     m_death = death;
 }
 
+void Physics::setEnemyDeath(const tnd::vector<Rectangle>& death)
+{
+    m_enemyDeath = death;
+}
+
 void Physics::setFallThrough(const tnd::vector<Rectangle>& fallThrough)
 {
     m_fallThrough = fallThrough;
@@ -162,6 +167,18 @@ void Physics::calc()
         for (int n = 0; n < m_death.size(); ++n)
         {
             Rectangle& death = m_death[n];
+            if (intersectRect(death, actor.rect))
+            {
+                actor.rect.x = m_spawn.x;
+                actor.rect.y = m_spawn.y;
+                actor.dx = 0;
+                actor.dy = 0;
+            }
+        }
+
+        for (int n = 0; n < m_enemyDeath.size(); ++n)
+        {
+            Rectangle& death = m_enemyDeath[n];
             if (intersectRect(death, actor.rect))
             {
                 actor.rect.x = m_spawn.x;

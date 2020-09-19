@@ -14,9 +14,10 @@
 #include <stdio.h>
 
 Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
-           shared_ptr<Animation> actorAnimation, const char* levelBasename) :
+           shared_ptr<Animation> actorAnimation, shared_ptr<Animation> enemyAnimation,
+           const char* levelBasename) :
     m_vgaGfx(vgaGfx), m_tiles(tiles), m_actorAnimation(actorAnimation),
-    m_frames(0), m_levelBasename(levelBasename),
+    m_enemyAnimation(enemyAnimation), m_frames(0), m_levelBasename(levelBasename),
     m_animationController(actorAnimation)
 {
     m_nextLevel.x = -1;
@@ -63,12 +64,21 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
         {
             actorPosY = PIXEL_TO_SUBPIXEL(10);
         }
-        else if (previousLevel.y > levelNumber.y) // bottom to tom
+        else if (previousLevel.y > levelNumber.y) // bottom to top
         {
             actorPosY = PIXEL_TO_SUBPIXEL(185 - m_actorAnimation->height());
         }
     }
     
+    // now load enemies
+    m_enemies.clear();
+    tnd::vector<Rectangle> enemyRectangles = level.getEnemies();
+    for (int i = 0; i < enemyRectangles.size(); ++i)
+    {
+        m_enemies.push_back(shared_ptr<Enemy>(new Enemy(enemyRectangles[i], m_enemyAnimation)));
+    }
+
+
     m_physics.reset(); // reset first, so we do not have two instances of physics at once
     m_physics = shared_ptr<Physics>(new Physics(this));
     Actor actor;
@@ -112,6 +122,19 @@ void Game::drawFrame()
     m_animationController.setPos(playerX, playerY);
 
     m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
+    
+    tnd::vector<Rectangle> enemyDeath;
+
+    for (int i = 0; i < m_enemies.size(); ++i)
+    {
+        m_enemies[i]->walk();
+        Rectangle enemy = m_enemies[i]->getPos();
+        enemyDeath.push_back(enemy);
+        m_vgaGfx->draw(*m_enemyAnimation, SUBPIXEL_TO_PIXEL(enemy.x), SUBPIXEL_TO_PIXEL(enemy.y));
+    }
+
+    m_physics->setEnemyDeath(enemyDeath);
+
     // m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX) + 10, SUBPIXEL_TO_PIXEL(playerY));
     // m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX) + 20, SUBPIXEL_TO_PIXEL(playerY));
     
@@ -147,7 +170,12 @@ void Game::drawFrame()
     }
     
 
-    if (m_frames % 4 == 0) m_actorAnimation->nextFrame();
+    if (m_frames % 4 == 0)
+    {
+        m_actorAnimation->nextFrame();
+        m_enemyAnimation->nextFrame();
+    }
+
     m_physics->calc();
 }
 

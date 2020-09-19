@@ -2,8 +2,10 @@ game.exe
 ../music/CELT.RAD
 ../images/tiles.tga
 ../images/guy.tga
-../images/guyframe.tga
 ../images/guy.jsn
+../images/enemy.tga
+../images/enemy.jsn
+../images/guyframe.tga
 ../levels/0101_bg.csv
 ../levels/0101_col.csv
 ../levels/0102_bg.csv

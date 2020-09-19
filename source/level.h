@@ -24,6 +24,7 @@ public:
     virtual tnd::vector<Rectangle> getWalls() { return m_walls; }
     virtual tnd::vector<Rectangle> getDeath() { return m_death; }
     virtual tnd::vector<Rectangle> getFallThrough() { return m_fallThrough; }
+    virtual tnd::vector<Rectangle> getEnemies() { return m_enemies; }
 
     virtual Point getSpawnPoint() { return m_spawn; };
 
@@ -40,6 +41,7 @@ private:
     tnd::vector<Rectangle> m_walls;
     tnd::vector<Rectangle> m_death;
     tnd::vector<Rectangle> m_fallThrough;
+    tnd::vector<Rectangle> m_enemies;
     Point m_spawn;
 };
 

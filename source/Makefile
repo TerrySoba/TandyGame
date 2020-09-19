@@ -3,7 +3,7 @@ objects_game_lib = \
     rad_player_asm.o timer.o physics.o tga_image.o \
     json.o cJSON.o level.o blit.o detect_lines.o exception.o \
 	rectangle.o tiny_string.o game.o compiled_sprite.o \
-	joystick.o
+	joystick.o enemy.o
 objects_game = \
 	main.o $(objects_game_lib)
 objects_test = \
@@ -55,6 +55,7 @@ tiny_string_test.o: tiny_string.h
 animation_test.o: animation.h unit_test.h
 compiled_sprite.o: compiled_sprite.h drawable.h
 joystick.o: joystick.h
+enemy.o: enemy.h
 
 cJSON.o: 3rd_party/cJSON/cJSON.h
 	wpp $(coptions) 3rd_party/cJSON/cJSON.c

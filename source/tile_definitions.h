@@ -1,0 +1,12 @@
+#ifndef _INCLUDE_TILE_DEFINITIONS
+#define _INCLUDE_TILE_DEFINITIONS
+
+enum
+{
+    TILE_GROUND = 1,
+    TILE_DEATH = 3,
+    TILE_FALL_THROUGH = 4,
+    TILE_ENEMY = 5
+};
+
+#endif

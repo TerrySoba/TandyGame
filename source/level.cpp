@@ -2,7 +2,7 @@
 #include "csv_reader.h"
 #include "blit.h"
 #include "detect_lines.h"
-
+#include "tile_definitions.h"
 
 Level::~Level()
 {
@@ -29,14 +29,14 @@ Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<Ima
         Point offset(m_offsetX, m_offsetY);
 
         CsvReader<uint8_t> bg(groundFilename);
-        m_walls = detectLines(bg, HORIZONTAL, 1);
+        m_walls = detectLines(bg, HORIZONTAL, TILE_GROUND);
         for (int i = 0; i < m_walls.size(); ++i)
         {
             m_walls[i].scale(tileWidth * 16, tileHeight * 16);
             m_walls[i] += offset * 16;
         }
 
-        m_death = detectLines(bg, HORIZONTAL, 3);
+        m_death = detectLines(bg, HORIZONTAL, TILE_DEATH);
         for (int i = 0; i < m_death.size(); ++i)
         {
             m_death[i].scale(tileWidth * 16, tileHeight * 16);
@@ -44,7 +44,7 @@ Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<Ima
             m_death[i].shrink(20);
         }
 
-        m_fallThrough = detectLines(bg, HORIZONTAL, 4);
+        m_fallThrough = detectLines(bg, HORIZONTAL, TILE_FALL_THROUGH);
         for (int i = 0; i < m_fallThrough.size(); ++i)
         {
             m_fallThrough[i].scale(tileWidth * 16, tileHeight * 16);
@@ -52,6 +52,13 @@ Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<Ima
             m_fallThrough[i].shrink(20);
 
             m_walls.push_back(m_fallThrough[i]);
+        }
+
+        m_enemies = detectLines(bg, HORIZONTAL, TILE_ENEMY);
+        for (int i = 0; i < m_enemies.size(); ++i)
+        {
+            m_enemies[i].scale(tileWidth * 16, tileHeight * 16);
+            m_enemies[i] += offset * 16;
         }
 
         for (int x = 0; x < bg.width(); ++x)
