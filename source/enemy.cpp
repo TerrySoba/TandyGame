@@ -28,7 +28,7 @@ void Enemy::walk()
 
 Rectangle Enemy::getPos()
 {
-    return Rectangle(m_posX, m_posY, m_animation->width(), m_animation->height());
+    return Rectangle(m_posX, m_posY, m_animation->width() * 16, m_animation->height() * 16);
 }
 
 Enemy::~Enemy()

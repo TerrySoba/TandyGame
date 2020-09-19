@@ -79,7 +79,7 @@ void Physics::calc()
         actor.rect.x += actor.dx;
         actor.rect.y += actor.dy;
 
-        actor.dx *= 0.99;
+        actor.dx *= 0.999999;
         actor.dy *= 0.99;
 
         actor.isOnGround = false;

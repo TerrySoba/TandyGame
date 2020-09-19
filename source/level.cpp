@@ -59,6 +59,7 @@ Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<Ima
         {
             m_enemies[i].scale(tileWidth * 16, tileHeight * 16);
             m_enemies[i] += offset * 16;
+            m_enemies[i].shrink(20);
         }
 
         for (int x = 0; x < bg.width(); ++x)
