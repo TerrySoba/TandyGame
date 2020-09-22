@@ -5,6 +5,8 @@ game.exe
 ../images/guy.jsn
 ../images/enemy.tga
 ../images/enemy.jsn
+../images/guffin.tga
+../images/guffin.jsn
 ../images/guyframe.tga
 ../levels/0101_bg.csv
 ../levels/0101_col.csv

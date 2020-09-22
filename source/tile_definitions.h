@@ -6,7 +6,8 @@ enum
     TILE_GROUND = 1,
     TILE_DEATH = 3,
     TILE_FALL_THROUGH = 4,
-    TILE_ENEMY = 5
+    TILE_ENEMY = 5,
+    TILE_MAC_GUFFIN = 6,
 };
 
 #endif

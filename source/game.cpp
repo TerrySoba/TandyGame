@@ -14,11 +14,10 @@
 #include <stdio.h>
 
 Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
-           shared_ptr<Animation> actorAnimation, shared_ptr<Animation> enemyAnimation,
+           GameAnimations animations,
            const char* levelBasename) :
-    m_vgaGfx(vgaGfx), m_tiles(tiles), m_actorAnimation(actorAnimation),
-    m_enemyAnimation(enemyAnimation), m_frames(0), m_levelBasename(levelBasename),
-    m_animationController(actorAnimation)
+    m_vgaGfx(vgaGfx), m_tiles(tiles), m_animations(animations), m_frames(0), m_levelBasename(levelBasename),
+    m_animationController(animations.actorAnimation)
 {
     m_nextLevel.x = -1;
     m_nextLevel.y = -1;
@@ -36,7 +35,7 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
     TinyString levelCol = TinyString(buf.data() + TinyString("_col.csv"));
 
     Level level(levelBg.c_str(), levelCol.c_str(), m_tiles, 16, 16, -8, -8);
-    m_actorAnimation->useTag("LoopR");
+    m_animations.actorAnimation->useTag("LoopR");
 
     m_vgaGfx->drawBackground(level, -8, -8);
 
@@ -58,7 +57,7 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
         }
         else if (previousLevel.x > levelNumber.x) // right to left
         {
-            actorPosX = PIXEL_TO_SUBPIXEL(310 - m_actorAnimation->width());
+            actorPosX = PIXEL_TO_SUBPIXEL(310 - m_animations.actorAnimation->width());
         }
         else if (previousLevel.y < levelNumber.y) // top to bottom
         {
@@ -66,7 +65,7 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
         }
         else if (previousLevel.y > levelNumber.y) // bottom to top
         {
-            actorPosY = PIXEL_TO_SUBPIXEL(185 - m_actorAnimation->height());
+            actorPosY = PIXEL_TO_SUBPIXEL(185 - m_animations.actorAnimation->height());
         }
     }
     
@@ -75,17 +74,19 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
     tnd::vector<Rectangle> enemyRectangles = level.getEnemies();
     for (int i = 0; i < enemyRectangles.size(); ++i)
     {
-        m_enemies.push_back(shared_ptr<Enemy>(new Enemy(enemyRectangles[i], m_enemyAnimation)));
+        m_enemies.push_back(shared_ptr<Enemy>(new Enemy(enemyRectangles[i], m_animations.enemyAnimation)));
     }
 
+    m_guffins.clear();
+    m_guffins = level.getMacGuffins();
 
     m_physics.reset(); // reset first, so we do not have two instances of physics at once
     m_physics = shared_ptr<Physics>(new Physics(this));
     Actor actor;
     actor.rect.x = actorPosX;
     actor.rect.y = actorPosY;
-    actor.rect.width = PIXEL_TO_SUBPIXEL(m_actorAnimation->width());
-    actor.rect.height = PIXEL_TO_SUBPIXEL(m_actorAnimation->height());
+    actor.rect.width = PIXEL_TO_SUBPIXEL(m_animations.actorAnimation->width());
+    actor.rect.height = PIXEL_TO_SUBPIXEL(m_animations.actorAnimation->height());
     actor.dx = 0;
     actor.dy = 0;
     actor.jumpFrame = 1;
@@ -121,7 +122,7 @@ void Game::drawFrame()
 
     m_animationController.setPos(playerX, playerY);
 
-    m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
+    
     
     tnd::vector<Rectangle> enemyDeath;
 
@@ -130,15 +131,20 @@ void Game::drawFrame()
         m_enemies[i]->walk();
         Rectangle enemy = m_enemies[i]->getPos();
         enemyDeath.push_back(enemy);
-        m_vgaGfx->draw(*m_enemyAnimation, SUBPIXEL_TO_PIXEL(enemy.x), SUBPIXEL_TO_PIXEL(enemy.y));
+        m_vgaGfx->draw(*m_animations.enemyAnimation, SUBPIXEL_TO_PIXEL(enemy.x), SUBPIXEL_TO_PIXEL(enemy.y));
     }
 
-    m_physics->setEnemyDeath(enemyDeath);
+    for (int i = 0; i < m_guffins.size(); ++i)
+    {
+        Rectangle& guffin = m_guffins[i];
+        m_vgaGfx->draw(*m_animations.guffinAnimation, SUBPIXEL_TO_PIXEL(guffin.x), SUBPIXEL_TO_PIXEL(guffin.y));
+    }
 
-    // m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX) + 10, SUBPIXEL_TO_PIXEL(playerY));
-    // m_vgaGfx->draw(*m_actorAnimation, SUBPIXEL_TO_PIXEL(playerX) + 20, SUBPIXEL_TO_PIXEL(playerY));
-    
+    m_vgaGfx->draw(*m_animations.actorAnimation, SUBPIXEL_TO_PIXEL(playerX), SUBPIXEL_TO_PIXEL(playerY));
+
     m_vgaGfx->drawScreen();
+    
+    m_physics->setEnemyDeath(enemyDeath);
 
     ++m_frames;
 
@@ -172,9 +178,12 @@ void Game::drawFrame()
 
     if (m_frames % 4 == 0)
     {
-        m_actorAnimation->nextFrame();
-        m_enemyAnimation->nextFrame();
+        m_animations.actorAnimation->nextFrame();
+        m_animations.enemyAnimation->nextFrame();
+        
     }
+
+    if (m_frames % 16 == 0) m_animations.guffinAnimation->nextFrame();
 
     m_physics->calc();
 }

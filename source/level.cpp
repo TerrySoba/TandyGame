@@ -62,6 +62,13 @@ Level::Level(const char* mapFilename, const char* groundFilename, shared_ptr<Ima
             m_enemies[i].shrink(20);
         }
 
+        m_guffins = detectLines(bg, HORIZONTAL, TILE_MAC_GUFFIN);
+        for (int i = 0; i < m_guffins.size(); ++i)
+        {
+            m_guffins[i].scale(tileWidth * 16, tileHeight * 16);
+            m_guffins[i] += offset * 16;
+        }
+
         for (int x = 0; x < bg.width(); ++x)
         {
             for (int y = 0; y < bg.height(); ++y)

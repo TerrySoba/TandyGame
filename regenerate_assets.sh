@@ -20,6 +20,7 @@ done
 
 cp images/guy.json images/guy.jsn
 cp images/enemy.json images/enemy.jsn
+cp images/guffin.json images/guffin.jsn
 
 # now convert tiled maps to csv
 for tmxfile in levels/*.tmx
