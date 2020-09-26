@@ -17,7 +17,7 @@ Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
            GameAnimations animations,
            const char* levelBasename) :
     m_vgaGfx(vgaGfx), m_tiles(tiles), m_animations(animations), m_frames(0), m_levelBasename(levelBasename),
-    m_animationController(animations.actorAnimation)
+    m_animationController(animations.actorAnimation), m_lastButtonPressed(false)
 {
     m_nextLevel.x = -1;
     m_nextLevel.y = -1;
@@ -103,6 +103,14 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
     
     snprintf(buf.data(), buf.size(), "Build date: %s", BUILD_DATE);
     m_vgaGfx->drawText(buf.data(), 50, 193);
+    drawAppleCount();
+}
+
+void Game::drawAppleCount()
+{
+    char buf[16];
+    snprintf(buf, 16, "Apples:%02d", m_collectedGuffins.size());
+    m_vgaGfx->drawText(buf, 270, 1);
 }
 
 
@@ -161,10 +169,13 @@ void Game::drawFrame()
         m_physics->setActorSpeedX(m_player, -16);
     }
 
-    if (s_keyAlt || joystick & JOY_BUTTON_1)
+    bool buttonPressed = s_keyAlt || joystick & JOY_BUTTON_1;
+    if (buttonPressed && !m_lastButtonPressed)
     {
         m_physics->startActorJump(m_player);
     }
+    m_lastButtonPressed = buttonPressed;
+
 
     if (s_keyDown || joystick & JOY_DOWN)
     {

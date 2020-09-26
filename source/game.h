@@ -8,6 +8,8 @@
 #include "actor_animation_controller.h"
 #include "enemy.h"
 
+#include <map>
+
 // forward declarations
 class VgaGfx;
 class ImageBase;
@@ -50,6 +52,9 @@ public:
 	virtual void levelTransition(LevelTransition transition);
 
 private:
+	virtual void drawAppleCount();
+
+private:
 	shared_ptr<VgaGfx> m_vgaGfx;
 	shared_ptr<ImageBase> m_tiles;
 	GameAnimations m_animations;
@@ -62,6 +67,8 @@ private:
 	LevelNumber m_levelNumber;
 	LevelNumber m_nextLevel;
 	ActorAnimationController m_animationController;
+	bool m_lastButtonPressed;
+	std::multimap<int16_t, Point> m_collectedGuffins;
 };
 
 
