@@ -22,3 +22,25 @@ TEST(VectorTest1)
     ASSERT_TRUE(vec1[2] == vec3[2]);
     ASSERT_TRUE(vec3.size() == 3);
 }
+
+TEST(VectorTestErase)
+{
+    tnd::vector<int> vec;
+    vec.push_back(1);
+    vec.push_back(2);
+    vec.push_back(3);
+    vec.push_back(4);
+
+    ASSERT_TRUE(vec.size() == 4);
+    ASSERT_TRUE(vec[0] == 1);
+    ASSERT_TRUE(vec[1] == 2);
+    ASSERT_TRUE(vec[2] == 3);
+    ASSERT_TRUE(vec[3] == 4);
+
+    vec.erase(1);
+
+    ASSERT_TRUE(vec.size() == 3);
+    ASSERT_TRUE(vec[0] == 1);
+    ASSERT_TRUE(vec[1] == 3);
+    ASSERT_TRUE(vec[2] == 4);
+}

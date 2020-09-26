@@ -46,6 +46,11 @@ void Physics::setFallThrough(const tnd::vector<Rectangle>& fallThrough)
     m_fallThrough = fallThrough;
 }
 
+void Physics::setGuffins(const tnd::vector<Rectangle>& guffins)
+{
+    m_guffins = guffins;
+}
+
 void Physics::setSpawnPoint(const Point& point)
 {
     m_spawn = point;
@@ -185,6 +190,16 @@ void Physics::calc()
                 actor.rect.y = m_spawn.y;
                 actor.dx = 0;
                 actor.dy = 0;
+            }
+        }
+
+
+        for (int n = 0; n < m_guffins.size(); ++n)
+        {
+            Rectangle& guffin = m_guffins[n];
+            if (intersectRect(guffin, actor.rect))
+            {
+                m_callback->collectApple(Point(guffin.x, guffin.y));
             }
         }
 

@@ -92,6 +92,18 @@ public:
         return m_data;
     }
 
+    void erase(int pos)
+    {
+        if (pos < m_size)
+        {
+            for (int i = pos + 1; i < m_size; ++i)
+            {
+                m_data[i-1] = m_data[i];
+            }
+            --m_size;
+        }
+    }
+
 private:
     ValueT* m_data;
     int m_capacity;

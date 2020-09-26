@@ -80,6 +80,26 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
     m_guffins.clear();
     m_guffins = level.getMacGuffins();
 
+    // remove already collected guffins
+    for (int n = 0; n < m_collectedGuffins.size(); ++n)
+    {
+        CollectedGuffin collected = m_collectedGuffins[n];
+        int index = -1;
+        for (int i = 0; i < m_guffins.size(); ++i)
+        {
+            Rectangle& rect = m_guffins[i];
+            if (m_levelNumber == collected.level && 
+                rect.x == collected.pos.x &&
+                rect.y == collected.pos.y)
+            {
+                index = i;
+            }      
+        }
+
+        if (index >= 0) m_guffins.erase(index);
+    }
+
+
     m_physics.reset(); // reset first, so we do not have two instances of physics at once
     m_physics = shared_ptr<Physics>(new Physics(this));
     Actor actor;
@@ -95,6 +115,7 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
     m_physics->setWalls(level.getWalls());
     m_physics->setDeath(level.getDeath());
     m_physics->setFallThrough(level.getFallThrough());
+    m_physics->setGuffins(m_guffins);
     
     m_physics->setSpawnPoint(Point(actorPosX, actorPosY));
 
@@ -113,6 +134,28 @@ void Game::drawAppleCount()
     m_vgaGfx->drawText(buf, 270, 1);
 }
 
+void Game::collectApple(Point point)
+{
+    CollectedGuffin collected;
+    collected.level = m_levelNumber;
+    collected.pos = point;
+    m_collectedGuffins.push_back(collected);
+    drawAppleCount();
+
+    // remove colected apple from guffin list
+    int index = -1;
+    for (int i = 0; i < m_guffins.size(); ++i)
+    {
+        Rectangle& guffin = m_guffins[i];
+        if (guffin.x == point.x && guffin.y == point.y)
+        {
+            index = i;
+        }
+    }
+
+    if (index >= 0) m_guffins.erase(index);
+    m_physics->setGuffins(m_guffins);
+}
 
 void Game::drawFrame()
 {

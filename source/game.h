@@ -8,8 +8,6 @@
 #include "actor_animation_controller.h"
 #include "enemy.h"
 
-#include <map>
-
 // forward declarations
 class VgaGfx;
 class ImageBase;
@@ -29,6 +27,11 @@ struct LevelNumber
 {
 	int8_t x;
 	int8_t y;
+
+	bool operator==(const LevelNumber& other)
+	{
+		return (x == other.x && y == other.y);
+	}
 };
 
 
@@ -37,6 +40,13 @@ struct GameAnimations
 	shared_ptr<Animation> actorAnimation;
 	shared_ptr<Animation> enemyAnimation;
 	shared_ptr<Animation> guffinAnimation;
+};
+
+
+struct CollectedGuffin
+{
+	LevelNumber level;
+	Point pos;
 };
 
 
@@ -50,6 +60,7 @@ public:
 
 	// PhysicsCallback interface
 	virtual void levelTransition(LevelTransition transition);
+	virtual void collectApple(Point point);
 
 private:
 	virtual void drawAppleCount();
@@ -68,7 +79,7 @@ private:
 	LevelNumber m_nextLevel;
 	ActorAnimationController m_animationController;
 	bool m_lastButtonPressed;
-	std::multimap<int16_t, Point> m_collectedGuffins;
+	tnd::vector<CollectedGuffin> m_collectedGuffins;
 };
 
 
