@@ -7,6 +7,7 @@ output=openglnb
 
 [dosbox]
 machine=vgaonly
+vertical retrace poll debug line=false
 
 [render]
 frameskip=0
@@ -21,8 +22,7 @@ cycleup=10
 cycledown=20
 
 [joystick]
-joysticktype=none
-
+joysticktype=auto
 
 [autoexec]
 # Lines in this section will be run at startup.

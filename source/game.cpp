@@ -10,6 +10,7 @@
 #include "exception.h"
 #include "compiled_sprite.h"
 #include "joystick.h"
+#include "game_save.h"
 
 #include <stdio.h>
 
@@ -21,6 +22,21 @@ Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
 {
     m_nextLevel.x = -1;
     m_nextLevel.y = -1;
+
+    // try to load savegame
+    GameState state;
+    if (loadGameState(state, "game.sav"))
+    {
+        loadLevel(state.level, UseSpawnPoint::NO);
+        m_collectedGuffins = state.colectedGuffins;
+        m_physics->setSpawnPoint(state.spawnPoint);
+        drawAppleCount();
+    }
+    else
+    {
+        LevelNumber levelNumber = {1, 1};
+        loadLevel(levelNumber, UseSpawnPoint::YES);
+    }
 }
 
 void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint)
@@ -125,6 +141,14 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
     snprintf(buf.data(), buf.size(), "Build date: %s", BUILD_DATE);
     m_vgaGfx->drawText(buf.data(), 50, 193);
     drawAppleCount();
+
+
+    // auto save current state
+    GameState state;
+    state.level = m_levelNumber;
+    state.spawnPoint = Point(actorPosX, actorPosY);
+    state.colectedGuffins = m_collectedGuffins;
+    saveGameState(state, "game.sav");
 }
 
 void Game::drawAppleCount()

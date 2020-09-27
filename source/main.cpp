@@ -36,12 +36,8 @@ int main()
 
 		Game game(gfx, tiles, animations, "%02x%02x");
 
-		LevelNumber levelNumber = {1,1};
-		game.loadLevel(levelNumber, UseSpawnPoint::YES);
-
 		while (!s_keyEsc)
     	{	
-			
 			game.drawFrame();
 		}
 		

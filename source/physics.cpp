@@ -54,6 +54,11 @@ void Physics::setGuffins(const tnd::vector<Rectangle>& guffins)
 void Physics::setSpawnPoint(const Point& point)
 {
     m_spawn = point;
+    if (m_actors.size() > 0)
+    {
+        m_actors[0].rect.x = point.x;
+        m_actors[0].rect.y = point.y;
+    }
 }
 
 void Physics::getActorPos(int index, int16_t& x, int16_t& y)
