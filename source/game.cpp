@@ -154,8 +154,9 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
 void Game::drawAppleCount()
 {
     char buf[16];
-    snprintf(buf, 16, "Apples:%02d", m_collectedGuffins.size());
-    m_vgaGfx->drawText(buf, 270, 1);
+
+    snprintf(buf, 16, "Apples:%3.0f%%", (100.0 / 6) * m_collectedGuffins.size());
+    m_vgaGfx->drawText(buf, 260, 1);
 }
 
 void Game::collectApple(Point point)

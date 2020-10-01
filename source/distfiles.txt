@@ -10,8 +10,6 @@ game.exe
 ../images/guyframe.tga
 ../levels/0101_bg.csv
 ../levels/0101_col.csv
-../levels/0102_bg.csv
-../levels/0102_col.csv
 ../levels/0202_bg.csv
 ../levels/0202_col.csv
 ../levels/0201_bg.csv
@@ -20,4 +18,8 @@ game.exe
 ../levels/0301_col.csv
 ../levels/0302_bg.csv
 ../levels/0302_col.csv
+../levels/0401_bg.csv
+../levels/0401_col.csv
+../levels/0402_bg.csv
+../levels/0402_col.csv
 ../readme/readme.txt
