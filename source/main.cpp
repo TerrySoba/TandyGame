@@ -13,10 +13,33 @@
 #include "exception.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
-
-int main()
+LevelNumber parseCommandline(int argc, char* argv[])
 {
+	LevelNumber level = {1, 1};
+
+	for (int i = 1; i < argc; ++i)
+	{
+		if (strcmp("--level", argv[i]) == 0 && i+2 < argc)
+		{
+			int16_t levelX, levelY;
+			sscanf(argv[i+1], "%d", &levelX);
+			sscanf(argv[i+2], "%d", &levelY);
+			i+=2;
+
+			level.x = levelX;
+			level.y = levelY;
+		}		
+	}
+
+	return level;
+}
+
+
+int main(int argc, char* argv[])
+{
+	LevelNumber level = parseCommandline(argc, argv);
 	calibrateJoystick();
 	
 	try
@@ -34,7 +57,7 @@ int main()
 
 		GameAnimations animations = {guy, enemy, guffin};
 
-		Game game(gfx, tiles, animations, "%02x%02x");
+		Game game(gfx, tiles, animations, "%02x%02x", level);
 
 		while (!s_keyEsc)
     	{	

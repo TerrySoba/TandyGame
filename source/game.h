@@ -53,7 +53,7 @@ struct CollectedGuffin
 class Game : public PhysicsCallback
 {
 public:
-	Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, GameAnimations animations, const char* levelBasename);
+	Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, GameAnimations animations, const char* levelBasename, LevelNumber startLevel);
 
 	void loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useSpawnPoint);
     void drawFrame();

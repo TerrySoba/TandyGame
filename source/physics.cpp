@@ -9,9 +9,9 @@ Physics::Physics(PhysicsCallback* callback) :
     m_rightLevelTransition *= 16;
     m_leftLevelTransition =  Rectangle(  0, 0, 4, 200); 
     m_leftLevelTransition *= 16;
-    m_bottomLevelTransition = Rectangle(0, 196, 200, 4);
+    m_bottomLevelTransition = Rectangle(0, 196, 320, 4);
     m_bottomLevelTransition *= 16;
-    m_topLevelTransition = Rectangle(0, 0, 200, 4);
+    m_topLevelTransition = Rectangle(0, 0, 320, 4);
     m_topLevelTransition *= 16;
 }
 

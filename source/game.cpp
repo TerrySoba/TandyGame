@@ -16,7 +16,7 @@
 
 Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
            GameAnimations animations,
-           const char* levelBasename) :
+           const char* levelBasename, LevelNumber startLevel) :
     m_vgaGfx(vgaGfx), m_tiles(tiles), m_animations(animations), m_frames(0), m_levelBasename(levelBasename),
     m_animationController(animations.actorAnimation), m_lastButtonPressed(false)
 {
@@ -34,8 +34,7 @@ Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
     }
     else
     {
-        LevelNumber levelNumber = {1, 1};
-        loadLevel(levelNumber, UseSpawnPoint::YES);
+        loadLevel(startLevel, UseSpawnPoint::YES);
     }
 }
 
