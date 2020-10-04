@@ -154,7 +154,7 @@ void Game::drawAppleCount()
 {
     char buf[16];
 
-    snprintf(buf, 16, "Apples:%3.0f%%", (100.0 / 6) * m_collectedGuffins.size());
+    snprintf(buf, 16, "Apples:%3.0f%%", (100.0 / 11) * m_collectedGuffins.size());
     m_vgaGfx->drawText(buf, 260, 1);
 }
 
