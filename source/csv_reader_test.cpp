@@ -5,7 +5,7 @@
 
 TEST(CsvReaderTest)
 {
-    CsvReader<int> reader("test.csv");
+    CsvReader<int> reader("source\\test.csv");
     ASSERT_TRUE(reader.width() == 3);
     ASSERT_TRUE(reader.height() == 4);
 
@@ -17,7 +17,7 @@ TEST(CsvReaderTest)
 
 TEST(CsvReaderTest2)
 {
-    CsvReader<int> reader("test2.csv");
+    CsvReader<int> reader("source\\test2.csv");
     ASSERT_TRUE(reader.width() == 58);
     ASSERT_TRUE(reader.height() == 47);
 
@@ -26,7 +26,7 @@ TEST(CsvReaderTest2)
 
 TEST(CsvReaderTest3)
 {
-    CsvReader<int> reader("..\\testdata\\level1.csv");
+    CsvReader<int> reader("testdata\\level1.csv");
     ASSERT_TRUE(reader.width() == 20);
     ASSERT_TRUE(reader.height() == 12);
 
@@ -36,7 +36,7 @@ TEST(CsvReaderTest3)
 
 TEST(CsvReaderTest4)
 {
-    CsvReader<int> reader("..\\testdata\\lines.csv");
+    CsvReader<int> reader("testdata\\lines.csv");
     ASSERT_TRUE(reader.width() == 4);
     ASSERT_TRUE(reader.height() == 3);
 }
@@ -44,7 +44,7 @@ TEST(CsvReaderTest4)
 
 TEST(LineDetectorTest)
 {
-    CsvReader<uint8_t> reader("..\\testdata\\lines.csv");
+    CsvReader<uint8_t> reader("testdata\\lines.csv");
 
     tnd::vector<Rectangle> horizontalLines = detectLines(reader, HORIZONTAL, 1);
     ASSERT_TRUE(horizontalLines.size() == 3);

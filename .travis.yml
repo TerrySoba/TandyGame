@@ -8,7 +8,7 @@ services:
 
 script:
   - bash build.sh
-  - bash test.sh
+  # - bash test.sh
   - zip -r website/game.zip release/
   - xvfb-run -s "-screen 0 640x400x24" bash take_screenshot.sh
   - cp screenshot.png website

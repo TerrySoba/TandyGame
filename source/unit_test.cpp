@@ -48,6 +48,9 @@ bool runTests()
             ++failureCount;
         }
         std::cout << "[      " << ((s_currentTestResult == TEST_SUCCESS)?"  OK":"FAIL") << " ] " << name.c_str() << std::endl;
+
+
+        if (failureCount > 0) break;
     }
 
     std::cout << "Failed tests: " << failureCount << std::endl;

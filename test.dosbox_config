@@ -16,7 +16,7 @@ scaler=none
 [cpu]
 core=auto
 cputype=8086
-cycles=fixed 600
+cycles=fixed 60000
 cycleup=10
 cycledown=20
 
@@ -24,8 +24,8 @@ cycledown=20
 # Lines in this section will be run at startup.
 # You can put your MOUNT lines here.
 
-mount c source
+mount c .
 c:
-gametest
+source\gametest
 pause
 exit
