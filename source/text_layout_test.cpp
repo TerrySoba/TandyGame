@@ -21,6 +21,33 @@ tnd::vector<int> getSpacePositions(const char* text)
 }
 
 
+void adjustSpaces(char* data, int length)
+{
+    // find number of spaces at end of line
+    int spaces = 0;
+    for (int i = length - 1; i > 0; --i)
+    {
+        if (data[i] != ' ') break;
+        ++spaces;
+    }
+
+    // insert spaces to make line full length
+    while (spaces > 0)
+    {
+        char lastCh = 0;
+        for (int i = 0; i < length - spaces; ++i)
+        {
+            if (lastCh != ' ' && data[i] == ' ' && spaces > 0)
+            {
+                memmove(&data[i+1], &data[i], length-i-1);
+                --spaces;
+                ++i;
+            }
+            lastCh = data[i];
+        }
+    }
+}
+
 
 
 tnd::vector<TinyString> formatString(const char* str, int lineWidth)
@@ -36,16 +63,16 @@ tnd::vector<TinyString> formatString(const char* str, int lineWidth)
         {
             TinyString line(lineWidth);
             memcpy(line.data(), &str[diff], spaces[i-1] - diff);
+            adjustSpaces(line.data(), lineWidth);
             out.push_back(line);
-            // puts(line.c_str());
             diff = spaces[i-1]+1;
         }
     }
 
     TinyString line(lineWidth);
     memcpy(line.data(), &str[diff], spaces[spaces.size()-1] - diff);
+    adjustSpaces(line.data(), lineWidth);
     out.push_back(line);
-    // puts(line.c_str());
 
     return out;
 }
@@ -70,20 +97,25 @@ TEST(TextLayoutTest1)
 TEST(TextLayoutTest2)
 {
     const char* testText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur gravida bibendum enim sodales ornare.";
-    const char* resultText =
-    "Lorem   ipsum  dolor  sit  amet,\n"
-    "consectetur   adipiscing   elit.\n"
-    "Curabitur  gravida bibendum enim\n"
-    "sodales                  ornare.";
+    tnd::vector<TinyString> resultText;
+    resultText.push_back(TinyString("Lorem   ipsum  dolor  sit  amet,"));
+    resultText.push_back(TinyString("consectetur   adipiscing   elit."));
+    resultText.push_back(TinyString("Curabitur  gravida bibendum enim"));
+    resultText.push_back(TinyString("sodales                  ornare."));
 
     tnd::vector<TinyString> f = formatString(testText, 32);
 
-    for (int i = 0; i < f.size(); ++i)
+    ASSERT_TRUE(resultText.size() == f.size());
+
+    for (int i = 0; i < resultText.size(); ++i)
     {
-        printf("\"%s\"\n", f[i].c_str());
+        ASSERT_TRUE(resultText[i] == f[i]);
     }
+}
 
-    // puts(f.c_str());
-
-    // ASSERT_TRUE(f == TinyString(resultText));
+TEST(AdjustSpaces)
+{
+    TinyString testString("Test string 123     ");
+    adjustSpaces(testString.data(), testString.size());
+    ASSERT_TRUE(testString == TinyString("Test    string   123"));
 }
