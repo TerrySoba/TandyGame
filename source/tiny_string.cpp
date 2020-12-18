@@ -19,9 +19,21 @@ TinyString::TinyString(const TinyString& other)
     m_data = strdup(other.m_data);
 }
 
+TinyString::TinyString(int size)
+{
+    m_data = (char*)malloc(size+1);
+    memset(m_data, ' ', size);
+    m_data[size] = '\0';
+}
+
 bool TinyString::operator==(const char* str)
 {
     return strcmp(str, m_data) == 0;
+}
+
+bool TinyString::operator==(const TinyString& other)
+{
+    return strcmp(other.m_data, m_data) == 0;
 }
 
 void TinyString::operator=(const char* str)
@@ -42,6 +54,11 @@ int TinyString::size() const
 }
 
 const char* TinyString::c_str() const
+{
+    return m_data;
+}
+
+char* TinyString::data()
 {
     return m_data;
 }

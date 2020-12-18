@@ -7,14 +7,17 @@ public:
     TinyString();
     TinyString(const char* str);
     TinyString(const TinyString& other);
+    TinyString(int size);
     ~TinyString();
 
     bool operator==(const char* str);
+    bool operator==(const TinyString& other);
     void operator=(const char* str);
     void operator=(const TinyString& other);
 
     int size() const;
     const char* c_str() const;
+    char* data();
     
 private:
     char* m_data;

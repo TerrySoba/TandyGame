@@ -9,7 +9,8 @@ objects_game = \
 objects_test = \
     $(objects_game_lib) test_main.o unit_test.o \
 	physics_test.o csv_reader_test.o tga_image_test.o json_test.o shared_ptr_test.o \
-	blit_test.o vector_test.o rectangle_test.o tiny_string_test.o animation_test.o 
+	blit_test.o vector_test.o rectangle_test.o tiny_string_test.o animation_test.o \
+	text_layout_test.o
 # coptions = -0 -ml -xs -onatx -oh -oi+ -ei -zp8 -fpi87
 # coptions = -0 -ml -xs -onatx -oh -ol -ol+ -ox
 coptions = -ml -oneatx -xs -zp4 -0
@@ -57,6 +58,7 @@ compiled_sprite.o: compiled_sprite.h drawable.h
 joystick.o: joystick.h
 enemy.o: enemy.h
 game_save.o: game_save.h physics.h game.h
+text_layout_test.o: text_layout.h unit_test.h
 
 cJSON.o: 3rd_party/cJSON/cJSON.h
 	wpp $(coptions) 3rd_party/cJSON/cJSON.c
