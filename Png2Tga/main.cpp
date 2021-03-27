@@ -10,8 +10,10 @@
 #include <forward_list>
 #include <sstream>
 #include <optional>
+#include <limits>
 
-double square(double val)
+template <typename T>
+auto square(const T& val) -> decltype(val*val)
 {
     return val * val;
 }
@@ -21,12 +23,12 @@ struct RGB
     unsigned char r, g, b;
 };
 
-double colorDiff(
+int32_t colorDiff(
         const RGB& color1,
         const RGB& color2)
 {
     // very simplistic euclidean distance...
-    return square(color1.r - color2.r) + square(color1.g - color2.g) + square(color1.b - color2.b);
+    return square((int32_t)color1.r - (int32_t)color2.r) + square((int32_t)color1.g - (int32_t)color2.g) + square((int32_t)color1.b - (int32_t)color2.b);
 }
 
 static const std::vector<std::pair<char, RGB>> rgbiColors =
@@ -50,13 +52,13 @@ static const std::vector<std::pair<char, RGB>> rgbiColors =
 };
 
 
-unsigned char getBestRgbiColor(RGB color)
+unsigned char getBestRgbiColor(const RGB& color)
 {
     char bestIndex = 0;
-    double bestDiff = 100000;
+    int32_t bestDiff = std::numeric_limits<int32_t>::max();
     for (const auto& entry : rgbiColors)
     {
-        double diff;
+        int32_t diff;
         if ((diff = colorDiff(color, entry.second)) < bestDiff)
         {
             bestIndex = entry.first;
