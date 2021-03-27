@@ -7,10 +7,9 @@
 #include <stdio.h>
 #include <cmath>
 #include <vector>
-#include <list>
+#include <forward_list>
 #include <sstream>
 #include <optional>
-#include <chrono>
 
 double square(double val)
 {
@@ -158,16 +157,16 @@ bool isSameRle(const Chunk& a, const Chunk& b)
  */
 void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
 {
-    std::list<Chunk> chunks;
-
-    auto start = std::chrono::system_clock::now();
+    std::forward_list<Chunk> chunks;
 
     // initialize chunks with single bytes of data
+    auto chunksIter = chunks.before_begin();
     for (auto ch : data)
     {
-        chunks.push_back(Chunk({true, {ch}}));
+        chunksIter = chunks.emplace_after(chunksIter, Chunk{true, {ch}});
     }
 
+    // Merge runs of same value into chunks
     for (auto it = chunks.begin(); it != chunks.end();)
     {
         auto next = it;
@@ -181,17 +180,13 @@ void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
             auto newData = it->data;
             newData.insert(newData.end(), next->data.begin(), next->data.end());
             *it = Chunk({true, newData});
-            chunks.erase(next);
+            chunks.erase_after(it);
         }
         else
         {
             ++it;
         }
     }
-
-    auto end = std::chrono::system_clock::now();
-        std::chrono::duration<double> diff = end-start;
-        std::cout << "Time:" << diff.count() << " s\n";
 
     // all chunks that are smaller than 3 elements should not be RLE chunks,
     // so we mark them as not being RLE chunks
@@ -217,7 +212,7 @@ void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
             auto newData = it->data;
             newData.insert(newData.end(), next->data.begin(), next->data.end());
             *it = Chunk({false, newData});
-            chunks.erase(next);
+            chunks.erase_after(it);
         }
         else
         {
