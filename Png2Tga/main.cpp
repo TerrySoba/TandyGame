@@ -7,9 +7,10 @@
 #include <stdio.h>
 #include <cmath>
 #include <vector>
+#include <list>
 #include <sstream>
 #include <optional>
-
+#include <chrono>
 
 double square(double val)
 {
@@ -154,11 +155,12 @@ bool isSameRle(const Chunk& a, const Chunk& b)
 
 /**
  * Compress data using run length encoding (RLE).
- * Currently the implementation is VERY inefficient.
  */
 void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
 {
-    std::vector<Chunk> chunks;
+    std::list<Chunk> chunks;
+
+    auto start = std::chrono::system_clock::now();
 
     // initialize chunks with single bytes of data
     for (auto ch : data)
@@ -166,43 +168,60 @@ void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
         chunks.push_back(Chunk({true, {ch}}));
     }
 
-    // merge RLE chunks that are the same
-    for (size_t i = 0; i < chunks.size() - 1; ++i)
+    for (auto it = chunks.begin(); it != chunks.end();)
     {
-        if (isSameRle(chunks[i], chunks[i + 1]) &&
-            chunks[i].data.size() + chunks[i + 1].data.size() < 127) // max chunk size is 127 bytes
+        auto next = it;
+        ++next;
+        if (next == chunks.end()) break;
+
+        if (isSameRle(*it, *next) &&
+            it->data.size() + next->data.size() < 127) // max chunk size is 127 bytes
         {
             // merge RLE blocks
-            auto newData = chunks[i].data;
-            newData.insert(newData.end(), chunks[i + 1].data.begin(), chunks[i + 1].data.end());
-            chunks[i] = Chunk({true, newData});
-            chunks.erase(chunks.begin() + i + 1);
-            --i;
+            auto newData = it->data;
+            newData.insert(newData.end(), next->data.begin(), next->data.end());
+            *it = Chunk({true, newData});
+            chunks.erase(next);
+        }
+        else
+        {
+            ++it;
         }
     }
 
+    auto end = std::chrono::system_clock::now();
+        std::chrono::duration<double> diff = end-start;
+        std::cout << "Time:" << diff.count() << " s\n";
+
     // all chunks that are smaller than 3 elements should not be RLE chunks,
     // so we mark them as not being RLE chunks
-    for (size_t i = 0; i < chunks.size(); ++i)
+    for (auto& chunk : chunks)
     {
-        if (chunks[i].data.size() < 3)
+        if (chunk.data.size() < 3)
         {
-            chunks[i].isRleChunk = false;
+            chunk.isRleChunk = false;
         }
     }
 
     // now merge non RLE chunks
-    for (size_t i = 0; i < chunks.size() - 1; ++i)
+    for (auto it = chunks.begin(); it != chunks.end();)
     {
-        if (!chunks[i].isRleChunk && !chunks[i + 1].isRleChunk &&
-            chunks[i].data.size() + chunks[i + 1].data.size() < 127) // max chunk size is 127 bytes
+        auto next = it;
+        ++next;
+        if (next == chunks.end()) break;
+
+        if (!it->isRleChunk && !next->isRleChunk &&
+            it->data.size() + next->data.size() < 127) // max chunk size is 127 bytes
         {
             // merge chunk blocks
-            auto newData = chunks[i].data;
-            newData.insert(newData.end(), chunks[i + 1].data.begin(), chunks[i + 1].data.end());
-            chunks[i] = Chunk({false, newData});
-            chunks.erase(chunks.begin() + i + 1);
-            --i;
+            auto newData = it->data;
+            newData.insert(newData.end(), next->data.begin(), next->data.end());
+            *it = Chunk({false, newData});
+            chunks.erase(next);
+        }
+        else
+        {
+            ++it;
         }
     }
 
