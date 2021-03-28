@@ -9,16 +9,24 @@ enum AnimationEnum
     ANIM_INITIAL,
     ANIM_WALK_RIGHT,
     ANIM_WALK_LEFT,
-    ANIM_STAND,
+    ANIM_STAND_RIGHT,
+    ANIM_STAND_LEFT,
     ANIM_JUMP_RIGHT,
     ANIM_JUMP_LEFT,
 };
 
-enum Direction
+enum VerticalDirection
 {
-    UP,
-    DOWN
+    DIR_UP,
+    DIR_DOWN
 };
+
+enum HorizontalDirection
+{
+    DIR_LEFT,
+    DIR_RIGHT
+};
+
 
 #define my_abs(x) ((x > 0)?(x):-(x))
 
@@ -27,7 +35,13 @@ class ActorAnimationController
 {
 public:
     ActorAnimationController(shared_ptr<Animation> actorAnimation) :
-        m_actorAnimation(actorAnimation), m_lastX(0), m_lastY(0), m_activeAnimation(ANIM_INITIAL), m_lastDirection(DOWN), airFrames(0)
+        m_actorAnimation(actorAnimation),
+        m_lastX(0),
+        m_lastY(0),
+        m_activeAnimation(ANIM_INITIAL),
+        m_lastDirection(DIR_DOWN),
+        m_lastHDir(DIR_RIGHT),
+        m_airFrames(0)
     {
     }
     
@@ -38,43 +52,53 @@ public:
         m_lastX = x;
         m_lastY = y;
 
-        Direction direction = (dy > 0) ? DOWN : UP;
+        VerticalDirection direction = (dy > 0) ? DIR_DOWN : DIR_UP;
 
         AnimationEnum nextAnim = m_activeAnimation;
 
         if (my_abs(dy) < 2)
         {
-            if (m_lastDirection == DOWN || airFrames++ > 4)
+            if (m_lastDirection == DIR_DOWN || m_airFrames++ > 4)
             {
-                airFrames = 0;
+                m_airFrames = 0;
                 if (dx > 0)
                 {
+                    m_lastHDir = DIR_RIGHT;
                     nextAnim = ANIM_WALK_RIGHT;
                 }
                 else if (dx < 0)
                 {
+                    m_lastHDir = DIR_LEFT;
                     nextAnim = ANIM_WALK_LEFT;
                 }
                 else if (dx == 0)
                 {
-                    nextAnim = ANIM_STAND;
+                    if (m_lastHDir == DIR_RIGHT) nextAnim = ANIM_STAND_RIGHT;
+                    else nextAnim = ANIM_STAND_LEFT;
                 }
             }
             else
             {
-                ++airFrames;
+                ++m_airFrames;
                 nextAnim = m_activeAnimation;
             }
         }
         else
         {
-            if (dx >= 0)
+            if (dx > 0)
             {
+                m_lastHDir = DIR_RIGHT;
                 nextAnim = ANIM_JUMP_RIGHT;
+            }
+            else if (dx < 0)
+            {
+                m_lastHDir = DIR_LEFT;
+                nextAnim = ANIM_JUMP_LEFT;
             }
             else
             {
-                nextAnim = ANIM_JUMP_LEFT;
+                if (m_lastHDir == DIR_RIGHT) nextAnim = ANIM_JUMP_RIGHT;
+                else nextAnim = ANIM_JUMP_LEFT;
             }
         }
         
@@ -91,8 +115,11 @@ public:
             case ANIM_WALK_LEFT:
                 m_actorAnimation->useTag("WalkL");
                 break;
-            case ANIM_STAND:
-                m_actorAnimation->useTag("Stand");
+            case ANIM_STAND_RIGHT:
+                m_actorAnimation->useTag("StandR");
+                break;
+            case ANIM_STAND_LEFT:
+                m_actorAnimation->useTag("StandL");
                 break;
             case ANIM_JUMP_RIGHT:
                 m_actorAnimation->useTag("JumpR");
@@ -110,8 +137,9 @@ private:
     int16_t m_lastX;
     int16_t m_lastY;
     AnimationEnum m_activeAnimation;
-    Direction m_lastDirection;
-    int airFrames;
+    VerticalDirection m_lastDirection;
+    HorizontalDirection m_lastHDir;
+    int m_airFrames;
 };
 
 #endif

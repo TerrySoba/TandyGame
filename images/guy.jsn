@@ -254,23 +254,72 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
     "sourceSize": { "w": 10, "h": 15 },
     "duration": 100
+   },
+   "guy_anim 32.ase": {
+    "frame": { "x": 320, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 33.ase": {
+    "frame": { "x": 330, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 34.ase": {
+    "frame": { "x": 340, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 35.ase": {
+    "frame": { "x": 350, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 36.ase": {
+    "frame": { "x": 360, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
+   },
+   "guy_anim 37.ase": {
+    "frame": { "x": 370, "y": 0, "w": 10, "h": 15 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 15 },
+    "sourceSize": { "w": 10, "h": 15 },
+    "duration": 100
    }
  },
  "meta": {
   "app": "https://github.com/LibreSprite/LibreSprite/",
   "version": "1.0-dev",
-  "image": "/home/yoshi252/program_sources/TandyGame/images/guy.png",
+  "image": "/home/yoshi252/program_source/TandyGame/images/guy.png",
   "format": "I8",
-  "size": { "w": 320, "h": 15 },
+  "size": { "w": 380, "h": 15 },
   "scale": "1",
   "frameTags": [
-   { "name": "Stand", "from": 0, "to": 5, "direction": "forward" },
-   { "name": "StartR", "from": 6, "to": 8, "direction": "forward" },
-   { "name": "WalkR", "from": 9, "to": 16, "direction": "forward" },
-   { "name": "StartL", "from": 17, "to": 19, "direction": "forward" },
-   { "name": "WalkL", "from": 20, "to": 27, "direction": "forward" },
-   { "name": "JumpR", "from": 28, "to": 29, "direction": "forward" },
-   { "name": "JumpL", "from": 30, "to": 31, "direction": "forward" }
+   { "name": "StandR", "from": 0, "to": 5, "direction": "forward" },
+   { "name": "StandL", "from": 6, "to": 11, "direction": "forward" },
+   { "name": "StartR", "from": 12, "to": 14, "direction": "forward" },
+   { "name": "WalkR", "from": 15, "to": 22, "direction": "forward" },
+   { "name": "StartL", "from": 23, "to": 25, "direction": "forward" },
+   { "name": "WalkL", "from": 26, "to": 33, "direction": "forward" },
+   { "name": "JumpR", "from": 34, "to": 35, "direction": "forward" },
+   { "name": "JumpL", "from": 36, "to": 37, "direction": "forward" }
   ],
   "layers": [
    { "name": "Background", "opacity": 255, "blendMode": "normal" }
