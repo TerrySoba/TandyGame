@@ -157,7 +157,7 @@ bool isSameRle(const Chunk& a, const Chunk& b)
 /**
  * Compress data using run length encoding (RLE).
  */
-void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
+void doRleCompression(const std::vector<uint8_t>& data, FILE *fp)
 {
     std::forward_list<Chunk> chunks;
 
@@ -165,7 +165,7 @@ void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
     auto chunksIter = chunks.before_begin();
     for (auto ch : data)
     {
-        chunksIter = chunks.emplace_after(chunksIter, Chunk{true, {ch}});
+        chunksIter = chunks.insert_after(chunksIter, {true, {ch}});
     }
 
     // Merge runs of same value into chunks
@@ -179,9 +179,7 @@ void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
             it->data.size() + next->data.size() < 127) // max chunk size is 127 bytes
         {
             // merge RLE blocks
-            auto newData = it->data;
-            newData.insert(newData.end(), next->data.begin(), next->data.end());
-            *it = Chunk({true, newData});
+            it->data.insert(it->data.end(), next->data.begin(), next->data.end());
             chunks.erase_after(it);
         }
         else
@@ -211,9 +209,7 @@ void doRleCompression(const std::vector<uint8_t> data, FILE *fp)
             it->data.size() + next->data.size() < 127) // max chunk size is 127 bytes
         {
             // merge chunk blocks
-            auto newData = it->data;
-            newData.insert(newData.end(), next->data.begin(), next->data.end());
-            *it = Chunk({false, newData});
+            it->data.insert(it->data.end(), next->data.begin(), next->data.end());
             chunks.erase_after(it);
         }
         else
