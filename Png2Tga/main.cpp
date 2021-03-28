@@ -31,24 +31,24 @@ int32_t colorDiff(
     return square((int32_t)color1.r - (int32_t)color2.r) + square((int32_t)color1.g - (int32_t)color2.g) + square((int32_t)color1.b - (int32_t)color2.b);
 }
 
-static const std::vector<std::pair<char, RGB>> rgbiColors =
+static const std::vector<RGB> rgbiColors =
 {
-    { 0 , {0x00,0x00,0x00}},
-    { 1 , {0x00,0x00,0xAA}},
-    { 2 , {0x00,0xAA,0x00}},
-    { 3 , {0x00,0xAA,0xAA}},
-    { 4 , {0xAA,0x00,0x00}},
-    { 5 , {0xAA,0x00,0xAA}},
-    { 6 , {0xAA,0x55,0x00}},
-    { 7 , {0xAA,0xAA,0xAA}},
-    { 8 , {0x55,0x55,0x55}},
-    { 9 , {0x55,0x55,0xFF}},
-    {10 , {0x55,0xFF,0x55}},
-    {11 , {0x55,0xFF,0xFF}},
-    {12 , {0xFF,0x55,0xFF}},
-    {13 , {0xFF,0x55,0xFF}},
-    {14 , {0xFF,0xFF,0x55}},
-    {15 , {0xFF,0xFF,0xFF}},
+    {0x00,0x00,0x00},
+    {0x00,0x00,0xAA},
+    {0x00,0xAA,0x00},
+    {0x00,0xAA,0xAA},
+    {0xAA,0x00,0x00},
+    {0xAA,0x00,0xAA},
+    {0xAA,0x55,0x00},
+    {0xAA,0xAA,0xAA},
+    {0x55,0x55,0x55},
+    {0x55,0x55,0xFF},
+    {0x55,0xFF,0x55},
+    {0x55,0xFF,0xFF},
+    {0xFF,0x55,0xFF},
+    {0xFF,0x55,0xFF},
+    {0xFF,0xFF,0x55},
+    {0xFF,0xFF,0xFF},
 };
 
 
@@ -56,12 +56,12 @@ unsigned char getBestRgbiColor(const RGB& color)
 {
     char bestIndex = 0;
     int32_t bestDiff = std::numeric_limits<int32_t>::max();
-    for (const auto& entry : rgbiColors)
+    for (char i = 0; i < rgbiColors.size(); ++i)
     {
         int32_t diff;
-        if ((diff = colorDiff(color, entry.second)) < bestDiff)
+        if ((diff = colorDiff(color, rgbiColors[i])) < bestDiff)
         {
-            bestIndex = entry.first;
+            bestIndex = i;
             bestDiff = diff;
         }
     }
@@ -118,9 +118,8 @@ std::vector<uint8_t> convertToRgbi(const Image& img)
     {
         for (unsigned int x = 0; x < img.width; ++x)
         {
-            auto color1 = rgba2rgb(data[img.width*y + x]);
-            unsigned char pixel1 = getBestRgbiColor(color1);
-            unsigned char pixel = pixel1;
+            auto color = rgba2rgb(data[img.width*y + x]);
+            unsigned char pixel = getBestRgbiColor(color);
             rgbiImage.push_back(pixel);
         }
     }
@@ -266,20 +265,20 @@ void convertToTga(const Image& image, std::string outputFile, bool useRleCompres
     // write palette data (3 byte per entry) BGR
     for (auto entry : rgbiColors)
     {
-        write8bit(entry.second.b, fp);
-        write8bit(entry.second.g, fp);
-        write8bit(entry.second.r, fp);
+        write8bit(entry.b, fp);
+        write8bit(entry.g, fp);
+        write8bit(entry.r, fp);
     }
 
     // write image data
-    if (!useRleCompression)
+    if (useRleCompression)
     {
-        // write uncompressed
-        fwrite(rgbiImage.data(), 1, rgbiImage.size(), fp);
+        doRleCompression(rgbiImage, fp);
     }
     else
     {
-        doRleCompression(rgbiImage, fp);
+        // write uncompressed
+        fwrite(rgbiImage.data(), 1, rgbiImage.size(), fp);
     }
     
     fclose(fp);
