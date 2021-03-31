@@ -4,6 +4,8 @@
 #include "animation.h"
 #include "shared_ptr.h"
 
+#include <stdlib.h>
+
 enum AnimationEnum
 {
     ANIM_INITIAL,
@@ -26,9 +28,6 @@ enum HorizontalDirection
     DIR_LEFT,
     DIR_RIGHT
 };
-
-
-#define my_abs(x) ((x > 0)?(x):-(x))
 
 
 class ActorAnimationController
@@ -56,7 +55,7 @@ public:
 
         AnimationEnum nextAnim = m_activeAnimation;
 
-        if (my_abs(dy) < 2)
+        if (abs(dy) < 2)
         {
             if (m_lastDirection == DIR_DOWN || m_airFrames++ > 4)
             {

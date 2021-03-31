@@ -9,6 +9,7 @@
 #include "version.h"
 #include "shared_ptr.h"
 #include "joystick.h"
+#include "text.h"
 
 #include "exception.h"
 
@@ -44,7 +45,7 @@ int main(int argc, char* argv[])
 	
 	try
 	{
-		RadPlayer music("CELT.RAD");
+		// RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));
@@ -59,11 +60,25 @@ int main(int argc, char* argv[])
 
 		Game game(gfx, tiles, animations, "%02x%02x", level);
 
+		while (!s_keyAlt)
+		{
+			gfx->clear();
+			Text t("Welcome stranger!\nThis is the World of Apples. "
+			       "Please feel free to collect as many as you like. "
+				   "But beware of the slight dimensional instability "
+				   "in the metallic looking room. Too many apples may "
+				   "throw off the cosmic balance..."
+				   "\nUp to 10 apples should be fine, though.\n\n   <Press jump to continue>", 30);
+			       //"I hope that we will be able to see the results of this endeavour as soon as we get home.", 40);
+			gfx->draw(t, 10,10);
+			gfx->vsync();
+			gfx->drawScreen();
+		}
+
 		while (!s_keyEsc)
     	{	
 			game.drawFrame();
 		}
-		
 	}
 	catch(const Exception& e)
 	{

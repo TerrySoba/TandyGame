@@ -1,0 +1,8 @@
+# Todo
+
+## Features
+
+ * Display story text
+ * Unlock areas when enough guffins have been collected.
+ * Tell a good story
+ 

@@ -18,14 +18,8 @@ public:
 
 	void setBackground(const ImageBase& image);
 
-	// void drawImage(const Animation& image, int16_t x, int16_t y);
 	void draw(const Drawable& image, int16_t x, int16_t y);
 	void drawBackground(const Drawable& image, int16_t x, int16_t y);
-	// void drawImage(const ImageBase& image, int16_t x, int16_t y);
-	// void drawImageTransparent(const ImageBase& image, int16_t targetX, int16_t targetY, uint8_t transparentColor);
-	// void drawImageTransparent(const Animation& image, int16_t x, int16_t y);
-
-	void drawText(const char* text, int16_t x, int16_t y);
 
 	void vsync();
 

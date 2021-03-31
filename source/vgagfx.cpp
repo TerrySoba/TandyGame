@@ -6,7 +6,6 @@
 #include <dos.h>
 #include <conio.h>
 #include <stdio.h>
-#include "font_data.h"
 
 #define inport(px) inpw(px)
 #define inportb(px) inp(px)
@@ -171,28 +170,5 @@ void VgaGfx::setBackground(const ImageBase& image)
             0, 0,
             image.width(), image.height());
         m_dirtyRects.push_back(rect);
-    }
-}
-
-
-void VgaGfx::drawText(const char* text, int16_t targetX, int16_t targetY)
-{
-    int len = strlen(text);
-
-    Rectangle rect(
-        targetX, targetY,
-        len * CHAR_WIDTH, CHAR_HEIGHT);
-    rect = rect.intersection(Rectangle(0, 0, SCREEN_W, SCREEN_H));
-    m_dirtyRects.push_back(rect);
-    // m_undrawnRects.push_back(rect);
-
-
-    for (int i = 0; i < len; ++i)
-    {
-        char* charImg = alphabet[getCharacterIndex(text[i])];
-        for (int16_t y = 0; y < CHAR_HEIGHT; ++y)
-        {
-            memcpy(getBackgroundImageLine(targetY + y) + targetX + i * CHAR_WIDTH, charImg + CHAR_WIDTH * y, CHAR_WIDTH);
-        }
     }
 }

@@ -11,6 +11,7 @@
 #include "compiled_sprite.h"
 #include "joystick.h"
 #include "game_save.h"
+#include "text.h"
 
 #include <stdio.h>
 
@@ -138,7 +139,8 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
 
     
     snprintf(buf.data(), buf.size(), "Build date: %s", BUILD_DATE);
-    m_vgaGfx->drawText(buf.data(), 50, 193);
+    Text t(buf.data());
+    m_vgaGfx->drawBackground(t, 50, 193);
     drawAppleCount();
 
 
@@ -154,8 +156,9 @@ void Game::drawAppleCount()
 {
     char buf[16];
 
-    snprintf(buf, 16, "Apples:%3.0f%%", (100.0 / 11) * m_collectedGuffins.size());
-    m_vgaGfx->drawText(buf, 260, 1);
+    snprintf(buf, 16, "Apples: %3d", m_collectedGuffins.size());
+    Text t(buf);
+    m_vgaGfx->drawBackground(t, 260, 1);
 }
 
 void Game::collectApple(Point point)

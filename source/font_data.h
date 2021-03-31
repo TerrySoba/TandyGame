@@ -1,3 +1,6 @@
+#ifndef _FONT_DATA_H
+#define _FONT_DATA_H
+
 #define CHAR_WIDTH 5
 #define CHAR_HEIGHT 6
 
@@ -401,10 +404,29 @@ char characterPercent[] = {
     15, 15,  0,  0,  0,
     15, 15,  0, 15,  0,
      0,  0, 15,  0,  0,
-    0 , 15,  0, 15,  0,
+     0, 15,  0, 15,  0,
     15,  0, 15, 15,  0,
      0,  0,  0,  0,  0,
 };
+
+char characterLower[] = { 
+     0,  0,  0, 15,  0,
+     0,  0, 15,  0,  0,
+     0, 15,  0,  0,  0,
+     0 , 0, 15,  0,  0,
+     0,  0,  0, 15,  0,
+     0,  0,  0,  0,  0,
+};
+
+char characterGreater[] = { 
+    15,  0,  0,  0,  0,
+     0, 15,  0,  0,  0,
+     0,  0, 15,  0,  0,
+     0, 15,  0,  0,  0,
+    15,  0,  0,  0,  0,
+     0,  0,  0,  0,  0,
+};
+
 
 char characterUnknown[] = { 
     15, 15, 15, 15,  0,
@@ -416,6 +438,9 @@ char characterUnknown[] = {
 };
 
 
+
+
+
 char* alphabet[] = {
     characterA, characterB, characterC, characterD, characterE, characterF,
     characterG, characterH, characterI, characterJ, characterK, characterL,
@@ -425,7 +450,7 @@ char* alphabet[] = {
     characterQuestionmark, character0, character1, character2, character3,
     character4, character5, character6, character7, character8, character9,
     characterExclamationmark, characterColon, characterPlus, characterMinus,
-    characterPercent, characterUnknown,
+    characterPercent, characterLower, characterGreater, characterUnknown,
 };
 
 int getCharacterIndex(char ch)
@@ -477,7 +502,12 @@ int getCharacterIndex(char ch)
         case '+': return 42;
         case '-': return 43;
         case '%': return 44;
+        case '<': return 45;
+        case '>': return 46;
     }
 
-    return 45;
+    return 47;
 }
+
+
+#endif
