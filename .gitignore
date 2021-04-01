@@ -6,10 +6,8 @@
 compiler
 release/
 .qmake.stash
-Image2Tandy/Image2Tandy
-Image2Tandy/Makefile
 .vscode/
-Image2Tandy/build/
+TextCompiler/build
 *.err
 source/version.h
 Png2Tga/build
