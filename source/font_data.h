@@ -427,6 +427,41 @@ char characterGreater[] = {
      0,  0,  0,  0,  0,
 };
 
+char characterAe[] = {
+    15,  0,  0, 15,  0,
+     0, 15, 15,  0,  0,
+    15,  0,  0, 15,  0,
+    15, 15, 15, 15,  0,
+    15,  0,  0, 15,  0,
+     0,  0,  0,  0,  0,
+};
+
+char characterOe[] = { 
+    15,  0,  0, 15,  0,     
+     0, 15, 15,  0,  0,
+    15,  0,  0, 15,  0,
+    15,  0,  0, 15,  0,
+     0, 15, 15,  0,  0,
+     0,  0,  0,  0,  0,
+};
+
+char characterUe[] = { 
+    15,  0,  0, 15,  0,
+     0,  0,  0,  0,  0,
+    15,  0,  0, 15,  0,
+    15,  0,  0, 15,  0,
+     0, 15, 15,  0,  0,
+     0,  0,  0,  0,  0,
+};
+
+char characterSS[] = { 
+     0, 15, 15,  0,  0,
+    15,  0,  0, 15,  0,
+    15,  0, 15,  0,  0,
+    15,  0,  0, 15,  0,
+    15,  0, 15,  0,  0,
+     0,  0,  0,  0,  0,
+};
 
 char characterUnknown[] = { 
     15, 15, 15, 15,  0,
@@ -450,7 +485,8 @@ char* alphabet[] = {
     characterQuestionmark, character0, character1, character2, character3,
     character4, character5, character6, character7, character8, character9,
     characterExclamationmark, characterColon, characterPlus, characterMinus,
-    characterPercent, characterLower, characterGreater, characterUnknown,
+    characterPercent, characterLower, characterGreater, characterAe,
+    characterOe, characterUe, characterSS, characterUnknown,
 };
 
 int getCharacterIndex(char ch)
@@ -504,9 +540,13 @@ int getCharacterIndex(char ch)
         case '%': return 44;
         case '<': return 45;
         case '>': return 46;
+        case '\xC4': case '\xE4': return 47; // A umlaut
+        case '\xD6': case '\xF6': return 48; // O umlaut
+        case '\xDC': case '\xFC': return 49; // U umlaut
+        case '\xDF': return 50; // sharp S
     }
 
-    return 47;
+    return 51;
 }
 
 

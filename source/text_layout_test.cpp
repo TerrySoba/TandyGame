@@ -50,7 +50,7 @@ void adjustSpaces(char* data, int length)
 
 
 
-tnd::vector<TinyString> formatString(const char* str, int lineWidth)
+tnd::vector<TinyString> formatString2(const char* str, int lineWidth)
 {
     tnd::vector<int> spaces = getSpacePositions(str);
 
@@ -103,7 +103,7 @@ TEST(TextLayoutTest2)
     resultText.push_back(TinyString("Curabitur  gravida bibendum enim"));
     resultText.push_back(TinyString("sodales                  ornare."));
 
-    tnd::vector<TinyString> f = formatString(testText, 32);
+    tnd::vector<TinyString> f = formatString2(testText, 32);
 
     ASSERT_TRUE(resultText.size() == f.size());
 

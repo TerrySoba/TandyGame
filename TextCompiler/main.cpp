@@ -49,6 +49,13 @@ std::vector<char> loadFile(const std::string& filename)
 {
     FILE *f = fopen(filename.c_str(), "rb");
 
+    if (!f)
+    {
+        std::stringstream message;
+        message << "Could not open file '" << filename << "' for reading.";
+        throw std::runtime_error(message.str());
+    }
+
     // Determine file size
     fseek(f, 0, SEEK_END);
     size_t size = ftell(f);
@@ -119,7 +126,9 @@ void writeBinaryTranslationFile(const std::map<int, std::string>& translations, 
     FILE* fp = fopen(filename.c_str(), "wb");
     if (!fp)
     {
-        throw std::runtime_error("Could not open output file.");
+        std::stringstream message;
+        message << "Could not open file '" << filename << "' for writing.";
+        throw std::runtime_error(message.str());
     }
 
     fwrite("TEXT", 4, 1, fp);
@@ -153,12 +162,25 @@ void writeBinaryTranslationFile(const std::map<int, std::string>& translations, 
 }
 
 
+void printUsage(const char* exeName)
+{
+    std::cout << "Usage: " << exeName << " <input file json> <output file binary>\n";
+}
+
+
 int main(int argc, char* argv[])
 {
     try
     {
-        auto translations = parseTranslationFile("/home/yoshi252/program_source/TandyGame/text/strings.en.json");
-        writeBinaryTranslationFile(translations, "out.text");
+
+        if (argc != 3)
+        {
+            printUsage(argv[0]);
+            return 1;
+        }
+
+        auto translations = parseTranslationFile(argv[1]);
+        writeBinaryTranslationFile(translations, argv[2]);
 
         std::cout << "Converted " << translations.size() << " text entries.\n";
 
@@ -172,12 +194,12 @@ int main(int argc, char* argv[])
     catch(const std::exception& e)
     {
         std::cerr << "Exception: \"" << e.what() << "\"\n";
-        return 1;
+        return 2;
     }
     catch(...)
     {
         std::cerr << "Unknown Exception\n";
-        return 2;
+        return 3;
     }
 
 

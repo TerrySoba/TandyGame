@@ -1,4 +1,6 @@
 game.exe
+../text/strings.en
+../text/strings.de
 ../music/CELT.RAD
 ../images/tiles.tga
 ../images/guy.tga

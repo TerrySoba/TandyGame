@@ -9,6 +9,26 @@ popd
 png2tga=Png2Tga/build/Png2Tga
 
 
+# build TextCompiler
+mkdir -p TextCompiler/build
+pushd TextCompiler/build
+cmake ..
+make
+popd
+textcompiler=TextCompiler/build/TextCompiler
+
+compileText () {
+    local input=$1
+    directory=`dirname $input`
+    filename=`basename $input .json`
+    echo Compiling text file \"${directory}/${filename}.json\" to \"${directory}/${filename}\"
+    $textcompiler ${directory}/${filename}.json ${directory}/${filename}
+}
+
+# now convert text json to binary
+for file in text/*.json; do compileText "$file" & done
+
+
 convertImage () {
     local pngfile=$1
     directory=`dirname $pngfile`

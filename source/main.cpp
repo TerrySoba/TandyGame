@@ -10,11 +10,13 @@
 #include "shared_ptr.h"
 #include "joystick.h"
 #include "text.h"
+#include "i18n.h"
 
 #include "exception.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
 
 LevelNumber parseCommandline(int argc, char* argv[])
 {
@@ -45,6 +47,7 @@ int main(int argc, char* argv[])
 	
 	try
 	{
+		I18N i18n("strings.en");
 		// RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 
@@ -63,13 +66,7 @@ int main(int argc, char* argv[])
 		while (!s_keyAlt)
 		{
 			gfx->clear();
-			Text t("Welcome stranger!\nThis is the World of Apples. "
-			       "Please feel free to collect as many as you like. "
-				   "But beware of the slight dimensional instability "
-				   "in the metallic looking room. Too many apples may "
-				   "throw off the cosmic balance..."
-				   "\nUp to 10 apples should be fine, though.\n\n   <Press jump to continue>", 30);
-			       //"I hope that we will be able to see the results of this endeavour as soon as we get home.", 40);
+			Text t(i18n.getString(1).c_str(), 30);
 			gfx->draw(t, 10,10);
 			gfx->vsync();
 			gfx->drawScreen();
