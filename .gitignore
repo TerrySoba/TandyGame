@@ -11,3 +11,4 @@ TextCompiler/build
 *.err
 source/version.h
 Png2Tga/build
+tandy_game.img
