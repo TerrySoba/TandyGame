@@ -27,9 +27,9 @@ RawJoystickState readJoystickRaw()
     // Then periodically read port 0x201 until the bits 0-3 of the read value
     // become 0. The waiting time until the bits become 0 corresponds to the
     // analogue value of the joystick axis. Because the timing needs to be
-    // acurate, interrups are disabled using "cli".
+    // accurate, interrups are disabled using "cli".
     //
-    // Thers is also a BIOS interrupt that may be use to read joystick values,
+    // There is also a BIOS interrupt that may be use to read joystick values,
     // but this code seems to be faster. At least on an IBM PS/2 Model 30 286.
 
     __asm{cli} // disable interrupts
@@ -124,7 +124,7 @@ void calibrateJoystick()
     setCursor(0,0);
     puts("Calibrate Joystick");
     setCursor(1,0);
-    puts("ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ");
+    puts("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
     setCursor(19,0);
     puts("Press \"Q\" on keyboard to disable joystick support.");
     setCursor(20,0);
