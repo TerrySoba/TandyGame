@@ -12,3 +12,4 @@ TextCompiler/build
 source/version.h
 Png2Tga/build
 tandy_game.img
+boot_floppy/*.img
