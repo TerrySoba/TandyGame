@@ -41,6 +41,12 @@ enum IntersectionType
     INTERSECTION_OTHER = 5
 };
 
+struct RectangleAction
+{
+    Rectangle rect;
+    CollisionAction* action;
+    int id;
+};
 
 class Physics
 {
@@ -49,6 +55,7 @@ public:
     int addActor(const Actor& rect);
     void setActor(int index, const Actor& rect);
     void getActorPos(int index, int16_t& x, int16_t& y);
+    void setActorPos(int index, int16_t x, int16_t y);
     void setActorSpeedX(int index, int16_t dx);
     void setActorSpeedY(int index, int16_t dy);
     void setActorDuck(int index, bool isDucking);
@@ -60,8 +67,9 @@ public:
     void setEnemyDeath(const tnd::vector<Rectangle>& death);
     void setFallThrough(const tnd::vector<Rectangle>& fallThrough);
     void setGuffins(const tnd::vector<Rectangle>& guffins);
-    void setSpawnPoint(const Point& point);
+    // void setSpawnPoint(const Point& point);
 
+    void setCollisionRects(const tnd::vector<Rectangle>& collisionRects, int collisionId, CollisionAction* action);
 
     void calc();
 
@@ -84,9 +92,10 @@ public:
     Rectangle m_leftLevelTransition;
     Rectangle m_bottomLevelTransition;
     Rectangle m_topLevelTransition;
-    Point m_spawn;
+    // Point m_spawn;
     tnd::vector<Actor> m_actors;
     PhysicsCallback* m_callback;
+    tnd::vector<RectangleAction> m_collisions;
 };
 
 #endif

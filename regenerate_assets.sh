@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# tiled_exe=tiled
+tiled_exe=$HOME/Downloads/Tiled-1.5.0-x86_64.AppImage
+
 # build png to tga converter
 mkdir -p Png2Tga/build
 pushd Png2Tga/build
@@ -49,9 +52,8 @@ generateCsv () {
     directory=`dirname $tmxfile`
     filename=`basename $tmxfile .tmx`
     echo Converting level \"${directory}/${filename}.tmx\" to CSV
-    tiled ${directory}/${filename}.tmx --export-map ${directory}/${filename}.csv
+    $tiled_exe ${directory}/${filename}.tmx --export-map ${directory}/${filename}.csv
 }
 
 # now convert tiled maps to csv
 for tmxfile in levels/*.tmx; do generateCsv "$tmxfile"; done
-

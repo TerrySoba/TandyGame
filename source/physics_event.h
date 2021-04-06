@@ -19,4 +19,10 @@ public:
     virtual void collectApple(Point point);
 };
 
+class CollisionAction
+{
+public:
+    virtual void collision(int collisionId) = 0;
+};
+
 #endif

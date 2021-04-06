@@ -15,6 +15,11 @@
 
 #include <stdio.h>
 
+enum CollisionIDs
+{
+    COLLISION_DEATH = 1,
+};
+
 Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
            GameAnimations animations,
            const char* levelBasename, LevelNumber startLevel) :
@@ -30,7 +35,8 @@ Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
     {
         loadLevel(state.level, UseSpawnPoint::NO);
         m_collectedGuffins = state.colectedGuffins;
-        m_physics->setSpawnPoint(state.spawnPoint);
+        // m_physics->setSpawnPoint(state.spawnPoint);
+        m_spawnPoint = state.spawnPoint;
         drawAppleCount();
     }
     else
@@ -129,15 +135,17 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
     m_player = m_physics->addActor(actor);
 
     m_physics->setWalls(level.getWalls());
-    m_physics->setDeath(level.getDeath());
+    // m_physics->setDeath(level.getDeath());
+
+    m_physics->setCollisionRects(level.getDeath(), COLLISION_DEATH, this);
+
     m_physics->setFallThrough(level.getFallThrough());
     m_physics->setGuffins(m_guffins);
     
-    m_physics->setSpawnPoint(Point(actorPosX, actorPosY));
+    m_spawnPoint = Point(actorPosX, actorPosY);
 
     m_vgaGfx->clear();
 
-    
     snprintf(buf.data(), buf.size(), "Build date: %s", BUILD_DATE);
     Text t(buf.data());
     m_vgaGfx->drawBackground(t, 50, 193);
@@ -288,6 +296,15 @@ void Game::levelTransition(LevelTransition transition)
         case TOP:
             m_nextLevel = m_levelNumber;
             m_nextLevel.y -= 1;
+            break;
+    }
+}
+
+void Game::collision(int collisionId)
+{   
+    switch(collisionId) {
+        case COLLISION_DEATH:
+            m_physics->setActorPos(m_player, m_spawnPoint.x, m_spawnPoint.y);
             break;
     }
 }

@@ -1,6 +1,6 @@
 #include "physics.h"
 #include "log.h"
-
+#include <stdlib.h>
 
 Physics::Physics(PhysicsCallback* callback) :
     m_callback(callback)
@@ -51,15 +51,15 @@ void Physics::setGuffins(const tnd::vector<Rectangle>& guffins)
     m_guffins = guffins;
 }
 
-void Physics::setSpawnPoint(const Point& point)
-{
-    m_spawn = point;
-    if (m_actors.size() > 0)
-    {
-        m_actors[0].rect.x = point.x;
-        m_actors[0].rect.y = point.y;
-    }
-}
+// void Physics::setSpawnPoint(const Point& point)
+// {
+//     m_spawn = point;
+//     if (m_actors.size() > 0)
+//     {
+//         m_actors[0].rect.x = point.x;
+//         m_actors[0].rect.y = point.y;
+//     }
+// }
 
 void Physics::getActorPos(int index, int16_t& x, int16_t& y)
 {
@@ -67,8 +67,6 @@ void Physics::getActorPos(int index, int16_t& x, int16_t& y)
     x = actor.rect.x;
     y = actor.rect.y;
 }
-
-#define abs(x) (((x) > 0)?x:-x)
 
 Rectangle extendRectangle(Rectangle rect, int16_t horizontal, int16_t vertical)
 {
@@ -174,29 +172,29 @@ void Physics::calc()
             }
         }
 
-        for (int n = 0; n < m_death.size(); ++n)
-        {
-            Rectangle& death = m_death[n];
-            if (intersectRect(death, actor.rect))
-            {
-                actor.rect.x = m_spawn.x;
-                actor.rect.y = m_spawn.y;
-                actor.dx = 0;
-                actor.dy = 0;
-            }
-        }
+        // for (int n = 0; n < m_death.size(); ++n)
+        // {
+        //     Rectangle& death = m_death[n];
+        //     if (intersectRect(death, actor.rect))
+        //     {
+        //         actor.rect.x = m_spawn.x;
+        //         actor.rect.y = m_spawn.y;
+        //         actor.dx = 0;
+        //         actor.dy = 0;
+        //     }
+        // }
 
-        for (int n = 0; n < m_enemyDeath.size(); ++n)
-        {
-            Rectangle& death = m_enemyDeath[n];
-            if (intersectRect(death, actor.rect))
-            {
-                actor.rect.x = m_spawn.x;
-                actor.rect.y = m_spawn.y;
-                actor.dx = 0;
-                actor.dy = 0;
-            }
-        }
+        // for (int n = 0; n < m_enemyDeath.size(); ++n)
+        // {
+        //     Rectangle& death = m_enemyDeath[n];
+        //     if (intersectRect(death, actor.rect))
+        //     {
+        //         actor.rect.x = m_spawn.x;
+        //         actor.rect.y = m_spawn.y;
+        //         actor.dx = 0;
+        //         actor.dy = 0;
+        //     }
+        // }
 
 
         for (int n = 0; n < m_guffins.size(); ++n)
@@ -205,6 +203,15 @@ void Physics::calc()
             if (intersectRect(guffin, actor.rect))
             {
                 m_callback->collectApple(Point(guffin.x, guffin.y));
+            }
+        }
+
+        for (int n = 0; n < m_collisions.size(); ++n)
+        {
+            RectangleAction& rect = m_collisions[n];
+            if (intersectRect(rect.rect, actor.rect))
+            {
+                rect.action->collision(rect.id);
             }
         }
 
@@ -282,4 +289,26 @@ IntersectionType Physics::getIntersectionType(const Rectangle &r1, const Rectang
 
 
     return INTERSECTION_OTHER;
+}
+
+void Physics::setCollisionRects(const tnd::vector<Rectangle>& collisionRects, int collisionId, CollisionAction* action)
+{
+    m_collisions.clear();
+    for (int i = 0; i < collisionRects.size(); ++i)
+    {
+        RectangleAction rect;
+        rect.rect = collisionRects[i];
+        rect.id = collisionId;
+        rect.action = action;
+        m_collisions.push_back(rect);
+    }
+}
+
+void Physics::setActorPos(int index, int16_t x, int16_t y)
+{
+    Actor& actor = m_actors[index];
+    actor.rect.x = x;
+    actor.rect.y = y;
+    actor.dx = 0;
+    actor.dy = 0;
 }

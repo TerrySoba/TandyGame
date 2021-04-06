@@ -50,7 +50,7 @@ struct CollectedGuffin
 };
 
 
-class Game : public PhysicsCallback
+class Game : public PhysicsCallback, public CollisionAction
 {
 public:
 	Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles, GameAnimations animations, const char* levelBasename, LevelNumber startLevel);
@@ -61,6 +61,10 @@ public:
 	// PhysicsCallback interface
 	virtual void levelTransition(LevelTransition transition);
 	virtual void collectApple(Point point);
+
+	// CollisionAction interface
+	virtual void collision(int collisionId);
+
 
 private:
 	virtual void drawAppleCount();
@@ -74,6 +78,7 @@ private:
     shared_ptr<Physics> m_physics;
     long int m_frames;
     int m_player;
+	Point m_spawnPoint;
 	TinyString m_levelBasename;
 	LevelNumber m_levelNumber;
 	LevelNumber m_nextLevel;
