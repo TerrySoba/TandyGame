@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 	try
 	{
 		I18N i18n("strings.en");
-		// RadPlayer music("CELT.RAD");
+		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 
 		shared_ptr<ImageBase> tiles(new TgaImage("tiles.tga"));

@@ -20,13 +20,6 @@ extern void videoInit(uint8_t mode);
     modify [ax]            \
     parm [al];
 
-extern uint8_t getCurrentVideoMode();
-#pragma aux getCurrentVideoMode =    \
-    "mov ax, 0fh"          \
-    "int 10h"              \
-    modify [ax]            \
-    value [al];
-
 int compareRectangles(const void* a, const void* b) {
    return ( ((Rectangle*)a)->y > ((Rectangle*)b)->y );
 }
@@ -51,7 +44,6 @@ VgaGfx::VgaGfx()
     Rectangle rect(0, 0, SCREEN_W, SCREEN_H);
     m_dirtyRects.push_back(rect);
 
-    m_oldVideoMode = getCurrentVideoMode();
     videoInit(0x13);
 }
 
@@ -60,7 +52,6 @@ VgaGfx::~VgaGfx()
     delete[] m_screenBuffer;
     delete[] m_backgroundImage;
 
-    // videoInit(m_oldVideoMode);
     videoInit(0x03);
 }
 
