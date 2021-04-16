@@ -1,6 +1,7 @@
 #include "physics.h"
 #include "log.h"
 
+#include <stdlib.h>
 
 Physics::Physics(PhysicsCallback* callback) :
     m_callback(callback)
@@ -68,7 +69,6 @@ void Physics::getActorPos(int index, int16_t& x, int16_t& y)
     y = actor.rect.y;
 }
 
-#define abs(x) (((x) > 0)?x:-x)
 
 Rectangle extendRectangle(Rectangle rect, int16_t horizontal, int16_t vertical)
 {

@@ -1,10 +1,6 @@
 #include "blit.h"
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "exception.h"
-// #include <algorithm>
-#include <sstream>
+
 
 void blit(const ImageBase& source, const Rectangle& sourceRect, const ImageBase& target, const Point& targetPos)
 {

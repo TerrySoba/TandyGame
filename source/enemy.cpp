@@ -1,6 +1,6 @@
 #include "enemy.h"
 
-#include <algorithm>
+#include <stdlib.h>
 
 Enemy::Enemy(Rectangle enemyWalkArea, shared_ptr<Animation> animation) :
     m_enemyWalkArea(enemyWalkArea), m_animation(animation), m_walkSpeed(24)
@@ -18,11 +18,11 @@ void Enemy::walk()
     m_posX += m_walkSpeed;
     if (m_posX > m_enemyWalkArea.x + m_enemyWalkArea.width)
     {
-        m_walkSpeed = -std::abs(m_walkSpeed);
+        m_walkSpeed = -abs(m_walkSpeed);
     }
     if (m_posX < m_enemyWalkArea.x)
     {
-        m_walkSpeed = std::abs(m_walkSpeed);
+        m_walkSpeed = abs(m_walkSpeed);
     }
 }
 

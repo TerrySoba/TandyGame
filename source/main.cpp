@@ -15,7 +15,6 @@
 #include "exception.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 
 
 LevelNumber parseCommandline(int argc, char* argv[])

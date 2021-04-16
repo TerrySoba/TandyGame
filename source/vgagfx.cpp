@@ -117,9 +117,6 @@ void VgaGfx::clear()
         int16_t rectX = rect.x;
         for (int16_t y = 0; y < rectHeight; ++y)
         {
-            // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
-            // memset(getScreenLine(y + rect.y) + rect.x / 2, 0, rect.width / 2);
-            // memset(getBackBufferLine(y + rect.y) + rect.x / 2, 0, rect.width / 2);
             memcpy(getBackBufferLine(y + rectY) + rectX, getBackgroundImageLine(y + rectY) + rectX, rectWidth);
         }
     }
@@ -141,7 +138,6 @@ void VgaGfx::drawScreen()
         int16_t rectX = rect.x;
         for (int16_t y = 0; y < rectHeight; ++y)
         {
-            // memcpy(m_screenBuffer + LINE_BYTES * (targetY + y) + targetX / 2, imageData + imageLineBytes * y, imageLineBytes);
             memcpy(getScreenLine(y + rectY) + rectX, getBackBufferLine(y + rectY) + rectX, rectWidth);
         }
     }
@@ -156,7 +152,6 @@ void VgaGfx::setBackground(const ImageBase& image)
         image.height() == SCREEN_H)
     {
         memcpy(m_backgroundImage, image.data(), SCREEN_W * SCREEN_H);
-        // memcpy(m_screenBuffer, image.data(), image.width() * image.height() / 2);
         Rectangle rect(
             0, 0,
             image.width(), image.height());
