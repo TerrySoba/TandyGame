@@ -1,5 +1,10 @@
 #!/bin/bash
 
+set -e
+
+# set this to the location of tiled
+tiled_path=~/Downloads/Tiled-1.5.0-x86_64.AppImage
+
 # build png to tga converter
 mkdir -p Png2Tga/build
 pushd Png2Tga/build
@@ -17,16 +22,8 @@ make
 popd
 textcompiler=TextCompiler/build/TextCompiler
 
-compileText () {
-    local input=$1
-    directory=`dirname $input`
-    filename=`basename $input .json`
-    echo Compiling text file \"${directory}/${filename}.json\" to \"${directory}/${filename}\"
-    $textcompiler ${directory}/${filename}.json ${directory}/${filename}
-}
-
 # now convert text json to binary
-for file in text/*.json; do compileText "$file" & done
+$textcompiler text/strings.json text/strings
 
 
 convertImage () {
@@ -40,7 +37,7 @@ convertImage () {
 # now convert png images to tga
 for pngfile in images/*.png; do  convertImage "$pngfile" & done
 
-cp images/guy.json images/guy.jsn
+# cp images/guy.json images/guy.jsn
 cp images/enemy.json images/enemy.jsn
 cp images/guffin.json images/guffin.jsn
 
@@ -49,9 +46,8 @@ generateCsv () {
     directory=`dirname $tmxfile`
     filename=`basename $tmxfile .tmx`
     echo Converting level \"${directory}/${filename}.tmx\" to CSV
-    tiled ${directory}/${filename}.tmx --export-map ${directory}/${filename}.csv
+    $tiled_path ${directory}/${filename}.tmx --export-map ${directory}/${filename}.csv
 }
 
 # now convert tiled maps to csv
 for tmxfile in levels/*.tmx; do generateCsv "$tmxfile"; done
-

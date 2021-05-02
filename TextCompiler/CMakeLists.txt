@@ -5,10 +5,5 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 add_executable(${PROJECT_NAME}
-    main.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/../source/3rd_party/cJSON/cJSON.c)
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR}/../source/3rd_party/cJSON/)
+    main.cpp)

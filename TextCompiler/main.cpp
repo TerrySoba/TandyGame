@@ -5,7 +5,7 @@
 #include <sstream>
 #include <map>
 
-#include "cJSON.h"
+#include "json.hpp"
 
 
 std::string UTF8toISO8859_1(const char* in)
@@ -69,42 +69,29 @@ std::vector<char> loadFile(const std::string& filename)
     return buffer;
 }
 
-std::map<int, std::string> parseTranslationFile(const std::string &path)
+std::map<std::string, std::map<int, std::string>> parseTranslationFile(const std::string &path)
 {
     auto jsonData = loadFile(path);
+    auto json = nlohmann::json::parse(jsonData);
 
-    auto json = cJSON_Parse(jsonData.data());
-    if (json == nullptr)
-    {
-        const char *error_ptr = cJSON_GetErrorPtr();
-        std::stringstream message;
-        message << "Error in JSON before: " << error_ptr;
-        throw std::runtime_error(message.str());
-    }
-
-    if (!cJSON_IsObject(json))
+    if (!json.is_object())
     {
         throw std::runtime_error("Root element of JSON is not an object.");
     }
 
-    std::map<int, std::string> ret;
+    std::map<std::string, std::map<int, std::string>> ret;
 
-    cJSON *translation;
-    cJSON_ArrayForEach(translation, json)
+    for(auto entry : json.items())
     {
-        if (!cJSON_IsString(translation))
+        if (!entry.value().is_object())
         {
-            throw std::runtime_error("Translation must be a string.");
+            throw std::runtime_error("Translation must be a JSON object.");
         }
 
-        try
+        for (auto lang : entry.value().items())
         {
-            ret[std::stoi(translation->string)] = translation->valuestring;
-        }
-        catch(...)
-        {
-            throw std::runtime_error("Could not convert integer.");
-        }        
+            ret[lang.key()][std::stoi(entry.key())] = lang.value();
+        }    
     }
 
     return ret;
@@ -180,25 +167,22 @@ int main(int argc, char* argv[])
         }
 
         auto translations = parseTranslationFile(argv[1]);
-        writeBinaryTranslationFile(translations, argv[2]);
+        for (auto translation : translations)
+        {
+            writeBinaryTranslationFile(translation.second, argv[2] + std::string(".") + translation.first);
+        }
 
         std::cout << "Converted " << translations.size() << " text entries.\n";
-
-        // for (auto r : translations)
-        // {
-        //     std::cout << r.first << ":" << r.second << "\n";
-        // }
-
 
     }
     catch(const std::exception& e)
     {
-        std::cerr << "Exception: \"" << e.what() << "\"\n";
+        std::cerr << "Fatal Error: \"" << e.what() << "\"\n";
         return 2;
     }
     catch(...)
     {
-        std::cerr << "Unknown Exception\n";
+        std::cerr << "Fatal Error: Unknown Error\n";
         return 3;
     }
 

@@ -36,6 +36,9 @@ class StringFile:
         del self._entries[oldId]
         self._entries[newId] = entry
 
+    def deleteEntry(self, id):
+        del self._entries[id]
+
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super(Ui, self).__init__() # Call the inherited classes __init__ method
@@ -43,7 +46,8 @@ class Ui(QtWidgets.QMainWindow):
         self._selectedId = None
         self._filename = None
         self._strings = StringFile()
-        uic.loadUi('text_editor.ui', self) # Load the .ui file
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        uic.loadUi(script_dir + '/text_editor.ui', self) # Load the .ui file
         self.show() # Show the GUI
         self.idList.clear()
 
@@ -58,8 +62,18 @@ class Ui(QtWidgets.QMainWindow):
         self.germanTextEdit.textChanged.connect(self.contentChanged)
         self.idList.currentTextChanged.connect(self.idSelected)
         self.renameIdButton.clicked.connect(self.renameIdClicked)
+        self.removeIdButton.clicked.connect(self.removeIdClicked)
 
         self.updateUi()
+
+    def removeIdClicked(self):
+        if self._selectedId is not None and len(self._selectedId) > 0:
+            self._strings.deleteEntry(self._selectedId)
+            self._selectedId = None
+            ids = self._strings.getIdList()
+            if len(ids) > 0:
+                self._selectedId = ids[0]
+            self.updateUi()
 
     def renameIdClicked(self):
         newId = self.idLineEdit.text()
