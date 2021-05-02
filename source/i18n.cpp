@@ -48,6 +48,9 @@ I18N::~I18N()
     delete[] m_entries;
 }
 
+
+
+
 TinyString I18N::getString(uint16_t id)
 {
     for (int i = 0; i < m_entryCount; ++i)
@@ -65,5 +68,10 @@ TinyString I18N::getString(uint16_t id)
         }
     }
 
-    return "???";
+    // If string is not available in translation file, then display three question marks
+    // and the id of the missing string.
+    char buf[20];
+    snprintf(buf, 20, "??? <id:%d>", id);
+
+    return buf;
 }

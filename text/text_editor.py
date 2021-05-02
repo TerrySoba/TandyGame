@@ -2,9 +2,12 @@ import json, sys
 from PyQt5 import QtWidgets, QtGui, uic
 import os.path
 
+script_dir = os.path.dirname(os.path.realpath(__file__))
+
 class StringFile:
     def __init__(self):
         self._entries = dict()
+        self._edited = False
         pass
     
     def load(self, jsonFileName):
@@ -14,6 +17,7 @@ class StringFile:
     def save(self, jsonFileName):
         with open(jsonFileName, "wb") as fp:
             fp.write(json.dumps(self._entries, indent=4).encode("utf8"))
+        self._edited = False
 
     def getIdList(self):
         return list(self._entries)
@@ -22,6 +26,7 @@ class StringFile:
         return self._entries[id]
 
     def newEntry(self):
+        self._edited = True
         id = 1
         while str(id) in self._entries:
             id = id + 1
@@ -29,15 +34,23 @@ class StringFile:
         return str(id)
 
     def setEntry(self, id, entry):
+        oldEntry = self._entries[id]
         self._entries[id] = entry
+        if repr(oldEntry) != repr(self._entries[id]):
+            self._edited = True
 
     def renameEntry(self, oldId, newId):
+        self._edited = True
         entry = self._entries[oldId]
         del self._entries[oldId]
         self._entries[newId] = entry
 
     def deleteEntry(self, id):
+        self._edited = True
         del self._entries[id]
+
+    def isEdited(self):
+        return self._edited
 
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
@@ -45,8 +58,9 @@ class Ui(QtWidgets.QMainWindow):
         self._appName = "Translation Editor"
         self._selectedId = None
         self._filename = None
+        self._uiLocked = False
         self._strings = StringFile()
-        script_dir = os.path.dirname(os.path.realpath(__file__))
+        
         uic.loadUi(script_dir + '/text_editor.ui', self) # Load the .ui file
         self.show() # Show the GUI
         self.idList.clear()
@@ -65,6 +79,25 @@ class Ui(QtWidgets.QMainWindow):
         self.removeIdButton.clicked.connect(self.removeIdClicked)
 
         self.updateUi()
+
+    def closeEvent(self, event):
+        if self._filename is None:
+            event.accept()
+            return
+
+        filename = os.path.basename(self._filename)
+
+        selection = QtWidgets.QMessageBox.question(self, "Save changes?", "Save changes to unsaved file \"{}\"?".format(filename),
+            QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel | QtWidgets.QMessageBox.Save, QtWidgets.QMessageBox.Save)
+        
+        if selection == QtWidgets.QMessageBox.Cancel:
+            event.ignore()
+            return
+
+        if selection == QtWidgets.QMessageBox.Save:
+            self.save()
+
+        event.accept()
 
     def removeIdClicked(self):
         if self._selectedId is not None and len(self._selectedId) > 0:
@@ -112,6 +145,7 @@ class Ui(QtWidgets.QMainWindow):
     def save(self):
         if len(self._filename) > 0:
             self._strings.save(self._filename)
+            self.updateUi()
 
     def new(self):
         self._strings = StringFile()
@@ -136,14 +170,22 @@ class Ui(QtWidgets.QMainWindow):
     def contentChanged(self):
         if self._selectedId is not None:
             entry = dict(en = self.englishTextEdit.toPlainText(), de = self.germanTextEdit.toPlainText())
-            self._strings.setEntry(self._selectedId, entry)
+            if not self._uiLocked:
+                self._strings.setEntry(self._selectedId, entry)
 
     def updateUi(self):
+        self._uiLocked = True
+
+        if self._strings.isEdited():
+            editedString = "*"
+        else:
+            editedString = ""
+
         if self._filename is None:
             self.actionSave.setEnabled(False)
-            self.setWindowTitle(self._appName)
+            self.setWindowTitle(editedString + self._appName)
         else:
-            self.setWindowTitle("{} - {}".format(os.path.basename(self._filename), self._appName))
+            self.setWindowTitle("{}{} - {}".format(editedString, os.path.basename(self._filename), self._appName))
             self.actionSave.setEnabled(True)
 
         if self._selectedId is None:
@@ -164,12 +206,12 @@ class Ui(QtWidgets.QMainWindow):
 
         self.idList.clear()
         self.idList.addItems(self._strings.getIdList())
-        
-    
 
+        self._uiLocked = False
+        
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv) # Create an instance of QtWidgets.QApplication
-    app.setWindowIcon(QtGui.QIcon('text_editor_icon.png'))
+    app.setWindowIcon(QtGui.QIcon(script_dir + '/text_editor_icon.png'))
     window = Ui() # Create an instance of our class
     app.exec_() # Start the application
