@@ -12,6 +12,7 @@
 #include "joystick.h"
 #include "game_save.h"
 #include "text.h"
+#include "i18n.h"
 
 #include <stdio.h>
 
@@ -23,6 +24,8 @@ Game::Game(shared_ptr<VgaGfx> vgaGfx, shared_ptr<ImageBase> tiles,
 {
     m_nextLevel.x = -1;
     m_nextLevel.y = -1;
+
+    m_appleString = I18N::getString(2);
 
     // try to load savegame
     GameState state;
@@ -155,8 +158,7 @@ void Game::loadLevel(LevelNumber levelNumber, UseSpawnPoint::UseSpawnPointT useS
 void Game::drawAppleCount()
 {
     char buf[16];
-
-    snprintf(buf, 16, "Apples: %3d", m_collectedGuffins.size());
+    snprintf(buf, 16, m_appleString.c_str(), m_collectedGuffins.size());
     Text t(buf);
     m_vgaGfx->drawBackground(t, 260, 1);
 }

@@ -46,7 +46,8 @@ int main(int argc, char* argv[])
 	
 	try
 	{
-		I18N i18n("strings.en");
+		I18N::loadTranslations("strings.de");
+
 		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
 
@@ -65,7 +66,7 @@ int main(int argc, char* argv[])
 		while (!s_keyAlt)
 		{
 			gfx->clear();
-			Text t(i18n.getString(1).c_str(), 30);
+			Text t(I18N::getString(1).c_str(), 30);
 			gfx->draw(t, 10,10);
 			gfx->vsync();
 			gfx->drawScreen();
@@ -87,7 +88,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	printf("Build date: %s\nhttps://github.com/TerrySoba/TandyGame\n\nThanks for playing!\n", BUILD_DATE);
+	printf(I18N::getString(3).c_str(), BUILD_DATE);
 
 	return 0;
 }

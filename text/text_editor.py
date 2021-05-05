@@ -53,7 +53,8 @@ class StringFile:
         return self._edited
 
 class Ui(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, filename = None):
+        """If filename is given, then the file with the given filename is opened immediately."""
         super(Ui, self).__init__() # Call the inherited classes __init__ method
         self._appName = "Translation Editor"
         self._selectedId = None
@@ -79,6 +80,9 @@ class Ui(QtWidgets.QMainWindow):
         self.removeIdButton.clicked.connect(self.removeIdClicked)
 
         self.updateUi()
+
+        if filename is not None:
+            self.load(filename)
 
     def closeEvent(self, event):
         if self._filename is None:
@@ -131,8 +135,7 @@ class Ui(QtWidgets.QMainWindow):
     def openFile(self):
         filename = QtWidgets.QFileDialog.getOpenFileName(self,'Open Translation File','./','JSON Files(*.json)')
         if len(filename[0]) > 0:
-            self._filename = filename[0]
-            self.load(self._filename)
+            self.load(filename[0])
             self.updateUi()
 
     def saveAs(self):
@@ -158,7 +161,7 @@ class Ui(QtWidgets.QMainWindow):
         pass
 
     def load(self, jsonFileName):
-        
+        self._filename = jsonFileName
         self._strings.load(jsonFileName)
         try:
             self._selectedId = self._strings.getIdList()[0]
@@ -213,5 +216,10 @@ class Ui(QtWidgets.QMainWindow):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv) # Create an instance of QtWidgets.QApplication
     app.setWindowIcon(QtGui.QIcon(script_dir + '/text_editor_icon.png'))
-    window = Ui() # Create an instance of our class
+
+    filename = None
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+
+    window = Ui(filename) # Create an instance of our class
     app.exec_() # Start the application

@@ -5,17 +5,22 @@
 #include <stdint.h>
 #include <stdio.h>
 
-TinyString getI18NString(const char* path, uint16_t id);
-
 struct StringEntry;
 
 class I18N
 {
 public:
+    static void loadTranslations(const char* path);
+    static TinyString getString(uint16_t id);
+
+private:
     I18N(const char* path);
     ~I18N();
-    TinyString getString(uint16_t id);
+    TinyString _getString(uint16_t id);
 
+private: // static members
+    static I18N* s_instance;
+    
 private:
     uint16_t m_entryCount;
     StringEntry* m_entries;

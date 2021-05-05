@@ -80,6 +80,7 @@ private:
 	ActorAnimationController m_animationController;
 	bool m_lastButtonPressed;
 	tnd::vector<CollectedGuffin> m_collectedGuffins;
+	TinyString m_appleString;
 };
 
 

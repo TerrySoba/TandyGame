@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #pragma pack(0);
 
@@ -15,6 +16,20 @@ struct StringEntry
     uint16_t length;
 };
 
+I18N* I18N::s_instance = NULL;
+
+
+void I18N::loadTranslations(const char* path)
+{
+    if (s_instance) delete s_instance;
+    s_instance = new I18N(path);
+}
+
+TinyString I18N::getString(uint16_t id)
+{
+    if (s_instance) return s_instance->_getString(id);
+    else return "Uninitialized";
+}
 
 I18N::I18N(const char* path)
 {
@@ -34,11 +49,7 @@ I18N::I18N(const char* path)
     }
 
     fread(&m_entryCount, 2, 1, m_file);
-
-    // printf("Found %d entries.\n", entryCount);
-
     m_entries = new StringEntry[m_entryCount];
-
     fread(m_entries, sizeof(StringEntry), m_entryCount, m_file);
 }
 
@@ -51,7 +62,7 @@ I18N::~I18N()
 
 
 
-TinyString I18N::getString(uint16_t id)
+TinyString I18N::_getString(uint16_t id)
 {
     for (int i = 0; i < m_entryCount; ++i)
     {
