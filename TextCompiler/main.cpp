@@ -4,44 +4,42 @@
 #include <exception>
 #include <sstream>
 #include <map>
+#include <iconv.h>
 
 #include "json.hpp"
 
 
-std::string UTF8toISO8859_1(const char* in)
-{
-    std::string out;
-    if (in == NULL)
-        return out;
 
-    unsigned int codepoint;
-    while (*in != 0)
+
+
+
+std::string UTF8toCP437(const char* in)
+{
+    std::vector<char> inVec(in, in + strlen(in));
+
+    iconv_t cd;
+    if ((cd = iconv_open("CP437", "UTF-8")) == (iconv_t)(-1))
     {
-        unsigned char ch = static_cast<unsigned char>(*in);
-        if (ch <= 0x7f)
-            codepoint = ch;
-        else if (ch <= 0xbf)
-            codepoint = (codepoint << 6) | (ch & 0x3f);
-        else if (ch <= 0xdf)
-            codepoint = ch & 0x1f;
-        else if (ch <= 0xef)
-            codepoint = ch & 0x0f;
-        else
-            codepoint = ch & 0x07;
-        ++in;
-        if (((*in & 0xc0) != 0x80) && (codepoint <= 0x10ffff))
-        {
-            if (codepoint <= 255)
-            {
-                out.append(1, static_cast<char>(codepoint));
-            }
-            else
-            {
-                // do whatever you want for out-of-bounds characters
-            }
-        }
+        fprintf(stderr, "Cannot open converter\n");
+        exit(1);
     }
-    return out;
+
+    char* inptr = inVec.data();
+    size_t inleft = inVec.size();
+
+    std::vector<char> outVec(inVec.size());
+    char* outptr = outVec.data();
+    size_t outleft = outVec.size();
+
+    int rc = iconv(cd, &inptr, &inleft, &outptr, &outleft);
+    if (rc == -1)
+    {
+        fprintf(stderr, "Error in converting characters\n");
+        exit(8);
+    }
+    iconv_close(cd);
+
+    return std::string(outVec.data(), outVec.size() - outleft);
 }
 
 
@@ -133,7 +131,7 @@ void writeBinaryTranslationFile(const std::map<int, std::string>& translations, 
         fwrite(&id, 2, 1, fp);
         uint32_t offset = HEADER_SIZE + ENTRY_SIZE * translations.size() + textLenSum;
         fwrite(&offset, 4, 1, fp);
-        auto str = UTF8toISO8859_1(translation.second.c_str());
+        auto str = UTF8toCP437(translation.second.c_str());
         uint16_t len = str.size();
         fwrite(&len, 2, 1, fp);
         textLenSum += len + 1;
@@ -141,7 +139,7 @@ void writeBinaryTranslationFile(const std::map<int, std::string>& translations, 
 
     for (auto translation : translations)
     {
-        auto str = UTF8toISO8859_1(translation.second.c_str());
+        auto str = UTF8toCP437(translation.second.c_str());
         fwrite(str.c_str(), str.size() + 1, 1, fp);
     }
 
