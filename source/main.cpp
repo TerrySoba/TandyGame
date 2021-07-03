@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 	
 	try
 	{
-		I18N::loadTranslations("strings.de");
+		I18N::loadTranslations("strings.en");
 
 		RadPlayer music("CELT.RAD");
 		Keyboard keyboard;
