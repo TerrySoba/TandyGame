@@ -540,10 +540,10 @@ int getCharacterIndex(char ch)
         case '%': return 44;
         case '<': return 45;
         case '>': return 46;
-        case '\x8E': case '\x84': return 47; // A umlaut
-        case '\x99': case '\x94': return 48; // O umlaut
-        case '\x9A': case '\x81': return 49; // U umlaut
-        case '\xE1': return 50; // sharp S
+        case '\x8E': case '\x84': return 47; // A umlaut in CP437
+        case '\x99': case '\x94': return 48; // O umlaut in CP437
+        case '\x9A': case '\x81': return 49; // U umlaut in CP437
+        case '\xE1': return 50; // sharp S in CP437
     }
 
     return 51;
